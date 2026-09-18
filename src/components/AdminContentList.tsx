@@ -31,7 +31,7 @@ export function AdminContentList<T extends Item>({
       ) : (
         <div className="mt-8 space-y-3">
           {items.map((item) => (
-            <div key={item.id} className="card-shell flex items-center justify-between gap-3 p-4">
+            <div key={item.id} className="card-shell flex flex-wrap items-center justify-between gap-3 p-4">
               <div>
                 <p className="font-semibold">
                   {item.title}
