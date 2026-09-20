@@ -11,6 +11,7 @@ type AuthContextValue = {
   isAdmin: boolean;
   signUp: (email: string, password: string) => Promise<{ error: string | null }>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
+  signInWithGoogle: () => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   requestPasswordReset: (email: string) => Promise<{ error: string | null }>;
   updatePassword: (newPassword: string) => Promise<{ error: string | null }>;
@@ -29,8 +30,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(data.session);
       setLoading(false);
     });
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession);
+      // Le retour de redirection Google ne passe pas par signIn() : on capte la
+      // connexion et on applique la même règle "un seul appareil" ici.
+      if (event === "SIGNED_IN" && newSession?.user?.app_metadata?.provider === "google") {
+        supabase.auth.signOut({ scope: "others" });
+        recordLoginEvent(newSession.user.id, newSession.user.email ?? "");
+      }
     });
     return () => listener.subscription.unsubscribe();
   }, []);
@@ -69,6 +76,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error?.message ?? null };
   };
 
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin },
+    });
+    return { error: error?.message ?? null };
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
   };
@@ -95,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isAdmin,
         signUp,
         signIn,
+        signInWithGoogle,
         signOut,
         requestPasswordReset,
         updatePassword,
