@@ -10,6 +10,7 @@ import { useExamIntegrity, shuffleOrder } from "@/lib/examIntegrity";
 import NotFound from "./NotFound";
 
 const SLOW_ANSWER_SECONDS = 30;
+const TOTAL_DURATION_SECONDS = 35 * 60;
 
 export default function PracticeCoSujet() {
   const { slug } = useParams<{ slug: string }>();
@@ -20,7 +21,7 @@ export default function PracticeCoSujet() {
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [finished, setFinished] = useState(false);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
-  const [secondsOnQuestion, setSecondsOnQuestion] = useState(0);
+  const [secondsRemaining, setSecondsRemaining] = useState(TOTAL_DURATION_SECONDS);
 
   const { fullscreenActive, enterFullscreen, preventContextMenu, baseFlags } = useExamIntegrity();
   const slowAnswersRef = useRef(0);
@@ -47,10 +48,14 @@ export default function PracticeCoSujet() {
 
   useEffect(() => {
     questionStartRef.current = Date.now();
-    setSecondsOnQuestion(0);
-    const interval = setInterval(() => setSecondsOnQuestion((s) => s + 1), 1000);
-    return () => clearInterval(interval);
   }, [currentIndex]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSecondsRemaining((s) => (s > 0 ? s - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   if (sujet === undefined) {
     return <div className="mx-auto max-w-2xl px-4 py-24 text-center text-sm text-muted-foreground">Chargement...</div>;
@@ -201,12 +206,12 @@ export default function PracticeCoSujet() {
         </span>
       </div>
 
-      {/* Chrono */}
+      {/* Chrono — compte à rebours du temps total de l'épreuve (35 min), ne se réinitialise pas entre les questions */}
       <div className="sticky top-3 z-20 mt-4 flex justify-end">
-        <div className={`card-shell flex items-center gap-2 px-4 py-2 shadow-lg ${secondsOnQuestion > SLOW_ANSWER_SECONDS ? "border-amber-500/50" : ""}`}>
-          <Clock className={`h-4 w-4 ${secondsOnQuestion > SLOW_ANSWER_SECONDS ? "text-amber-500" : "text-primary"}`} />
+        <div className={`card-shell flex items-center gap-2 px-4 py-2 shadow-lg ${secondsRemaining <= 300 ? "border-amber-500/50" : ""}`}>
+          <Clock className={`h-4 w-4 ${secondsRemaining <= 300 ? "text-amber-500" : "text-primary"}`} />
           <span className="font-mono text-sm font-bold">
-            {Math.floor(secondsOnQuestion / 60)}:{(secondsOnQuestion % 60).toString().padStart(2, "0")}
+            {Math.floor(secondsRemaining / 60)}:{(secondsRemaining % 60).toString().padStart(2, "0")}
           </span>
         </div>
       </div>
