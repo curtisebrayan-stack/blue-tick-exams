@@ -77,7 +77,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-2 border-t border-secondary-foreground/10 pt-6 text-xs text-secondary-foreground/40 sm:flex-row">
-          <p>© {new Date().getFullYear()} Blue Tick Exams. Site indépendant, non affilié à France Éducation international.</p>
+          <p>© {new Date().getFullYear()} Blue Tick Project. Site indépendant, non affilié à France Éducation international.</p>
           <Link to="/confidentialite" className="hover:text-secondary-foreground/70">Confidentialité</Link>
         </div>
       </div>

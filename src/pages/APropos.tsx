@@ -11,7 +11,7 @@ const POINTS = [
   {
     icon: ShieldCheck,
     title: "Indépendance",
-    text: "Blue Tick Exams est un site indépendant. Nous ne sommes affiliés ni à France Éducation international, ni à IRCC, ni à aucun organisme officiel du TCF.",
+    text: "Blue Tick Project est un site indépendant. Nous ne sommes affiliés ni à France Éducation international, ni à IRCC, ni à aucun organisme officiel du TCF.",
   },
   {
     icon: Wrench,
@@ -23,12 +23,12 @@ const POINTS = [
 export default function APropos() {
   return (
     <section className="mx-auto max-w-4xl px-4 py-16 sm:py-24">
-      <Seo title="À propos" description="La mission et l'indépendance de Blue Tick Exams." />
+      <Seo title="À propos" description="La mission et l'indépendance de Blue Tick Project." />
       <div className="text-center">
         <span className="chip">À propos</span>
         <h1 className="mt-4 text-3xl font-bold sm:text-5xl">Qui sommes-nous ?</h1>
         <p className="mx-auto mt-4 max-w-2xl text-base text-muted-foreground">
-          Blue Tick Exams est né d'un constat simple : préparer le TCF Canada demande de s'entraîner sur un format précis,
+          Blue Tick Project est né d'un constat simple : préparer le TCF Canada demande de s'entraîner sur un format précis,
           pas de réviser le français en général. Ce site propose un parcours structuré autour des quatre épreuves
           réellement notées pour un dossier d'immigration.
         </p>

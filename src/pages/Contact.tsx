@@ -37,7 +37,7 @@ export default function Contact() {
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-16 sm:py-24">
-      <Seo title="Nous écrire" description="Contacte l'équipe de Blue Tick Exams." />
+      <Seo title="Nous écrire" description="Contacte l'équipe de Blue Tick Project." />
       <div className="text-center">
         <span className="chip"><Mail className="h-3.5 w-3.5" /> Contact</span>
         <h1 className="mt-4 text-3xl font-bold sm:text-4xl">Entrez en contact</h1>

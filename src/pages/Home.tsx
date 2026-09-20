@@ -24,7 +24,7 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Blue Tick Exams"
+        title="Blue Tick Project"
         description="Préparation structurée aux quatre épreuves du TCF Canada : compréhension orale, compréhension écrite, expression orale, expression écrite."
       />
       {/* HERO */}

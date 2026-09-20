@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const SITE_NAME = "Blue Tick Exams";
+const SITE_NAME = "Blue Tick Project";
 
 export function Seo({ title, description }: { title: string; description?: string }) {
   useEffect(() => {

@@ -27,7 +27,7 @@ const SECTIONS = [
 export default function Confidentialite() {
   return (
     <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
-      <Seo title="Politique de confidentialité" description="Comment Blue Tick Exams collecte et protège tes données." />
+      <Seo title="Politique de confidentialité" description="Comment Blue Tick Project collecte et protège tes données." />
       <div className="text-center">
         <span className="chip">Légal</span>
         <h1 className="mt-4 text-3xl font-bold sm:text-4xl">Politique de confidentialité</h1>
@@ -35,7 +35,7 @@ export default function Confidentialite() {
       </div>
 
       <div className="mt-8 rounded-xl border-l-4 border-primary bg-primary/5 p-5 text-sm text-muted-foreground">
-        Cette page explique quelles données Blue Tick Exams collecte, pourquoi, et comment elles sont protégées. Ton compte et tes résultats
+        Cette page explique quelles données Blue Tick Project collecte, pourquoi, et comment elles sont protégées. Ton compte et tes résultats
         restent privés : seuls toi (et l'équipe technique, si nécessaire) peuvent y accéder.
       </div>
 

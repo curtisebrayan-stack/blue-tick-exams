@@ -29,7 +29,7 @@ export default function Blog() {
                 <Newspaper className="absolute -bottom-4 -right-4 h-16 w-16 text-secondary-foreground/10" />
               </div>
               <div className="flex flex-1 flex-col p-6">
-                <p className="text-xs text-muted-foreground">Blue Tick Exams</p>
+                <p className="text-xs text-muted-foreground">Blue Tick Project</p>
                 <h2 className="mt-1 font-display text-lg font-bold">{article.title}</h2>
                 <p className="mt-2 flex-1 text-sm text-muted-foreground">{article.excerpt}</p>
                 <div className="mt-4 flex items-center justify-between border-t border-border pt-4">

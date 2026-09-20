@@ -37,7 +37,7 @@ export default function Inscription() {
   if (done) {
     return (
       <section className="mx-auto max-w-md px-4 py-16 text-center sm:py-24">
-        <Seo title="Compte créé" description="Ton compte Blue Tick Exams a été créé." />
+        <Seo title="Compte créé" description="Ton compte Blue Tick Project a été créé." />
         <div className="card-shell p-8">
           <CheckCircle2 className="mx-auto h-12 w-12 text-primary" />
           <h1 className="mt-4 text-2xl font-bold">Compte créé</h1>

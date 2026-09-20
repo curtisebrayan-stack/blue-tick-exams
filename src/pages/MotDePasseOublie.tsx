@@ -40,7 +40,7 @@ export default function MotDePasseOublie() {
 
   return (
     <section className="mx-auto max-w-md px-4 py-16 sm:py-24">
-      <Seo title="Mot de passe oublié" description="Réinitialise ton mot de passe Blue Tick Exams." />
+      <Seo title="Mot de passe oublié" description="Réinitialise ton mot de passe Blue Tick Project." />
       <span className="chip"><KeyRound className="h-3.5 w-3.5" /> Compte</span>
       <h1 className="mt-4 text-3xl font-bold">Mot de passe oublié</h1>
       <p className="mt-2 text-sm text-muted-foreground">
