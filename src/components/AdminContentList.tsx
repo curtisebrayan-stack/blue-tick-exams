@@ -57,7 +57,7 @@ export function AdminContentList<T extends Item>({
                   type="button"
                   onClick={() => onDelete(item.id, item.title)}
                   disabled={deletingId === item.id}
-                  className="btn-outline !px-3 !py-2 text-xs !border-red-300 !text-red-600 disabled:opacity-50"
+                  className="btn-outline !px-3 !py-2 text-xs !border-red-500/60 !text-red-500 disabled:opacity-50"
                 >
                   <Trash2 className="h-3.5 w-3.5" /> {deletingId === item.id ? "Suppression..." : "Supprimer"}
                 </button>

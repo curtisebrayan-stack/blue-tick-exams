@@ -105,7 +105,7 @@ export default function PracticeCo() {
       <div className="mt-6 flex items-center justify-between">
         <span className="chip">Compréhension orale</span>
         {!locked && !submitted && (
-          <span className={`font-mono text-xs ${elapsedSeconds > TIME_BUDGET_SECONDS ? "text-amber-600" : "text-muted-foreground"}`}>
+          <span className={`font-mono text-xs ${elapsedSeconds > TIME_BUDGET_SECONDS ? "text-amber-500" : "text-muted-foreground"}`}>
             {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, "0")}
           </span>
         )}
@@ -120,12 +120,12 @@ export default function PracticeCo() {
       ) : (
         <>
       {!speechSupported && (
-        <p className="mt-4 flex items-center gap-2 rounded-lg bg-red-50 p-4 text-sm text-red-700">
+        <p className="mt-4 flex items-center gap-2 rounded-lg bg-red-500/10 p-4 text-sm text-red-500">
           <AlertTriangle className="h-4 w-4 shrink-0" /> Ton navigateur ne supporte pas la lecture audio automatique. Essaie avec Chrome ou Edge.
         </p>
       )}
       {speechSupported && !frenchVoice && voices.length > 0 && (
-        <p className="mt-4 flex items-center gap-2 rounded-lg bg-amber-50 p-4 text-sm text-amber-700">
+        <p className="mt-4 flex items-center gap-2 rounded-lg bg-amber-500/10 p-4 text-sm text-amber-500">
           <AlertTriangle className="h-4 w-4 shrink-0" /> Aucune voix française trouvée sur cet appareil : la prononciation peut être approximative.
         </p>
       )}
@@ -158,9 +158,9 @@ export default function PracticeCo() {
                     key={realIndex}
                     className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition ${
                       showFeedback && isCorrect
-                        ? "border-green-500 bg-green-50"
+                        ? "border-green-500/60 bg-green-500/10"
                         : showFeedback && isSelected && !isCorrect
-                          ? "border-red-400 bg-red-50"
+                          ? "border-red-500/60 bg-red-500/10"
                           : "border-border"
                     }`}
                   >
@@ -172,7 +172,7 @@ export default function PracticeCo() {
                       onChange={() => setAnswers((prev) => ({ ...prev, [i]: realIndex }))}
                     />
                     <span className="font-bold">{String.fromCharCode(65 + realIndex)}.</span> {option}
-                    {showFeedback && isCorrect && <CheckCircle2 className="ml-auto h-4 w-4 text-green-600" />}
+                    {showFeedback && isCorrect && <CheckCircle2 className="ml-auto h-4 w-4 text-green-500" />}
                     {showFeedback && isSelected && !isCorrect && <XCircle className="ml-auto h-4 w-4 text-red-500" />}
                   </label>
                 );

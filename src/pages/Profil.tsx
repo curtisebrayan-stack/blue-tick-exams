@@ -59,7 +59,7 @@ const TOPIC_LABELS: Record<string, string> = {
 };
 
 export default function Profil() {
-  const { user } = useAuth();
+  const { user, updatePassword } = useAuth();
   const [results, setResults] = useState<PracticeResult[] | null>(null);
   const [recordings, setRecordings] = useState<SpeakingSubmission[] | null>(null);
   const [writings, setWritings] = useState<WritingSubmission[] | null>(null);
@@ -84,10 +84,10 @@ export default function Profil() {
       return;
     }
     setPasswordSaving(true);
-    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+    const { error: updateError } = await updatePassword(newPassword);
     setPasswordSaving(false);
     if (updateError) {
-      setPasswordError(updateError.message);
+      setPasswordError(updateError);
       return;
     }
     setNewPassword("");
@@ -172,7 +172,7 @@ export default function Profil() {
           </label>
           {passwordError && <p className="text-sm text-red-500 sm:col-span-2">{passwordError}</p>}
           {passwordSuccess && (
-            <p className="flex items-center gap-1.5 text-sm text-green-600 sm:col-span-2">
+            <p className="flex items-center gap-1.5 text-sm text-green-500 sm:col-span-2">
               <CheckCircle2 className="h-4 w-4" /> Mot de passe mis à jour.
             </p>
           )}
@@ -183,7 +183,7 @@ export default function Profil() {
       </div>
 
       <div className="mt-10">
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-red-500">{error}</p>}
 
         {results === null && !error && (
           <p className="text-sm text-muted-foreground">Chargement de tes résultats...</p>

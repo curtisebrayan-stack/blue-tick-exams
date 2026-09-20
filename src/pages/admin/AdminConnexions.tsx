@@ -84,10 +84,10 @@ export default function AdminConnexions() {
               {events.map((e) => (
                 <tr
                   key={e.id}
-                  className={`border-b border-border/60 align-top ${suspicious.has(e.id) ? "bg-red-50" : ""}`}
+                  className={`border-b border-border/60 align-top ${suspicious.has(e.id) ? "bg-red-500/10" : ""}`}
                 >
                   <td className="py-2 pr-4 font-medium">
-                    {suspicious.has(e.id) && <AlertTriangle className="mr-1 inline h-3.5 w-3.5 text-red-600" />}
+                    {suspicious.has(e.id) && <AlertTriangle className="mr-1 inline h-3.5 w-3.5 text-red-500" />}
                     {e.email}
                   </td>
                   <td className="py-2 pr-4 text-muted-foreground">{new Date(e.created_at).toLocaleString("fr-FR")}</td>

@@ -123,7 +123,7 @@ export default function PracticeEe() {
       ) : (
         <>
       {showPasteWarning && (
-        <p className="mt-4 flex items-center gap-2 rounded-lg bg-amber-50 p-3 text-xs text-amber-700">
+        <p className="mt-4 flex items-center gap-2 rounded-lg bg-amber-500/10 p-3 text-xs text-amber-500">
           <Ban className="h-3.5 w-3.5 shrink-0" /> Le collage est désactivé pour cet exercice — rédige directement ton texte.
         </p>
       )}
@@ -136,7 +136,7 @@ export default function PracticeEe() {
         placeholder="Écris ton message ici..."
         className="mt-6 w-full rounded-xl border border-border bg-background p-4 text-sm outline-none focus:border-primary disabled:opacity-70"
       />
-      <p className={`mt-2 text-xs ${inRange ? "text-green-600" : "text-muted-foreground"}`}>
+      <p className={`mt-2 text-xs ${inRange ? "text-green-500" : "text-muted-foreground"}`}>
         {wordCount} mot{wordCount !== 1 ? "s" : ""} {inRange ? "— dans la cible" : `— cible : ${prompt.minWords}-${prompt.maxWords}`}
       </p>
 

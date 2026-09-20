@@ -30,7 +30,7 @@ function StringListEditor({
               className="flex-1 rounded-lg border border-border px-3 py-2 text-sm"
             />
             {items.length > 1 && (
-              <button type="button" onClick={() => onChange(items.filter((_, idx) => idx !== i))} className="text-red-600">
+              <button type="button" onClick={() => onChange(items.filter((_, idx) => idx !== i))} className="text-red-500">
                 <Trash2 className="h-4 w-4" />
               </button>
             )}
@@ -183,7 +183,7 @@ export default function AdminEoNouveau() {
           />
         </div>
 
-        {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+        {error && <p className="rounded-lg bg-red-500/10 p-3 text-sm text-red-500">{error}</p>}
 
         <button type="submit" disabled={submitting} className="btn-primary w-full disabled:opacity-50">
           {submitting ? "Envoi en cours..." : "Créer le sujet"}

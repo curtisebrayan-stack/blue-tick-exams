@@ -112,13 +112,13 @@ export default function AdminIntegrite() {
               {rows.map((row) => {
                 const suspicious = isSuspicious(row.integrity_flags);
                 return (
-                  <tr key={row.id} className={`border-b border-border/60 align-top ${suspicious ? "bg-red-50" : ""}`}>
+                  <tr key={row.id} className={`border-b border-border/60 align-top ${suspicious ? "bg-red-500/10" : ""}`}>
                     <td className="py-2 pr-4 font-medium">{row.email ?? "—"}</td>
                     <td className="py-2 pr-4 text-muted-foreground">{row.skill.toUpperCase()} — {row.topic_slug}</td>
                     <td className="py-2 pr-4 text-muted-foreground">{row.detail}</td>
                     <td className="py-2 pr-4 text-muted-foreground">{new Date(row.created_at).toLocaleString("fr-FR")}</td>
                     <td className="py-2 text-muted-foreground">
-                      {suspicious && <AlertTriangle className="mr-1 inline h-3.5 w-3.5 text-red-600" />}
+                      {suspicious && <AlertTriangle className="mr-1 inline h-3.5 w-3.5 text-red-500" />}
                       {describeFlags(row.integrity_flags)}
                     </td>
                   </tr>

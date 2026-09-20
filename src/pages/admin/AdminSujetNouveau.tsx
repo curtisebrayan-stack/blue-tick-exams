@@ -134,7 +134,7 @@ export default function AdminSujetNouveau() {
             <div className="flex items-center justify-between">
               <h2 className="font-semibold">Question {index + 1}</h2>
               {questions.length > 1 && (
-                <button type="button" onClick={() => removeQuestion(index)} className="text-xs font-semibold text-red-600">
+                <button type="button" onClick={() => removeQuestion(index)} className="text-xs font-semibold text-red-500">
                   <Trash2 className="h-3.5 w-3.5" /> Retirer
                 </button>
               )}
@@ -200,7 +200,7 @@ export default function AdminSujetNouveau() {
           <Plus className="h-4 w-4" /> Ajouter une question
         </button>
 
-        {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+        {error && <p className="rounded-lg bg-red-500/10 p-3 text-sm text-red-500">{error}</p>}
 
         <button type="submit" disabled={submitting} className="btn-primary w-full disabled:opacity-50">
           {submitting ? "Envoi en cours..." : "Créer le sujet"}

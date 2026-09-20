@@ -195,8 +195,8 @@ export default function PracticeEo() {
         {state === "recording" && (
           <>
             <p className="font-mono text-3xl font-bold text-primary">{minutes}:{seconds.toString().padStart(2, "0")}</p>
-            <p className="flex items-center gap-2 text-sm text-red-600">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-red-600" /> Enregistrement en cours...
+            <p className="flex items-center gap-2 text-sm text-red-500">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" /> Enregistrement en cours...
             </p>
             <button type="button" onClick={stopRecording} className="btn-outline">
               <Square className="h-4 w-4" /> Arrêter
@@ -214,7 +214,7 @@ export default function PracticeEo() {
         )}
 
         {state === "error" && (
-          <p className="flex items-center gap-2 text-sm text-red-600">
+          <p className="flex items-center gap-2 text-sm text-red-500">
             <AlertTriangle className="h-4 w-4" /> {errorMessage}
           </p>
         )}

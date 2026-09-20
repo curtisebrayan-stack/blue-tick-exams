@@ -47,7 +47,7 @@ export default function ReinitialiserMotDePasse() {
           <span className="mt-1 block text-xs text-muted-foreground">6 caractères minimum.</span>
         </label>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-red-500">{error}</p>}
 
         <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-60">
           {loading ? "Mise à jour..." : "Mettre à jour le mot de passe"}
