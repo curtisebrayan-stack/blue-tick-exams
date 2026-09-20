@@ -6,6 +6,7 @@ import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
+import { AuthRequired } from "@/components/AuthRequired";
 import { useExamIntegrity } from "@/lib/examIntegrity";
 import NotFound from "./NotFound";
 
@@ -49,6 +50,7 @@ export default function PracticeCo() {
   if (!exercise) return <NotFound />;
 
   const locked = exercise.slug !== CO_FREE_SLUG && !isPremium && !isAdmin;
+  const blocked = !user || locked;
 
   const frenchVoice = voices.find((v) => v.lang.toLowerCase().startsWith("fr"));
 
@@ -95,7 +97,7 @@ export default function PracticeCo() {
         <Link to="/comprehension-orale" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
           <ArrowLeft className="h-4 w-4" /> Retour à l'épreuve
         </Link>
-        {!locked && !submitted && !fullscreenActive && (
+        {!blocked && !submitted && !fullscreenActive && (
           <button type="button" onClick={enterFullscreen} className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary">
             <Maximize className="h-3.5 w-3.5" /> Mode examen (plein écran)
           </button>
@@ -104,7 +106,7 @@ export default function PracticeCo() {
 
       <div className="mt-6 flex items-center justify-between">
         <span className="chip">Compréhension orale</span>
-        {!locked && !submitted && (
+        {!blocked && !submitted && (
           <span className={`font-mono text-xs ${elapsedSeconds > TIME_BUDGET_SECONDS ? "text-amber-500" : "text-muted-foreground"}`}>
             {Math.floor(elapsedSeconds / 60)}:{(elapsedSeconds % 60).toString().padStart(2, "0")}
           </span>
@@ -115,7 +117,9 @@ export default function PracticeCo() {
         Généré par synthèse vocale du navigateur — pas un enregistrement humain. La qualité de la voix dépend de ton appareil.
       </p>
 
-      {locked ? (
+      {!user ? (
+        <AuthRequired title={exercise.title} />
+      ) : locked ? (
         <PremiumUpsell title={exercise.title} />
       ) : (
         <>

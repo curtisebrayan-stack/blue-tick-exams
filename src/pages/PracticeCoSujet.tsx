@@ -6,6 +6,7 @@ import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
+import { AuthRequired } from "@/components/AuthRequired";
 import { useExamIntegrity } from "@/lib/examIntegrity";
 import NotFound from "./NotFound";
 
@@ -59,14 +60,14 @@ export default function PracticeCoSujet() {
 
   const locked = !sujet.isFree && !isPremium && !isAdmin;
 
-  if (locked) {
+  if (!user || locked) {
     return (
       <section className="mx-auto max-w-2xl px-4 py-16 sm:py-24">
         <Seo title={sujet.title} description={`Sujet pratique de compréhension orale TCF Canada : ${sujet.title}.`} />
         <Link to="/comprehension-orale" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
           <ArrowLeft className="h-4 w-4" /> Retour à l'épreuve
         </Link>
-        <PremiumUpsell title={sujet.title} />
+        {!user ? <AuthRequired title={sujet.title} /> : <PremiumUpsell title={sujet.title} />}
       </section>
     );
   }

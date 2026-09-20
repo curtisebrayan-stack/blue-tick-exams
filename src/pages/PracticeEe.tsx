@@ -6,6 +6,7 @@ import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
+import { AuthRequired } from "@/components/AuthRequired";
 import { useExamIntegrity } from "@/lib/examIntegrity";
 import NotFound from "./NotFound";
 
@@ -51,6 +52,7 @@ export default function PracticeEe() {
   if (!prompt) return <NotFound />;
 
   const locked = !prompt.isFree && !isPremium && !isAdmin;
+  const blocked = !user || locked;
 
   const inRange = wordCount >= prompt.minWords && wordCount <= prompt.maxWords;
 
@@ -96,7 +98,7 @@ export default function PracticeEe() {
         <Link to="/expression-ecrite" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
           <ArrowLeft className="h-4 w-4" /> Retour à l'épreuve
         </Link>
-        {!locked && !submitted && !fullscreenActive && (
+        {!blocked && !submitted && !fullscreenActive && (
           <button type="button" onClick={enterFullscreen} className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary">
             <Maximize className="h-3.5 w-3.5" /> Mode examen (plein écran)
           </button>
@@ -118,7 +120,9 @@ export default function PracticeEe() {
       <p className="mt-3 text-sm text-muted-foreground">{prompt.instructions}</p>
       <p className="mt-2 text-xs text-muted-foreground">Objectif : entre {prompt.minWords} et {prompt.maxWords} mots.</p>
 
-      {locked ? (
+      {!user ? (
+        <AuthRequired title={prompt.title} />
+      ) : locked ? (
         <PremiumUpsell title={prompt.title} />
       ) : (
         <>
