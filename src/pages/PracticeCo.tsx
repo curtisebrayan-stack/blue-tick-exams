@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Volume2, CheckCircle2, XCircle, Save, AlertTriangle, Maximize } from "lucide-react";
 import { getListeningExercise, CO_FREE_SLUG } from "@/lib/listeningExercises";
@@ -6,7 +6,7 @@ import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
-import { useExamIntegrity, shuffleOrder } from "@/lib/examIntegrity";
+import { useExamIntegrity } from "@/lib/examIntegrity";
 import NotFound from "./NotFound";
 
 const MAX_PLAYS = 2;
@@ -45,11 +45,6 @@ export default function PracticeCo() {
     const interval = setInterval(() => setElapsedSeconds((s) => s + 1), 1000);
     return () => clearInterval(interval);
   }, [submitted]);
-
-  const optionOrders = useMemo(() => {
-    if (!exercise) return [];
-    return exercise.questions.map((q) => shuffleOrder(q.options.length));
-  }, [exercise]);
 
   if (!exercise) return <NotFound />;
 
@@ -154,8 +149,7 @@ export default function PracticeCo() {
           <fieldset key={i} className="card-shell p-5">
             <legend className="px-1 text-sm font-semibold">{i + 1}. {q.question}</legend>
             <div className="mt-3 space-y-2">
-              {(optionOrders[i] ?? q.options.map((_, idx) => idx)).map((realIndex, visualIndex) => {
-                const option = q.options[realIndex];
+              {q.options.map((option, realIndex) => {
                 const isSelected = answers[i] === realIndex;
                 const isCorrect = realIndex === q.correctIndex;
                 const showFeedback = submitted;
@@ -177,7 +171,7 @@ export default function PracticeCo() {
                       checked={isSelected}
                       onChange={() => setAnswers((prev) => ({ ...prev, [i]: realIndex }))}
                     />
-                    <span className="font-bold">{String.fromCharCode(65 + visualIndex)}.</span> {option}
+                    <span className="font-bold">{String.fromCharCode(65 + realIndex)}.</span> {option}
                     {showFeedback && isCorrect && <CheckCircle2 className="ml-auto h-4 w-4 text-green-600" />}
                     {showFeedback && isSelected && !isCorrect && <XCircle className="ml-auto h-4 w-4 text-red-500" />}
                   </label>

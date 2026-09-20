@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Save, ArrowRight, AlertTriangle, Maximize, Headphones, Clock } from "lucide-react";
 import { getCoSujet, type CoSujet } from "@/lib/coSujets";
@@ -6,7 +6,7 @@ import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
-import { useExamIntegrity, shuffleOrder } from "@/lib/examIntegrity";
+import { useExamIntegrity } from "@/lib/examIntegrity";
 import NotFound from "./NotFound";
 
 const SLOW_ANSWER_SECONDS = 30;
@@ -41,11 +41,6 @@ export default function PracticeCoSujet() {
     };
   }, [slug]);
 
-  const optionOrders = useMemo(() => {
-    if (!sujet) return [];
-    return sujet.questions.map(() => shuffleOrder(4));
-  }, [sujet]);
-
   useEffect(() => {
     questionStartRef.current = Date.now();
   }, [currentIndex]);
@@ -79,7 +74,6 @@ export default function PracticeCoSujet() {
   const provisionalCount = sujet.questions.filter((q) => q.provisional).length;
 
   const question = sujet.questions[currentIndex];
-  const optionOrder = optionOrders[currentIndex] ?? [0, 1, 2, 3];
 
   const score = sujet.questions.reduce(
     (total, q) => (answers[q.number] === q.correctIndex ? total + 1 : total),
@@ -255,8 +249,7 @@ export default function PracticeCoSujet() {
         <legend className="px-1 text-sm font-semibold">Choisissez la bonne réponse</legend>
         {question.options ? (
           <div className="mt-3 space-y-2">
-            {optionOrder.map((realIndex, visualIndex) => {
-              const option = question.options![realIndex];
+            {question.options!.map((option, realIndex) => {
               const isSelected = answers[question.number] === realIndex;
               return (
                 <label
@@ -271,14 +264,14 @@ export default function PracticeCoSujet() {
                     checked={isSelected}
                     onChange={() => selectAnswer(realIndex)}
                   />
-                  <span className="font-bold">{String.fromCharCode(65 + visualIndex)}.</span> {option}
+                  <span className="font-bold">{String.fromCharCode(65 + realIndex)}.</span> {option}
                 </label>
               );
             })}
           </div>
         ) : (
           <div className="mt-3 grid grid-cols-4 gap-2">
-            {optionOrder.map((realIndex, visualIndex) => {
+            {[0, 1, 2, 3].map((realIndex) => {
               const isSelected = answers[question.number] === realIndex;
               return (
                 <button
@@ -289,7 +282,7 @@ export default function PracticeCoSujet() {
                     isSelected ? "border-primary bg-primary/5 text-primary" : "border-border"
                   }`}
                 >
-                  {String.fromCharCode(65 + visualIndex)}
+                  {String.fromCharCode(65 + realIndex)}
                 </button>
               );
             })}

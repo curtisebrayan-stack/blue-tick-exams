@@ -18,7 +18,7 @@ export default function Tarifs() {
         Le paiement en ligne arrive bientôt. Pour t'abonner à une formule Premium dès maintenant, contacte-nous directement.
       </div>
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-3">
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {PLANS.map((plan) => (
           <div
             key={plan.id}
@@ -33,7 +33,7 @@ export default function Tarifs() {
             </p>
             {plan.period && (
               <span className="mt-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-                <Clock className="h-3.5 w-3.5" /> Accès {plan.period === "/mois" ? "mensuel" : "annuel"}
+                <Clock className="h-3.5 w-3.5" /> Accès {plan.period.replace("/ ", "")}
               </span>
             )}
 

@@ -51,14 +51,3 @@ export function useExamIntegrity() {
 
   return { fullscreenActive, enterFullscreen, preventContextMenu, baseFlags };
 }
-
-// Mélange stable de l'ordre d'affichage des 4 choix, généré une fois par question et par
-// tentative — empêche de partager "la bonne réponse est toujours en position C".
-export function shuffleOrder(length: number): number[] {
-  const order = Array.from({ length }, (_, i) => i);
-  for (let i = order.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [order[i], order[j]] = [order[j], order[i]];
-  }
-  return order;
-}
