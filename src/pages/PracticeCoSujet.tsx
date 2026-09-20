@@ -201,7 +201,7 @@ export default function PracticeCoSujet() {
       </div>
 
       {/* Chrono — compte à rebours du temps total de l'épreuve (35 min), ne se réinitialise pas entre les questions */}
-      <div className="sticky top-3 z-20 mt-4 flex justify-end">
+      <div className="sticky top-20 z-20 mt-4 flex justify-end lg:top-28">
         <div className={`card-shell flex items-center gap-2 px-4 py-2 shadow-lg ${secondsRemaining <= 300 ? "border-amber-500/50" : ""}`}>
           <Clock className={`h-4 w-4 ${secondsRemaining <= 300 ? "text-amber-500" : "text-primary"}`} />
           <span className="font-mono text-sm font-bold">

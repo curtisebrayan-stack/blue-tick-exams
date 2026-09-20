@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { UserCircle, ArrowRight, Mic, PenLine } from "lucide-react";
+import { UserCircle, ArrowRight, Mic, PenLine, Lock, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/AuthContext";
 import { SKILL_LABELS, type TcfSkill } from "@/lib/nclc";
@@ -65,6 +65,36 @@ export default function Profil() {
   const [writings, setWritings] = useState<WritingSubmission[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
+  const [passwordSaving, setPasswordSaving] = useState(false);
+
+  const handlePasswordChange = async (e: FormEvent) => {
+    e.preventDefault();
+    setPasswordError(null);
+    setPasswordSuccess(false);
+    if (newPassword.length < 6) {
+      setPasswordError("Le mot de passe doit contenir au moins 6 caractères.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError("Les deux mots de passe ne correspondent pas.");
+      return;
+    }
+    setPasswordSaving(true);
+    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+    setPasswordSaving(false);
+    if (updateError) {
+      setPasswordError(updateError.message);
+      return;
+    }
+    setNewPassword("");
+    setConfirmPassword("");
+    setPasswordSuccess(true);
+  };
+
   useEffect(() => {
     if (!user) return;
     supabase
@@ -111,6 +141,46 @@ export default function Profil() {
       <span className="chip"><UserCircle className="h-3.5 w-3.5" /> Compte</span>
       <h1 className="mt-4 text-3xl font-bold sm:text-5xl">Ma progression</h1>
       <p className="mt-4 text-sm text-muted-foreground">{user?.email}</p>
+
+      <div className="mt-10 card-shell p-6">
+        <h2 className="flex items-center gap-2 text-lg font-bold">
+          <Lock className="h-4 w-4 text-primary" /> Sécurité
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">Change ton mot de passe.</p>
+        <form onSubmit={handlePasswordChange} className="mt-4 grid gap-4 sm:grid-cols-2">
+          <label className="block">
+            <span className="text-sm font-semibold">Nouveau mot de passe</span>
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            />
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold">Confirmer le mot de passe</span>
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            />
+          </label>
+          {passwordError && <p className="text-sm text-red-500 sm:col-span-2">{passwordError}</p>}
+          {passwordSuccess && (
+            <p className="flex items-center gap-1.5 text-sm text-green-600 sm:col-span-2">
+              <CheckCircle2 className="h-4 w-4" /> Mot de passe mis à jour.
+            </p>
+          )}
+          <button type="submit" disabled={passwordSaving} className="btn-primary sm:col-span-2 sm:w-fit disabled:opacity-60">
+            {passwordSaving ? "Enregistrement..." : "Mettre à jour le mot de passe"}
+          </button>
+        </form>
+      </div>
 
       <div className="mt-10">
         {error && <p className="text-sm text-red-600">{error}</p>}
