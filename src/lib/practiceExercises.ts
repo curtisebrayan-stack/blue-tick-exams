@@ -110,3 +110,30 @@ export async function deleteCeExercise(id: string): Promise<void> {
   const { error } = await supabase.from("ce_exercises").delete().eq("id", id);
   if (error) throw error;
 }
+
+export async function updateCeExercise(
+  id: string,
+  title: string,
+  text: string,
+  isFree: boolean,
+  questions: NewCeQuestion[],
+): Promise<void> {
+  const { error: exerciseError } = await supabase
+    .from("ce_exercises")
+    .update({ title, text, is_free: isFree })
+    .eq("id", id);
+  if (exerciseError) throw exerciseError;
+
+  const { error: deleteError } = await supabase.from("ce_questions").delete().eq("exercise_id", id);
+  if (deleteError) throw deleteError;
+
+  const rows = questions.map((q, i) => ({
+    exercise_id: id,
+    number: i + 1,
+    question: q.question,
+    options: q.options,
+    correct_index: q.correctIndex,
+  }));
+  const { error: questionsError } = await supabase.from("ce_questions").insert(rows);
+  if (questionsError) throw questionsError;
+}

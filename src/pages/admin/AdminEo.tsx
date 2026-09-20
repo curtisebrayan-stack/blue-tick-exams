@@ -32,6 +32,7 @@ export default function AdminEo() {
       <AdminContentList
         items={items}
         viewPathPrefix="/expression-orale"
+        editPathPrefix="/admin/eo/modifier"
         newPath="/admin/eo/nouveau"
         onDelete={handleDelete}
         deletingId={deletingId}

@@ -32,6 +32,7 @@ export default function AdminSujets() {
       <AdminContentList
         items={sujets}
         viewPathPrefix="/comprehension-orale/examens"
+        editPathPrefix="/admin/sujets/modifier"
         newPath="/admin/sujets/nouveau"
         onDelete={handleDelete}
         deletingId={deletingId}

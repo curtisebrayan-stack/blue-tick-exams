@@ -32,6 +32,7 @@ export default function AdminEe() {
       <AdminContentList
         items={items}
         viewPathPrefix="/expression-ecrite"
+        editPathPrefix="/admin/ee/modifier"
         newPath="/admin/ee/nouveau"
         onDelete={handleDelete}
         deletingId={deletingId}

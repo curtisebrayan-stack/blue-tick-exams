@@ -32,6 +32,7 @@ export default function AdminCe() {
       <AdminContentList
         items={items}
         viewPathPrefix="/comprehension-ecrite"
+        editPathPrefix="/admin/ce/modifier"
         newPath="/admin/ce/nouveau"
         onDelete={handleDelete}
         deletingId={deletingId}

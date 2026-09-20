@@ -1,17 +1,19 @@
 import { Link } from "react-router-dom";
-import { Plus, Trash2, ExternalLink } from "lucide-react";
+import { Plus, Trash2, ExternalLink, Pencil } from "lucide-react";
 
 type Item = { id: string; slug: string; title: string; isFree?: boolean };
 
 export function AdminContentList<T extends Item>({
   items,
   viewPathPrefix,
+  editPathPrefix,
   newPath,
   onDelete,
   deletingId,
 }: {
   items: T[] | null;
   viewPathPrefix: string;
+  editPathPrefix: string;
   newPath: string;
   onDelete: (id: string, title: string) => void;
   deletingId: string | null;
@@ -52,6 +54,9 @@ export function AdminContentList<T extends Item>({
                   className="btn-outline !px-3 !py-2 text-xs"
                 >
                   <ExternalLink className="h-3.5 w-3.5" /> Voir
+                </Link>
+                <Link to={`${editPathPrefix}/${item.slug}`} className="btn-outline !px-3 !py-2 text-xs">
+                  <Pencil className="h-3.5 w-3.5" /> Modifier
                 </Link>
                 <button
                   type="button"

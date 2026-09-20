@@ -137,3 +137,56 @@ export async function deleteCoSujet(id: string): Promise<void> {
   const { error } = await supabase.from("co_sujets").delete().eq("id", id);
   if (error) throw error;
 }
+
+export type EditableCoQuestion = {
+  number: number;
+  existingAudioUrl: string;
+  existingImageUrl: string | null;
+  newAudioFile: File | null;
+  newImageFile: File | null;
+  options: string[] | null;
+  correctIndex: number;
+};
+
+export async function updateCoSujet(
+  id: string,
+  slug: string,
+  title: string,
+  isFree: boolean,
+  questions: EditableCoQuestion[],
+): Promise<void> {
+  const { error: sujetError } = await supabase
+    .from("co_sujets")
+    .update({ title, is_free: isFree })
+    .eq("id", id);
+  if (sujetError) throw sujetError;
+
+  for (const q of questions) {
+    let audioUrl = q.existingAudioUrl;
+    if (q.newAudioFile) {
+      const audioPath = `${slug}/audio/Q${q.number}.${fileExtension(q.newAudioFile.name)}`;
+      const { error } = await supabase.storage
+        .from("co-content")
+        .upload(audioPath, q.newAudioFile, { upsert: true, cacheControl: "31536000" });
+      if (error) throw error;
+      audioUrl = supabase.storage.from("co-content").getPublicUrl(audioPath).data.publicUrl;
+    }
+
+    let imageUrl = q.existingImageUrl;
+    if (q.newImageFile) {
+      const imagePath = `${slug}/images/Q${q.number}.${fileExtension(q.newImageFile.name)}`;
+      const { error } = await supabase.storage
+        .from("co-content")
+        .upload(imagePath, q.newImageFile, { upsert: true, cacheControl: "31536000" });
+      if (error) throw error;
+      imageUrl = supabase.storage.from("co-content").getPublicUrl(imagePath).data.publicUrl;
+    }
+
+    const { error: questionError } = await supabase
+      .from("co_questions")
+      .update({ audio_url: audioUrl, image_url: imageUrl, options: q.options, correct_index: q.correctIndex })
+      .eq("sujet_id", id)
+      .eq("number", q.number);
+    if (questionError) throw questionError;
+  }
+}

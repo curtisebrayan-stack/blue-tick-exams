@@ -90,3 +90,28 @@ export async function deleteEePrompt(id: string): Promise<void> {
   const { error } = await supabase.from("ee_prompts").delete().eq("id", id);
   if (error) throw error;
 }
+
+export async function updateEePrompt(
+  id: string,
+  input: {
+    title: string;
+    instructions: string;
+    minWords: number;
+    maxWords: number;
+    checklist: string[];
+    isFree: boolean;
+  },
+): Promise<void> {
+  const { error } = await supabase
+    .from("ee_prompts")
+    .update({
+      title: input.title,
+      instructions: input.instructions,
+      min_words: input.minWords,
+      max_words: input.maxWords,
+      checklist: input.checklist,
+      is_free: input.isFree,
+    })
+    .eq("id", id);
+  if (error) throw error;
+}

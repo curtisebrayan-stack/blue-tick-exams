@@ -4,13 +4,17 @@ import { RequireAuth } from "@/components/RequireAuth";
 import { RequireAdmin } from "@/components/RequireAdmin";
 import AdminSujets from "@/pages/admin/AdminSujets";
 import AdminSujetNouveau from "@/pages/admin/AdminSujetNouveau";
+import AdminSujetModifier from "@/pages/admin/AdminSujetModifier";
 import AdminConnexions from "@/pages/admin/AdminConnexions";
 import AdminCe from "@/pages/admin/AdminCe";
 import AdminCeNouveau from "@/pages/admin/AdminCeNouveau";
+import AdminCeModifier from "@/pages/admin/AdminCeModifier";
 import AdminEo from "@/pages/admin/AdminEo";
 import AdminEoNouveau from "@/pages/admin/AdminEoNouveau";
+import AdminEoModifier from "@/pages/admin/AdminEoModifier";
 import AdminEe from "@/pages/admin/AdminEe";
 import AdminEeNouveau from "@/pages/admin/AdminEeNouveau";
+import AdminEeModifier from "@/pages/admin/AdminEeModifier";
 import AdminIntegrite from "@/pages/admin/AdminIntegrite";
 import AdminMessages from "@/pages/admin/AdminMessages";
 import Home from "@/pages/Home";
@@ -58,13 +62,17 @@ export default function App() {
         <Route path="profil" element={<RequireAuth><Profil /></RequireAuth>} />
         <Route path="admin" element={<RequireAdmin><AdminSujets /></RequireAdmin>} />
         <Route path="admin/sujets/nouveau" element={<RequireAdmin><AdminSujetNouveau /></RequireAdmin>} />
+        <Route path="admin/sujets/modifier/:slug" element={<RequireAdmin><AdminSujetModifier /></RequireAdmin>} />
         <Route path="admin/connexions" element={<RequireAdmin><AdminConnexions /></RequireAdmin>} />
         <Route path="admin/ce" element={<RequireAdmin><AdminCe /></RequireAdmin>} />
         <Route path="admin/ce/nouveau" element={<RequireAdmin><AdminCeNouveau /></RequireAdmin>} />
+        <Route path="admin/ce/modifier/:slug" element={<RequireAdmin><AdminCeModifier /></RequireAdmin>} />
         <Route path="admin/eo" element={<RequireAdmin><AdminEo /></RequireAdmin>} />
         <Route path="admin/eo/nouveau" element={<RequireAdmin><AdminEoNouveau /></RequireAdmin>} />
+        <Route path="admin/eo/modifier/:slug" element={<RequireAdmin><AdminEoModifier /></RequireAdmin>} />
         <Route path="admin/ee" element={<RequireAdmin><AdminEe /></RequireAdmin>} />
         <Route path="admin/ee/nouveau" element={<RequireAdmin><AdminEeNouveau /></RequireAdmin>} />
+        <Route path="admin/ee/modifier/:slug" element={<RequireAdmin><AdminEeModifier /></RequireAdmin>} />
         <Route path="admin/integrite" element={<RequireAdmin><AdminIntegrite /></RequireAdmin>} />
         <Route path="admin/messages" element={<RequireAdmin><AdminMessages /></RequireAdmin>} />
         <Route path="connexion" element={<Connexion />} />
