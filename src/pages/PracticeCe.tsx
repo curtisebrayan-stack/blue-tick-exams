@@ -26,6 +26,12 @@ export default function PracticeCe() {
   const { fullscreenActive, enterFullscreen, preventContextMenu, baseFlags } = useExamIntegrity();
 
   useEffect(() => {
+    setExercise(undefined);
+    setAnswers({});
+    setSubmitted(false);
+    setSaveState("idle");
+    setElapsedSeconds(0);
+
     if (!slug) {
       setExercise(null);
       return;

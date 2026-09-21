@@ -36,6 +36,17 @@ export default function PracticeCoSujet() {
   const questionStartRef = useRef(Date.now());
 
   useEffect(() => {
+    setSujet(undefined);
+    setCurrentIndex(0);
+    setAnswers({});
+    setFinished(false);
+    setSaveState("idle");
+    setSecondsRemaining(TOTAL_DURATION_SECONDS);
+    setFinalTimeUsed(0);
+    setImageLoaded(false);
+    slowAnswersRef.current = 0;
+    questionStartRef.current = Date.now();
+
     if (!slug) {
       setSujet(null);
       return;

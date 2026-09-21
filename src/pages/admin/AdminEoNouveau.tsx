@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Trash2, ArrowLeft } from "lucide-react";
 import { Seo } from "@/components/Seo";
@@ -16,12 +16,26 @@ function StringListEditor({
   onChange: (items: string[]) => void;
   placeholder: string;
 }) {
+  const keysRef = useRef<string[]>([]);
+  if (keysRef.current.length !== items.length) {
+    keysRef.current = items.map((_, i) => keysRef.current[i] ?? crypto.randomUUID());
+  }
+
+  const removeAt = (i: number) => {
+    keysRef.current = keysRef.current.filter((_, idx) => idx !== i);
+    onChange(items.filter((_, idx) => idx !== i));
+  };
+  const addItem = () => {
+    keysRef.current = [...keysRef.current, crypto.randomUUID()];
+    onChange([...items, ""]);
+  };
+
   return (
     <div>
       <p className="text-sm font-semibold">{label}</p>
       <div className="mt-2 space-y-2">
         {items.map((item, i) => (
-          <div key={i} className="flex items-center gap-2">
+          <div key={keysRef.current[i]} className="flex items-center gap-2">
             <input
               type="text"
               value={item}
@@ -30,14 +44,14 @@ function StringListEditor({
               className="flex-1 rounded-lg border border-border px-3 py-2 text-sm"
             />
             {items.length > 1 && (
-              <button type="button" onClick={() => onChange(items.filter((_, idx) => idx !== i))} className="text-red-500">
+              <button type="button" onClick={() => removeAt(i)} className="text-red-500">
                 <Trash2 className="h-4 w-4" />
               </button>
             )}
           </div>
         ))}
       </div>
-      <button type="button" onClick={() => onChange([...items, ""])} className="mt-2 text-xs font-semibold text-primary">
+      <button type="button" onClick={addItem} className="mt-2 text-xs font-semibold text-primary">
         <Plus className="mr-1 inline h-3.5 w-3.5" /> Ajouter une ligne
       </button>
     </div>

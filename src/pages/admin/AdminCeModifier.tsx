@@ -6,6 +6,7 @@ import { getPracticeExercise, updateCeExercise, type PracticeExercise, type NewC
 import NotFound from "@/pages/NotFound";
 
 type QuestionDraft = {
+  _key: string;
   question: string;
   options: [string, string, string, string];
   correctIndex: number;
@@ -35,6 +36,7 @@ export default function AdminCeModifier() {
         setIsFree(result.isFree);
         setQuestions(
           result.questions.map((q) => ({
+            _key: crypto.randomUUID(),
             question: q.question,
             options: q.options as [string, string, string, string],
             correctIndex: q.correctIndex,
@@ -59,7 +61,8 @@ export default function AdminCeModifier() {
     );
   };
 
-  const addQuestion = () => setQuestions((prev) => [...prev, { question: "", options: ["", "", "", ""], correctIndex: 0 }]);
+  const addQuestion = () =>
+    setQuestions((prev) => [...prev, { _key: crypto.randomUUID(), question: "", options: ["", "", "", ""], correctIndex: 0 }]);
   const removeQuestion = (index: number) => setQuestions((prev) => prev.filter((_, i) => i !== index));
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -133,7 +136,7 @@ export default function AdminCeModifier() {
         </div>
 
         {questions.map((q, index) => (
-          <div key={index} className="card-shell space-y-3 p-5">
+          <div key={q._key} className="card-shell space-y-3 p-5">
             <div className="flex items-center justify-between">
               <h2 className="font-semibold">Question {index + 1}</h2>
               {questions.length > 1 && (

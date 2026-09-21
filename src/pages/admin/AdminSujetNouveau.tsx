@@ -6,6 +6,7 @@ import { createCoSujet, type NewCoQuestion } from "@/lib/coSujets";
 import { slugifyTitle } from "@/lib/slug";
 
 type QuestionDraft = {
+  _key: string;
   audioFile: File | null;
   imageFile: File | null;
   options: [string, string, string, string];
@@ -14,7 +15,7 @@ type QuestionDraft = {
 };
 
 function emptyQuestion(): QuestionDraft {
-  return { audioFile: null, imageFile: null, options: ["", "", "", ""], hasOptions: true, correctIndex: 0 };
+  return { _key: crypto.randomUUID(), audioFile: null, imageFile: null, options: ["", "", "", ""], hasOptions: true, correctIndex: 0 };
 }
 
 export default function AdminSujetNouveau() {
@@ -130,7 +131,7 @@ export default function AdminSujetNouveau() {
         </div>
 
         {questions.map((q, index) => (
-          <div key={index} className="card-shell space-y-3 p-5">
+          <div key={q._key} className="card-shell space-y-3 p-5">
             <div className="flex items-center justify-between">
               <h2 className="font-semibold">Question {index + 1}</h2>
               {questions.length > 1 && (

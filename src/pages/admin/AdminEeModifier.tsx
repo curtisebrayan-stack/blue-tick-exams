@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Plus, Trash2, ArrowLeft } from "lucide-react";
 import { Seo } from "@/components/Seo";
@@ -17,6 +17,11 @@ export default function AdminEeModifier() {
   const [isFree, setIsFree] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const checklistKeysRef = useRef<string[]>([]);
+  if (checklistKeysRef.current.length !== checklist.length) {
+    checklistKeysRef.current = checklist.map((_, i) => checklistKeysRef.current[i] ?? crypto.randomUUID());
+  }
 
   useEffect(() => {
     if (!slug) {
@@ -38,6 +43,16 @@ export default function AdminEeModifier() {
 
   const updateChecklistItem = (i: number, value: string) => {
     setChecklist((prev) => prev.map((v, idx) => (idx === i ? value : v)));
+  };
+
+  const removeChecklistItem = (i: number) => {
+    checklistKeysRef.current = checklistKeysRef.current.filter((_, idx) => idx !== i);
+    setChecklist((prev) => prev.filter((_, idx) => idx !== i));
+  };
+
+  const addChecklistItem = () => {
+    checklistKeysRef.current = [...checklistKeysRef.current, crypto.randomUUID()];
+    setChecklist((prev) => [...prev, ""]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -148,7 +163,7 @@ export default function AdminEeModifier() {
           <p className="text-sm font-semibold">Grille d'auto-relecture</p>
           <div className="mt-2 space-y-2">
             {checklist.map((item, i) => (
-              <div key={i} className="flex items-center gap-2">
+              <div key={checklistKeysRef.current[i]} className="flex items-center gap-2">
                 <input
                   type="text"
                   value={item}
@@ -159,7 +174,7 @@ export default function AdminEeModifier() {
                 {checklist.length > 1 && (
                   <button
                     type="button"
-                    onClick={() => setChecklist((prev) => prev.filter((_, idx) => idx !== i))}
+                    onClick={() => removeChecklistItem(i)}
                     className="text-red-500"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -170,7 +185,7 @@ export default function AdminEeModifier() {
           </div>
           <button
             type="button"
-            onClick={() => setChecklist((prev) => [...prev, ""])}
+            onClick={addChecklistItem}
             className="mt-2 text-xs font-semibold text-primary"
           >
             <Plus className="mr-1 inline h-3.5 w-3.5" /> Ajouter une ligne

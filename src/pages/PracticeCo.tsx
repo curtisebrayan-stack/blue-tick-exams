@@ -48,6 +48,17 @@ export default function PracticeCo() {
     return () => clearInterval(interval);
   }, [submitted]);
 
+  useEffect(() => {
+    if (speechSupported) window.speechSynthesis.cancel();
+    setPlayCount(0);
+    setIsSpeaking(false);
+    setAnswers({});
+    setSubmitted(false);
+    setSaveState("idle");
+    setElapsedSeconds(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
+
   if (!exercise) return <NotFound />;
 
   const locked = exercise.slug !== CO_FREE_SLUG && !isPremium && !isAdmin;

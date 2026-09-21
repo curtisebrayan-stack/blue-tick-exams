@@ -34,6 +34,17 @@ export default function PracticeEo() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
+    setPrompt(undefined);
+    setState("idle");
+    setErrorMessage(null);
+    setSaveState("idle");
+    setAudioUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    if (timerRef.current) clearInterval(timerRef.current);
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+
     if (!slug) {
       setPrompt(null);
       return;
