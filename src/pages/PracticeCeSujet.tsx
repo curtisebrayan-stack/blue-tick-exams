@@ -231,6 +231,10 @@ export default function PracticeCeSujet() {
         className="mt-6 w-full rounded-2xl border border-border object-cover"
       />
 
+      <div className="mt-4 rounded-xl border-2 p-4 text-center" style={{ borderColor: "var(--ce)" }}>
+        <p className="font-display text-base font-bold">{item.question}</p>
+      </div>
+
       <fieldset className="card-shell mt-6 p-5">
         <legend className="px-1 text-sm font-semibold">Choisissez la bonne réponse</legend>
         <div className="mt-3 space-y-2">

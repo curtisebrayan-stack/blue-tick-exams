@@ -8,6 +8,7 @@ import { supabase } from "./supabase";
 export type CeItem = {
   number: number;
   image: string;
+  question: string;
   options: string[];
   correctIndex: number;
 };
@@ -47,7 +48,7 @@ export async function getCeSujet(slug: string): Promise<CeSujet | undefined> {
 
   const { data: items, error: itemsError } = await supabase
     .from("ce_items")
-    .select("number, image_url, options, correct_index")
+    .select("number, image_url, question, options, correct_index")
     .eq("sujet_id", sujet.id)
     .order("number", { ascending: true });
   if (itemsError) throw itemsError;
@@ -60,6 +61,7 @@ export async function getCeSujet(slug: string): Promise<CeSujet | undefined> {
     items: (items ?? []).map((it) => ({
       number: it.number,
       image: it.image_url,
+      question: it.question,
       options: it.options as string[],
       correctIndex: it.correct_index,
     })),
@@ -69,6 +71,7 @@ export async function getCeSujet(slug: string): Promise<CeSujet | undefined> {
 export type NewCeItem = {
   number: number;
   imageFile: File;
+  question: string;
   options: string[];
   correctIndex: number;
 };
@@ -107,6 +110,7 @@ export async function createCeSujet(
       sujet_id: sujet.id,
       number: it.number,
       image_url: imageUrl,
+      question: it.question,
       options: it.options,
       correct_index: it.correctIndex,
     });
@@ -120,6 +124,7 @@ export type EditableCeItem = {
   number: number;
   existingImageUrl: string;
   newImageFile: File | null;
+  question: string;
   options: string[];
   correctIndex: number;
 };
@@ -150,7 +155,7 @@ export async function updateCeSujet(
 
     const { error: itemError } = await supabase
       .from("ce_items")
-      .update({ image_url: imageUrl, options: it.options, correct_index: it.correctIndex })
+      .update({ image_url: imageUrl, question: it.question, options: it.options, correct_index: it.correctIndex })
       .eq("sujet_id", id)
       .eq("number", it.number);
     if (itemError) throw itemError;

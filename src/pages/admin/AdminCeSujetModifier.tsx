@@ -9,6 +9,7 @@ type ItemDraft = {
   number: number;
   existingImageUrl: string;
   newImageFile: File | null;
+  question: string;
   options: string[];
   correctIndex: number;
 };
@@ -38,6 +39,7 @@ export default function AdminCeSujetModifier() {
             number: it.number,
             existingImageUrl: it.image,
             newImageFile: null,
+            question: it.question,
             options: it.options,
             correctIndex: it.correctIndex,
           })),
@@ -76,6 +78,7 @@ export default function AdminCeSujetModifier() {
         number: it.number,
         existingImageUrl: it.existingImageUrl,
         newImageFile: it.newImageFile,
+        question: it.question,
         options: it.options,
         correctIndex: it.correctIndex,
       }));
@@ -131,6 +134,16 @@ export default function AdminCeSujetModifier() {
                 accept="image/*"
                 onChange={(e) => updateItem(index, { newImageFile: e.target.files?.[0] ?? null })}
                 className="mt-1 w-full text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground">Question</label>
+              <input
+                type="text"
+                value={it.question}
+                onChange={(e) => updateItem(index, { question: e.target.value })}
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
               />
             </div>
 

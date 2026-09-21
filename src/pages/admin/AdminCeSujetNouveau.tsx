@@ -7,12 +7,13 @@ import { slugifyTitle } from "@/lib/slug";
 
 type ItemDraft = {
   imageFile: File | null;
+  question: string;
   options: [string, string, string, string];
   correctIndex: number;
 };
 
 function emptyItem(): ItemDraft {
-  return { imageFile: null, options: ["", "", "", ""], correctIndex: 0 };
+  return { imageFile: null, question: "", options: ["", "", "", ""], correctIndex: 0 };
 }
 
 export default function AdminCeSujetNouveau() {
@@ -65,6 +66,10 @@ export default function AdminCeSujetNouveau() {
         setError(`Question ${i + 1} : l'image du document est obligatoire.`);
         return;
       }
+      if (!it.question.trim()) {
+        setError(`Question ${i + 1} : le texte de la question est obligatoire.`);
+        return;
+      }
       if (it.options.some((o) => !o.trim())) {
         setError(`Question ${i + 1} : remplis les 4 choix de réponse.`);
         return;
@@ -76,6 +81,7 @@ export default function AdminCeSujetNouveau() {
       const payload: NewCeItem[] = items.map((it, i) => ({
         number: i + 1,
         imageFile: it.imageFile as File,
+        question: it.question,
         options: it.options,
         correctIndex: it.correctIndex,
       }));
@@ -144,6 +150,17 @@ export default function AdminCeSujetNouveau() {
                 accept="image/*"
                 onChange={(e) => updateItem(index, { imageFile: e.target.files?.[0] ?? null })}
                 className="mt-1 w-full text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground">Question (ex: "Qu'est-ce que Patrick fait chez Louise ?")</label>
+              <input
+                type="text"
+                value={it.question}
+                onChange={(e) => updateItem(index, { question: e.target.value })}
+                placeholder="Texte de la question"
+                className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm"
               />
             </div>
 
