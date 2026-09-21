@@ -168,7 +168,7 @@ export default function PracticeCeSujet() {
             </p>
           )}
 
-          <div className="mt-6 grid grid-cols-8 gap-2 sm:grid-cols-13">
+          <div className="mt-6 grid grid-cols-6 gap-1.5 sm:grid-cols-8 md:grid-cols-13">
             {sujet.items.map((it) => {
               const answered = answers[it.number];
               const correct = answered === it.correctIndex;
@@ -244,18 +244,18 @@ export default function PracticeCeSujet() {
         <RealExamModeToggle checked={realExamMode} onChange={setRealExamMode} scope="CE" />
       </div>
 
-      <div className="sticky top-20 z-20 mt-4 flex justify-end gap-2 lg:top-28">
+      <div className="sticky top-20 z-20 mt-4 flex flex-wrap justify-end gap-2 lg:top-28">
         {realExamMode && (
-          <div className={`card-shell flex items-center gap-2 px-4 py-2 shadow-lg ${perQuestionSecondsLeft <= 5 ? "border-amber-500/50" : ""}`}>
-            <Clock className={`h-4 w-4 ${perQuestionSecondsLeft <= 5 ? "text-amber-500" : "text-accent"}`} />
-            <span className="font-mono text-sm font-bold">
-              Question : {Math.floor(perQuestionSecondsLeft / 60)}:{(perQuestionSecondsLeft % 60).toString().padStart(2, "0")}
+          <div className={`card-shell flex items-center gap-1.5 px-3 py-1.5 shadow-lg sm:px-4 sm:py-2 ${perQuestionSecondsLeft <= 5 ? "border-amber-500/50" : ""}`}>
+            <Clock className={`h-4 w-4 shrink-0 ${perQuestionSecondsLeft <= 5 ? "text-amber-500" : "text-accent"}`} />
+            <span className="font-mono text-xs font-bold sm:text-sm">
+              Q : {Math.floor(perQuestionSecondsLeft / 60)}:{(perQuestionSecondsLeft % 60).toString().padStart(2, "0")}
             </span>
           </div>
         )}
-        <div className={`card-shell flex items-center gap-2 px-4 py-2 shadow-lg ${secondsRemaining <= 300 ? "border-amber-500/50" : ""}`}>
-          <Clock className={`h-4 w-4 ${secondsRemaining <= 300 ? "text-amber-500" : "text-primary"}`} />
-          <span className="font-mono text-sm font-bold">
+        <div className={`card-shell flex items-center gap-1.5 px-3 py-1.5 shadow-lg sm:px-4 sm:py-2 ${secondsRemaining <= 300 ? "border-amber-500/50" : ""}`}>
+          <Clock className={`h-4 w-4 shrink-0 ${secondsRemaining <= 300 ? "text-amber-500" : "text-primary"}`} />
+          <span className="font-mono text-xs font-bold sm:text-sm">
             {Math.floor(secondsRemaining / 60)}:{(secondsRemaining % 60).toString().padStart(2, "0")}
           </span>
         </div>
@@ -319,14 +319,14 @@ export default function PracticeCeSujet() {
           Navigation des questions
           {realExamMode && <span className="ml-2 text-xs font-normal text-muted-foreground">(bloquée en mode examen réel)</span>}
         </p>
-        <div className="mt-4 grid grid-cols-8 gap-2 sm:grid-cols-13">
+        <div className="mt-4 grid grid-cols-6 gap-1.5 sm:grid-cols-8 md:grid-cols-13">
           {sujet.items.map((it, i) => (
             <button
               type="button"
               key={it.number}
               onClick={() => goTo(i)}
               disabled={realExamMode}
-              className={`grid h-9 place-items-center rounded-lg text-xs font-bold transition disabled:cursor-not-allowed disabled:opacity-50 ${
+              className={`grid h-10 place-items-center rounded-lg text-xs font-bold transition disabled:cursor-not-allowed disabled:opacity-50 ${
                 i === currentIndex
                   ? "bg-accent text-accent-foreground"
                   : answers[it.number] !== undefined

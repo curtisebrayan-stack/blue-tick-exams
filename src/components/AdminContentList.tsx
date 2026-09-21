@@ -46,7 +46,7 @@ export function AdminContentList<T extends Item>({
                 </p>
                 <p className="text-xs text-muted-foreground">/{item.slug}</p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Link
                   to={`${viewPathPrefix}/${item.slug}`}
                   target="_blank"
