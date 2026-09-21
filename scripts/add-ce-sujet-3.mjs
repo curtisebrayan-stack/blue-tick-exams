@@ -1,7 +1,4 @@
-// Ajout ponctuel du Sujet 3 de Compréhension Écrite (format examen).
-// Q36 est absente : le fichier source du client ne contient pas le texte de la
-// question (seulement les 4 choix et la réponse). À ajouter plus tard via l'admin
-// une fois le texte fourni par le client.
+// Ajout ponctuel du Sujet 3 de Compréhension Écrite (format examen, 39 questions).
 // Usage : node --env-file=.env --env-file=.env.migration scripts/add-ce-sujet-3.mjs
 
 import { createClient } from "@supabase/supabase-js";
@@ -53,7 +50,7 @@ const QUESTIONS = {
   33: "Quel constat dresse le journaliste à propos de la réforme des rythmes scolaires ?",
   34: "Quel est l'atout principal de cette discipline artistique ?",
   35: "En adoptant la cooptation pour le recrutement, que recherchent les entreprises ?",
-  // 36 : texte de la question manquant dans le fichier source du client.
+  36: "Selon l'intervenant, qu'est-ce qui caractérise le discours écologique actuel ?",
   37: "D'après cet extrait, quelle est la plus grande qualité du Bon Usage ?",
   38: "Que pense cet écrivain de la lecture publique d'un roman par son auteur ?",
   39: "Selon l'article, que va faire l'équipage du voilier la Boudeuse ?",
@@ -95,6 +92,7 @@ const OPTIONS = {
   33: ["Les familles sont opposées à toute modification.", "Les impacts financiers demeurent incontournables.", "Les intérêts du jeu sont difficilement compatibles.", "Les opinions des experts sont tout antant désaccord."],
   34: ["Donner une dimension nouvelle aux lieux mis en scène.", "Permettre la réhabilitation des monuments historiques.", "Transformer de manière durable les bâtiments urbains.", "Rénover techniquement des œuvres urbaines détruites."],
   35: ["À gagner du temps.", "À minimiser les aléas.", "À réduire les frais.", "À simplifier les procédures."],
+  36: ["Il apaise les tensions de la société.", "Il insiste sur le point de vue matériel.", "Il propose des programmes utopiques.", "Il traite les problèmes liés aux sols."],
   37: ["Il est complet.", "Il est concis.", "Il est innovant.", "Il est infaillible."],
   38: ["Elle demande de posséder des talents d'acteur.", "Elle dessert le travail d'écriture du romancier.", "Elle est particulièrement adaptée au public citadin.", "Elle rend les émissions littéraires plus intéressantes."],
   39: ["Former des scientifiques à la prévention des risques écologiques.", "Innover dans les moyens de lutter contre les pollutions fluviales.", "Observer l'écosystème dans une région de grands fleuves.", "Représenter le gouvernement français lors d'une rencontre."],
@@ -104,7 +102,7 @@ const ANSWERS = {
   1: "D", 2: "C", 3: "A", 4: "D", 5: "C", 6: "A", 7: "D", 8: "B", 9: "A", 10: "A",
   11: "A", 12: "C", 13: "C", 14: "B", 15: "B", 16: "C", 17: "A", 18: "C", 19: "D", 20: "C",
   21: "B", 22: "D", 23: "B", 24: "A", 25: "A", 26: "D", 27: "D", 28: "A", 29: "B", 30: "B",
-  31: "C", 32: "B", 33: "C", 34: "A", 35: "B",
+  31: "C", 32: "B", 33: "C", 34: "A", 35: "B", 36: "B",
   37: "A", 38: "B", 39: "C",
 };
 
@@ -164,7 +162,7 @@ async function main() {
 
     process.stdout.write(`\rQuestion ${number}/39 ajoutée`);
   }
-  console.log(`\nSujet 3 CE : ${numbers.length}/39 questions ajoutées (Q36 en attente du texte de la question).`);
+  console.log(`\nSujet 3 CE : ${numbers.length}/39 questions ajoutées.`);
   process.exit(0);
 }
 
