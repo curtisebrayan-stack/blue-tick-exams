@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import {
   Headphones, BookOpen, Mic, PenLine, Calculator, ArrowRight,
   Target, ListChecks, Smartphone,
-  Layers,
+  Layers, Landmark, ExternalLink,
 } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { ARTICLES } from "@/lib/blog";
@@ -153,6 +153,29 @@ export default function Home() {
             <p className="mt-2 max-w-md text-sm text-muted-foreground">Estime ton niveau NCLC à partir de tes résultats aux quatre épreuves du TCF Canada.</p>
           </div>
           <Link to="/calculatrice-nclc" className="btn-primary shrink-0">Calculer mon NCLC</Link>
+        </div>
+      </section>
+
+      {/* INFOS OFFICIELLES IRCC */}
+      <section className="bg-muted">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+          <div className="card-shell flex flex-col items-start gap-4 p-8 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <span className="chip"><Landmark className="h-3.5 w-3.5" /> Ressource officielle</span>
+              <h2 className="mt-3 text-2xl font-bold">Informations officielles sur l'immigration au Canada</h2>
+              <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                Pour consulter les exigences, procédures et informations officielles, rendez-vous sur le site d'Immigration, Réfugiés et Citoyenneté Canada (IRCC).
+              </p>
+            </div>
+            <a
+              href="https://www.canada.ca/"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-outline shrink-0"
+            >
+              Consulter le site officiel d'IRCC <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
         </div>
       </section>
     </>
