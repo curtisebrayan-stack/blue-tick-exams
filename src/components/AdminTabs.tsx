@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 const TABS = [
   { to: "/admin", label: "Compréhension orale", end: true },
   { to: "/admin/ce", label: "Compréhension écrite", end: false },
+  { to: "/admin/ce-sujets", label: "CE (examens)", end: false },
   { to: "/admin/eo", label: "Expression orale", end: false },
   { to: "/admin/ee", label: "Expression écrite", end: false },
   { to: "/admin/connexions", label: "Connexions", end: false },

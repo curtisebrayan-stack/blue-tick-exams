@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { BookOpen, Clock, ListChecks, Lightbulb, ArrowRight, Lock } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { listCeExercises, type PracticeExerciseSummary } from "@/lib/practiceExercises";
+import { listCeSujets, type CeSujetSummary } from "@/lib/ceSujets";
 
 const FORMAT_STEPS = [
   {
@@ -28,10 +29,15 @@ const TIPS = [
 
 export default function ComprehensionEcrite() {
   const [topics, setTopics] = useState<PracticeExerciseSummary[] | null>(null);
+  const [sujets, setSujets] = useState<CeSujetSummary[] | null>(null);
 
   useEffect(() => {
     listCeExercises().then(setTopics).catch(() => setTopics([]));
+    listCeSujets().then(setSujets).catch(() => setSujets([]));
   }, []);
+
+  const freeCount = sujets?.filter((s) => s.isFree).length ?? 0;
+  const lockedCount = (sujets?.length ?? 0) - freeCount;
 
   return (
     <>
@@ -90,32 +96,49 @@ export default function ComprehensionEcrite() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
-        <h2 className="text-2xl font-bold sm:text-3xl">Liste des sujets</h2>
+        <h2 className="text-2xl font-bold sm:text-3xl">Sujets complets (format examen)</h2>
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-          Un sujet gratuit pour découvrir le format ; les autres font partie du Premium.
+          39 questions indépendantes, chacune avec son propre document — le format exact et complet de l'épreuve officielle.
         </p>
-        {topics === null ? (
+
+        {sujets !== null && sujets.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-3">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-3 py-1.5 text-xs font-semibold text-green-500">
+              ● {freeCount} sujet{freeCount > 1 ? "s" : ""} disponible{freeCount > 1 ? "s" : ""}
+            </span>
+            {lockedCount > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground">
+                <Lock className="h-3 w-3" /> {lockedCount} réservé{lockedCount > 1 ? "s" : ""} aux abonnés
+              </span>
+            )}
+          </div>
+        )}
+
+        {sujets === null ? (
           <p className="mt-8 text-sm text-muted-foreground">Chargement...</p>
-        ) : topics.length === 0 ? (
+        ) : sujets.length === 0 ? (
           <p className="mt-8 text-sm text-muted-foreground">Aucun sujet disponible pour le moment.</p>
         ) : (
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {topics.map((topic, i) => (
+            {sujets.map((sujet, i) => (
               <Link
-                key={topic.slug}
-                to={`/comprehension-ecrite/${topic.slug}`}
-                className={`card-shell flex flex-col gap-3 p-5 transition hover:-translate-y-0.5 hover:shadow-lg ${!topic.isFree ? "opacity-60" : ""}`}
+                key={sujet.slug}
+                to={`/comprehension-ecrite/examens/${sujet.slug}`}
+                className={`card-shell flex flex-col gap-3 p-5 transition hover:-translate-y-0.5 hover:shadow-lg ${!sujet.isFree ? "opacity-60" : ""}`}
               >
                 <div className="flex items-start justify-between">
                   <span className="grid h-9 w-9 place-items-center rounded-lg" style={{ backgroundColor: "color-mix(in oklch, var(--ce) 18%, transparent)", color: "var(--ce)" }}>
                     <BookOpen className="h-4 w-4" />
                   </span>
-                  <span className={`grid h-7 w-7 place-items-center rounded-md text-xs font-bold ${topic.isFree ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+                  <span className={`grid h-7 w-7 place-items-center rounded-md text-xs font-bold ${sujet.isFree ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
                     {i + 1}
                   </span>
                 </div>
-                <p className="font-display text-lg font-bold">{topic.title}</p>
-                {topic.isFree ? (
+                <div>
+                  <p className="text-[0.65rem] font-bold uppercase tracking-wide text-muted-foreground">Compréhension écrite</p>
+                  <p className="font-display text-lg font-bold">{sujet.title}</p>
+                </div>
+                {sujet.isFree ? (
                   <span className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-primary">
                     Commencer <ArrowRight className="h-4 w-4" />
                   </span>
@@ -128,7 +151,50 @@ export default function ComprehensionEcrite() {
             ))}
           </div>
         )}
-        <Link to="/inscription" className="btn-primary mt-8 inline-flex">Créer un compte gratuit</Link>
+      </section>
+
+      <section className="bg-muted">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
+          <h2 className="text-2xl font-bold sm:text-3xl">Sujets pratiques par thème</h2>
+          <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+            Un sujet gratuit pour découvrir le format ; les autres font partie du Premium.
+          </p>
+          {topics === null ? (
+            <p className="mt-8 text-sm text-muted-foreground">Chargement...</p>
+          ) : topics.length === 0 ? (
+            <p className="mt-8 text-sm text-muted-foreground">Aucun sujet disponible pour le moment.</p>
+          ) : (
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {topics.map((topic, i) => (
+                <Link
+                  key={topic.slug}
+                  to={`/comprehension-ecrite/${topic.slug}`}
+                  className={`card-shell flex flex-col gap-3 p-5 transition hover:-translate-y-0.5 hover:shadow-lg ${!topic.isFree ? "opacity-60" : ""}`}
+                >
+                  <div className="flex items-start justify-between">
+                    <span className="grid h-9 w-9 place-items-center rounded-lg" style={{ backgroundColor: "color-mix(in oklch, var(--ce) 18%, transparent)", color: "var(--ce)" }}>
+                      <BookOpen className="h-4 w-4" />
+                    </span>
+                    <span className={`grid h-7 w-7 place-items-center rounded-md text-xs font-bold ${topic.isFree ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+                      {i + 1}
+                    </span>
+                  </div>
+                  <p className="font-display text-lg font-bold">{topic.title}</p>
+                  {topic.isFree ? (
+                    <span className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-primary">
+                      Commencer <ArrowRight className="h-4 w-4" />
+                    </span>
+                  ) : (
+                    <span className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground">
+                      <Lock className="h-3.5 w-3.5" /> Abonnement requis
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          )}
+          <Link to="/inscription" className="btn-primary mt-8 inline-flex">Créer un compte gratuit</Link>
+        </div>
       </section>
     </>
   );

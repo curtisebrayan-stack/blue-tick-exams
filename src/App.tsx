@@ -9,6 +9,9 @@ import AdminConnexions from "@/pages/admin/AdminConnexions";
 import AdminCe from "@/pages/admin/AdminCe";
 import AdminCeNouveau from "@/pages/admin/AdminCeNouveau";
 import AdminCeModifier from "@/pages/admin/AdminCeModifier";
+import AdminCeSujets from "@/pages/admin/AdminCeSujets";
+import AdminCeSujetNouveau from "@/pages/admin/AdminCeSujetNouveau";
+import AdminCeSujetModifier from "@/pages/admin/AdminCeSujetModifier";
 import AdminEo from "@/pages/admin/AdminEo";
 import AdminEoNouveau from "@/pages/admin/AdminEoNouveau";
 import AdminEoModifier from "@/pages/admin/AdminEoModifier";
@@ -24,6 +27,7 @@ import PracticeCo from "@/pages/PracticeCo";
 import PracticeCoSujet from "@/pages/PracticeCoSujet";
 import ComprehensionEcrite from "@/pages/ComprehensionEcrite";
 import PracticeCe from "@/pages/PracticeCe";
+import PracticeCeSujet from "@/pages/PracticeCeSujet";
 import ExpressionOrale from "@/pages/ExpressionOrale";
 import PracticeEo from "@/pages/PracticeEo";
 import ExpressionEcrite from "@/pages/ExpressionEcrite";
@@ -50,6 +54,7 @@ export default function App() {
         <Route path="comprehension-orale/examens/:slug" element={<PracticeCoSujet />} />
         <Route path="comprehension-orale/:slug" element={<PracticeCo />} />
         <Route path="comprehension-ecrite" element={<ComprehensionEcrite />} />
+        <Route path="comprehension-ecrite/examens/:slug" element={<PracticeCeSujet />} />
         <Route path="comprehension-ecrite/:slug" element={<PracticeCe />} />
         <Route path="expression-orale" element={<ExpressionOrale />} />
         <Route path="expression-orale/:slug" element={<PracticeEo />} />
@@ -67,6 +72,9 @@ export default function App() {
         <Route path="admin/ce" element={<RequireAdmin><AdminCe /></RequireAdmin>} />
         <Route path="admin/ce/nouveau" element={<RequireAdmin><AdminCeNouveau /></RequireAdmin>} />
         <Route path="admin/ce/modifier/:slug" element={<RequireAdmin><AdminCeModifier /></RequireAdmin>} />
+        <Route path="admin/ce-sujets" element={<RequireAdmin><AdminCeSujets /></RequireAdmin>} />
+        <Route path="admin/ce-sujets/nouveau" element={<RequireAdmin><AdminCeSujetNouveau /></RequireAdmin>} />
+        <Route path="admin/ce-sujets/modifier/:slug" element={<RequireAdmin><AdminCeSujetModifier /></RequireAdmin>} />
         <Route path="admin/eo" element={<RequireAdmin><AdminEo /></RequireAdmin>} />
         <Route path="admin/eo/nouveau" element={<RequireAdmin><AdminEoNouveau /></RequireAdmin>} />
         <Route path="admin/eo/modifier/:slug" element={<RequireAdmin><AdminEoModifier /></RequireAdmin>} />
