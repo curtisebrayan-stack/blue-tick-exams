@@ -29,6 +29,7 @@ export default function PracticeCoSujet() {
   const [secondsRemaining, setSecondsRemaining] = useState(TOTAL_DURATION_SECONDS);
   const [finalTimeUsed, setFinalTimeUsed] = useState(0);
   const [realExamMode, setRealExamMode] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const { fullscreenActive, enterFullscreen, preventContextMenu, baseFlags } = useExamIntegrity();
   const slowAnswersRef = useRef(0);
@@ -50,6 +51,7 @@ export default function PracticeCoSujet() {
 
   useEffect(() => {
     questionStartRef.current = Date.now();
+    setImageLoaded(false);
   }, [currentIndex]);
 
   useEffect(() => {
@@ -272,11 +274,18 @@ export default function PracticeCoSujet() {
       </div>
 
       {question.image && (
-        <img
-          src={question.image}
-          alt={`Illustration question ${question.number}`}
-          className="mt-6 w-full rounded-2xl border border-border object-cover"
-        />
+        <div className="relative mt-6">
+          {!imageLoaded && <div className="aspect-[16/9] w-full animate-pulse rounded-2xl bg-muted" />}
+          <img
+            key={question.number}
+            src={question.image}
+            alt={`Illustration question ${question.number}`}
+            onLoad={() => setImageLoaded(true)}
+            className={`w-full rounded-2xl border border-border object-cover transition-opacity duration-200 ${
+              imageLoaded ? "opacity-100" : "absolute inset-0 opacity-0"
+            }`}
+          />
+        </div>
       )}
 
       <div className="card-shell mt-6 overflow-hidden">

@@ -29,6 +29,7 @@ export default function PracticeCeSujet() {
   const [secondsRemaining, setSecondsRemaining] = useState(TOTAL_DURATION_SECONDS);
   const [finalTimeUsed, setFinalTimeUsed] = useState(0);
   const [realExamMode, setRealExamMode] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const { fullscreenActive, enterFullscreen, preventContextMenu, baseFlags } = useExamIntegrity();
   const slowAnswersRef = useRef(0);
@@ -50,6 +51,7 @@ export default function PracticeCeSujet() {
 
   useEffect(() => {
     questionStartRef.current = Date.now();
+    setImageLoaded(false);
   }, [currentIndex]);
 
   useEffect(() => {
@@ -259,11 +261,18 @@ export default function PracticeCeSujet() {
         />
       </div>
 
-      <img
-        src={item.image}
-        alt={`Document question ${item.number}`}
-        className="mt-6 w-full rounded-2xl border border-border object-cover"
-      />
+      <div className="relative mt-6">
+        {!imageLoaded && <div className="aspect-[16/9] w-full animate-pulse rounded-2xl bg-muted" />}
+        <img
+          key={item.number}
+          src={item.image}
+          alt={`Document question ${item.number}`}
+          onLoad={() => setImageLoaded(true)}
+          className={`w-full rounded-2xl border border-border object-cover transition-opacity duration-200 ${
+            imageLoaded ? "opacity-100" : "absolute inset-0 opacity-0"
+          }`}
+        />
+      </div>
 
       <div className="mt-4 rounded-xl border-2 p-4 text-center" style={{ borderColor: "var(--ce)" }}>
         <p className="font-display text-base font-bold">{item.question}</p>
