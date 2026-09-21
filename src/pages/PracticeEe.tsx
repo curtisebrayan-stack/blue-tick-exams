@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Save, CheckSquare, Maximize, Ban, PenLine } from "lucide-react";
+import { ArrowLeft, Save, CheckSquare, Maximize, Ban, PenLine, Clock } from "lucide-react";
 import { getWritingPrompt, type WritingPrompt } from "@/lib/writingPrompts";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
@@ -8,9 +8,11 @@ import { supabase } from "@/lib/supabase";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
 import { AuthRequired } from "@/components/AuthRequired";
 import { useExamIntegrity } from "@/lib/examIntegrity";
+import { RealExamModeToggle } from "@/components/RealExamModeToggle";
 import NotFound from "./NotFound";
 
 const FAST_TYPING_WPM = 80;
+const EE_REAL_MODE_SECONDS = 20 * 60;
 
 function countWords(text: string): number {
   return text.trim().length === 0 ? 0 : text.trim().split(/\s+/).length;
@@ -24,10 +26,13 @@ export default function PracticeEe() {
   const [content, setContent] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [realExamMode, setRealExamMode] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(EE_REAL_MODE_SECONDS);
 
   const { fullscreenActive, enterFullscreen, preventContextMenu, baseFlags } = useExamIntegrity();
   const pasteAttemptsRef = useRef(0);
   const typingStartRef = useRef<number | null>(null);
+  const submitRef = useRef<() => void>(() => {});
   const [showPasteWarning, setShowPasteWarning] = useState(false);
 
   const wordCount = useMemo(() => countWords(content), [content]);
@@ -45,6 +50,20 @@ export default function PracticeEe() {
       cancelled = true;
     };
   }, [slug]);
+
+  useEffect(() => {
+    if (!realExamMode || submitted) return;
+    const interval = setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s <= 1) {
+          submitRef.current();
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [realExamMode, submitted]);
 
   if (prompt === undefined) {
     return <div className="mx-auto max-w-3xl px-4 py-24 text-center text-sm text-muted-foreground">Chargement...</div>;
@@ -91,6 +110,8 @@ export default function PracticeEe() {
     setSaveState(error ? "error" : "saved");
   };
 
+  submitRef.current = () => void handleSubmit();
+
   return (
     <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24" onContextMenu={preventContextMenu}>
       <Seo title={prompt.title} description={`Sujet pratique d'expression écrite TCF Canada : ${prompt.title}.`} />
@@ -126,6 +147,21 @@ export default function PracticeEe() {
         <PremiumUpsell title={prompt.title} />
       ) : (
         <>
+      {!submitted && (
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <div className="flex-1">
+            <RealExamModeToggle checked={realExamMode} onChange={setRealExamMode} scope="EE" />
+          </div>
+          {realExamMode && (
+            <div className={`card-shell flex items-center gap-2 px-4 py-2 shadow-lg ${secondsLeft <= 120 ? "border-amber-500/50" : ""}`}>
+              <Clock className={`h-4 w-4 ${secondsLeft <= 120 ? "text-amber-500" : "text-primary"}`} />
+              <span className="font-mono text-sm font-bold">
+                {Math.floor(secondsLeft / 60)}:{(secondsLeft % 60).toString().padStart(2, "0")}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
       {showPasteWarning && (
         <p className="mt-4 flex items-center gap-2 rounded-lg bg-amber-500/10 p-3 text-xs text-amber-500">
           <Ban className="h-3.5 w-3.5 shrink-0" /> Le collage est désactivé pour cet exercice — rédige directement ton texte.

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Save, ArrowRight, AlertTriangle, Maximize, Headphones, Clock } from "lucide-react";
 import { getCoSujet, type CoSujet } from "@/lib/coSujets";
@@ -9,6 +9,9 @@ import { PremiumUpsell } from "@/components/PremiumUpsell";
 import { AuthRequired } from "@/components/AuthRequired";
 import { ExamResults } from "@/components/ExamResults";
 import { useExamIntegrity } from "@/lib/examIntegrity";
+import { RealExamModeToggle } from "@/components/RealExamModeToggle";
+import { buildProgressiveTimeTable } from "@/lib/realExamMode";
+import { usePerQuestionTimer } from "@/lib/usePerQuestionTimer";
 import NotFound from "./NotFound";
 
 const SLOW_ANSWER_SECONDS = 30;
@@ -25,6 +28,7 @@ export default function PracticeCoSujet() {
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [secondsRemaining, setSecondsRemaining] = useState(TOTAL_DURATION_SECONDS);
   const [finalTimeUsed, setFinalTimeUsed] = useState(0);
+  const [realExamMode, setRealExamMode] = useState(false);
 
   const { fullscreenActive, enterFullscreen, preventContextMenu, baseFlags } = useExamIntegrity();
   const slowAnswersRef = useRef(0);
@@ -54,6 +58,24 @@ export default function PracticeCoSujet() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const timeTable = useMemo(
+    () => buildProgressiveTimeTable(TOTAL_DURATION_SECONDS, sujet?.questions.length ?? 0),
+    [sujet?.questions.length],
+  );
+
+  function handleAutoAdvance() {
+    if (!sujet) return;
+    setCurrentIndex((i) => {
+      if (i >= sujet.questions.length - 1) {
+        void handleFinish();
+        return i;
+      }
+      return i + 1;
+    });
+  }
+
+  const perQuestionSecondsLeft = usePerQuestionTimer(realExamMode, timeTable, currentIndex, handleAutoAdvance);
 
   if (sujet === undefined) {
     return <div className="mx-auto max-w-2xl px-4 py-24 text-center text-sm text-muted-foreground">Chargement...</div>;
@@ -216,8 +238,20 @@ export default function PracticeCoSujet() {
         </span>
       </div>
 
+      <div className="mt-4">
+        <RealExamModeToggle checked={realExamMode} onChange={setRealExamMode} scope="CO" />
+      </div>
+
       {/* Chrono — compte à rebours du temps total de l'épreuve (35 min), ne se réinitialise pas entre les questions */}
-      <div className="sticky top-20 z-20 mt-4 flex justify-end lg:top-28">
+      <div className="sticky top-20 z-20 mt-4 flex justify-end gap-2 lg:top-28">
+        {realExamMode && (
+          <div className={`card-shell flex items-center gap-2 px-4 py-2 shadow-lg ${perQuestionSecondsLeft <= 5 ? "border-amber-500/50" : ""}`}>
+            <Clock className={`h-4 w-4 ${perQuestionSecondsLeft <= 5 ? "text-amber-500" : "text-accent"}`} />
+            <span className="font-mono text-sm font-bold">
+              Question : {Math.floor(perQuestionSecondsLeft / 60)}:{(perQuestionSecondsLeft % 60).toString().padStart(2, "0")}
+            </span>
+          </div>
+        )}
         <div className={`card-shell flex items-center gap-2 px-4 py-2 shadow-lg ${secondsRemaining <= 300 ? "border-amber-500/50" : ""}`}>
           <Clock className={`h-4 w-4 ${secondsRemaining <= 300 ? "text-amber-500" : "text-primary"}`} />
           <span className="font-mono text-sm font-bold">
@@ -307,14 +341,18 @@ export default function PracticeCoSujet() {
       </fieldset>
 
       <div className="card-shell mt-8 p-5">
-        <p className="text-sm font-semibold">Navigation des questions</p>
+        <p className="text-sm font-semibold">
+          Navigation des questions
+          {realExamMode && <span className="ml-2 text-xs font-normal text-muted-foreground">(bloquée en mode examen réel)</span>}
+        </p>
         <div className="mt-4 grid grid-cols-8 gap-2 sm:grid-cols-13">
           {sujet.questions.map((q, i) => (
             <button
               type="button"
               key={q.number}
               onClick={() => goTo(i)}
-              className={`grid h-9 place-items-center rounded-lg text-xs font-bold transition ${
+              disabled={realExamMode}
+              className={`grid h-9 place-items-center rounded-lg text-xs font-bold transition disabled:cursor-not-allowed disabled:opacity-50 ${
                 i === currentIndex
                   ? "bg-accent text-accent-foreground"
                   : answers[q.number] !== undefined
@@ -336,7 +374,7 @@ export default function PracticeCoSujet() {
       {/* Barre de navigation fixe */}
       <div className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3">
-          <button type="button" onClick={() => goTo(currentIndex - 1)} disabled={currentIndex === 0} className="btn-outline disabled:opacity-40">
+          <button type="button" onClick={() => goTo(currentIndex - 1)} disabled={currentIndex === 0 || realExamMode} className="btn-outline disabled:opacity-40">
             <ArrowLeft className="h-4 w-4" /> Précédent
           </button>
           <span className="text-sm font-semibold text-muted-foreground">Q {question.number}/{sujet.questions.length}</span>

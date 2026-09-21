@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
 import { AuthRequired } from "@/components/AuthRequired";
 import { useExamIntegrity } from "@/lib/examIntegrity";
+import { RealExamModeToggle } from "@/components/RealExamModeToggle";
 import NotFound from "./NotFound";
 
 type RecordingState = "idle" | "recording" | "recorded" | "error";
@@ -23,6 +24,7 @@ export default function PracticeEo() {
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [realExamMode, setRealExamMode] = useState(false);
 
   const { fullscreenActive, enterFullscreen, preventContextMenu, baseFlags } = useExamIntegrity();
 
@@ -186,6 +188,12 @@ export default function PracticeEo() {
         </ul>
       </div>
 
+      {state === "idle" && (
+        <div className="mt-6">
+          <RealExamModeToggle checked={realExamMode} onChange={setRealExamMode} scope="EO" />
+        </div>
+      )}
+
       <div className="card-shell mt-6 flex flex-col items-center gap-4 p-8 text-center">
         {state === "idle" && (
           <>
@@ -211,9 +219,13 @@ export default function PracticeEo() {
         {state === "recorded" && audioUrl && (
           <>
             <audio controls src={audioUrl} className="w-full" />
-            <button type="button" onClick={reset} className="btn-outline">
-              <RotateCcw className="h-4 w-4" /> Recommencer
-            </button>
+            {realExamMode ? (
+              <p className="text-xs text-muted-foreground">Mode examen réel : une seule tentative, comme à l'examen.</p>
+            ) : (
+              <button type="button" onClick={reset} className="btn-outline">
+                <RotateCcw className="h-4 w-4" /> Recommencer
+              </button>
+            )}
           </>
         )}
 
