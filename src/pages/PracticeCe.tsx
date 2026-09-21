@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
 import { AuthRequired } from "@/components/AuthRequired";
+import { ExamResults } from "@/components/ExamResults";
 import { useExamIntegrity } from "@/lib/examIntegrity";
 import NotFound from "./NotFound";
 
@@ -167,26 +168,41 @@ export default function PracticeCe() {
           Valider mes réponses
         </button>
       ) : (
-        <div className="mt-8 card-shell p-6">
-          <p className="text-2xl font-bold">{score} / {exercise.questions.length}</p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {score === exercise.questions.length
-              ? "Excellent, toutes les réponses sont correctes !"
-              : "Relis les questions en rouge pour comprendre ton erreur."}
-          </p>
-          {user ? (
-            <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Save className="h-3.5 w-3.5" />
-              {saveState === "saving" && "Sauvegarde en cours..."}
-              {saveState === "saved" && "Résultat sauvegardé dans ton profil."}
-              {saveState === "error" && "Erreur de sauvegarde — réessaie plus tard."}
+        <>
+          <div className="mt-8 card-shell p-6">
+            <p className="text-2xl font-bold">{score} / {exercise.questions.length}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {score === exercise.questions.length
+                ? "Excellent, toutes les réponses sont correctes !"
+                : "Relis les questions en rouge pour comprendre ton erreur."}
             </p>
-          ) : (
-            <p className="mt-3 text-xs text-muted-foreground">
-              <Link to="/connexion" className="font-semibold text-primary hover:underline">Connecte-toi</Link> pour sauvegarder ta progression.
-            </p>
-          )}
-        </div>
+            {user ? (
+              <p className="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Save className="h-3.5 w-3.5" />
+                {saveState === "saving" && "Sauvegarde en cours..."}
+                {saveState === "saved" && "Résultat sauvegardé dans ton profil."}
+                {saveState === "error" && "Erreur de sauvegarde — réessaie plus tard."}
+              </p>
+            ) : (
+              <p className="mt-3 text-xs text-muted-foreground">
+                <Link to="/connexion" className="font-semibold text-primary hover:underline">Connecte-toi</Link> pour sauvegarder ta progression.
+              </p>
+            )}
+          </div>
+
+          <ExamResults
+            skill="ce"
+            score={score}
+            maxScore={exercise.questions.length}
+            timeUsedSeconds={elapsedSeconds}
+            questions={exercise.questions.map((q, i) => ({
+              number: i + 1,
+              options: q.options,
+              correctIndex: q.correctIndex,
+              selectedIndex: answers[i],
+            }))}
+          />
+        </>
       )}
         </>
       )}

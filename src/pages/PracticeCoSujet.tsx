@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
 import { AuthRequired } from "@/components/AuthRequired";
+import { ExamResults } from "@/components/ExamResults";
 import { useExamIntegrity } from "@/lib/examIntegrity";
 import NotFound from "./NotFound";
 
@@ -23,6 +24,7 @@ export default function PracticeCoSujet() {
   const [finished, setFinished] = useState(false);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [secondsRemaining, setSecondsRemaining] = useState(TOTAL_DURATION_SECONDS);
+  const [finalTimeUsed, setFinalTimeUsed] = useState(0);
 
   const { fullscreenActive, enterFullscreen, preventContextMenu, baseFlags } = useExamIntegrity();
   const slowAnswersRef = useRef(0);
@@ -96,6 +98,7 @@ export default function PracticeCoSujet() {
 
   const handleFinish = async () => {
     setFinished(true);
+    setFinalTimeUsed(TOTAL_DURATION_SECONDS - secondsRemaining);
     if (!user) return;
     setSaveState("saving");
     const { error } = await supabase.from("practice_results").insert({
@@ -119,7 +122,6 @@ export default function PracticeCoSujet() {
         </Link>
         <div className="mt-6 card-shell p-6">
           <span className="chip">{sujet.title} — terminé</span>
-          <p className="mt-4 text-3xl font-bold">{score} / {sujet.questions.length}</p>
           {provisionalCount > 0 && (
             <p className="mt-2 flex items-start gap-1.5 rounded-lg bg-amber-500/10 p-3 text-xs text-amber-500">
               <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
@@ -163,6 +165,19 @@ export default function PracticeCoSujet() {
             })}
           </div>
         </div>
+
+        <ExamResults
+          skill="co"
+          score={score}
+          maxScore={sujet.questions.length}
+          timeUsedSeconds={finalTimeUsed}
+          questions={sujet.questions.map((q) => ({
+            number: q.number,
+            options: q.options,
+            correctIndex: q.correctIndex,
+            selectedIndex: answers[q.number],
+          }))}
+        />
       </section>
     );
   }

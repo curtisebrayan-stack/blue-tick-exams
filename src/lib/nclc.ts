@@ -36,4 +36,21 @@ export function formatNclc(nclc: number | null): string {
   return nclc >= 10 ? "NCLC 10+" : `NCLC ${nclc}`;
 }
 
+/** Équivalent CECR (A1-C2) du niveau NCLC — pour affichage grand public. */
+export function getCefrLevel(nclc: number | null): string {
+  if (nclc === null) return "A1";
+  if (nclc >= 10) return "C1-C2";
+  if (nclc === 9) return "C1";
+  if (nclc >= 7) return "B2";
+  if (nclc >= 5) return "B1";
+  return "A2";
+}
+
+/** Estime un score sur 699 (échelle officielle TCF) à partir d'un score brut sur un
+ * exercice pratique. Approximation linéaire — le vrai barème IRCC n'est pas public. */
+export function estimateScaledScore(rawScore: number, maxRaw: number): number {
+  if (maxRaw <= 0) return 0;
+  return Math.round((rawScore / maxRaw) * 699);
+}
+
 export const NCLC_TABLE = BANDS;
