@@ -16,7 +16,7 @@ const LETTER_INDEX = { A: 0, B: 1, C: 2, D: 3 };
 
 const QUESTIONS = {
   1: "Qu’est-ce que propose cette publicité ?",
-  2: "Ou est christian ?",
+  2: "Où est Christian ?",
   3: "Que propose cette entreprise ?",
   4: "Pourquoi est-ce qu’Alice attend Pierre ?",
   5: "Pourquoi Ariane écrit-elle ce message ?",
