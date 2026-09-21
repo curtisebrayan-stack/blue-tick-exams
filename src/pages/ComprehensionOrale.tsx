@@ -4,6 +4,7 @@ import { Headphones, Clock, ListChecks, Lightbulb, ArrowRight, Lock } from "luci
 import { Seo } from "@/components/Seo";
 import { CO_FREE_SLUG } from "@/lib/listeningExercises";
 import { listCoSujets, type CoSujetSummary } from "@/lib/coSujets";
+import { useAuth } from "@/lib/AuthContext";
 
 const FORMAT_STEPS = [
   {
@@ -37,6 +38,7 @@ const PRACTICE_TOPICS = [
 ];
 
 export default function ComprehensionOrale() {
+  const { user } = useAuth();
   const [sujets, setSujets] = useState<CoSujetSummary[] | null>(null);
 
   useEffect(() => {
@@ -184,7 +186,7 @@ export default function ComprehensionOrale() {
             );
           })}
         </div>
-        <Link to="/inscription" className="btn-primary mt-8 inline-flex">Créer un compte gratuit</Link>
+        {!user && <Link to="/inscription" className="btn-primary mt-8 inline-flex">Créer un compte gratuit</Link>}
       </section>
     </>
   );

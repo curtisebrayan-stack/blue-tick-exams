@@ -2,8 +2,10 @@ import { Link } from "react-router-dom";
 import { Check, Info, Clock } from "lucide-react";
 import { PLANS } from "@/lib/pricing";
 import { Seo } from "@/components/Seo";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Tarifs() {
+  const { user } = useAuth();
   return (
     <section className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
       <Seo title="Tarifs" description="Les formules d'abonnement pour accéder à l'ensemble des sujets et méthodologies TCF Canada." />
@@ -47,9 +49,15 @@ export default function Tarifs() {
             </ul>
 
             {plan.id === "gratuit" ? (
-              <Link to="/inscription" className="btn-outline mt-8">
-                {plan.cta}
-              </Link>
+              user ? (
+                <Link to="/profil" className="btn-outline mt-8">
+                  Voir mon profil
+                </Link>
+              ) : (
+                <Link to="/inscription" className="btn-outline mt-8">
+                  {plan.cta}
+                </Link>
+              )
             ) : (
               <>
                 <Link to="/contact" className={`mt-8 ${plan.highlighted ? "btn-primary" : "btn-outline"}`}>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { PenLine, Clock, ListChecks, Lightbulb, ArrowRight, Lock } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { listEePrompts, type WritingPromptSummary } from "@/lib/writingPrompts";
+import { useAuth } from "@/lib/AuthContext";
 
 const FORMAT_STEPS = [
   {
@@ -27,6 +28,7 @@ const TIPS = [
 ];
 
 export default function ExpressionEcrite() {
+  const { user } = useAuth();
   const [topics, setTopics] = useState<WritingPromptSummary[] | null>(null);
 
   useEffect(() => {
@@ -128,7 +130,7 @@ export default function ExpressionEcrite() {
             ))}
           </div>
         )}
-        <Link to="/inscription" className="btn-primary mt-8 inline-flex">Créer un compte gratuit</Link>
+        {!user && <Link to="/inscription" className="btn-primary mt-8 inline-flex">Créer un compte gratuit</Link>}
       </section>
     </>
   );

@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { ARTICLES } from "@/lib/blog";
+import { useAuth } from "@/lib/AuthContext";
 
 const SKILLS = [
   { to: "/comprehension-orale", label: "Compréhension orale", icon: Headphones, color: "var(--co)", topics: "Sujets pratiques disponibles", duration: "~35 min à l'examen" },
@@ -21,6 +22,7 @@ const ADVANTAGES = [
 ];
 
 export default function Home() {
+  const { user } = useAuth();
   return (
     <>
       <Seo
@@ -52,7 +54,7 @@ export default function Home() {
           </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link to="/inscription" className="btn-primary">Créer un compte gratuit</Link>
+            {!user && <Link to="/inscription" className="btn-primary">Créer un compte gratuit</Link>}
             <Link to="/tarifs" className="btn-outline">Voir les tarifs</Link>
           </div>
         </div>
@@ -71,9 +73,11 @@ export default function Home() {
             </div>
           ))}
         </div>
-        <div className="mt-8 border-t border-border pt-6 text-center">
-          <Link to="/inscription" className="text-sm font-semibold text-primary hover:underline">Créer un compte gratuit →</Link>
-        </div>
+        {!user && (
+          <div className="mt-8 border-t border-border pt-6 text-center">
+            <Link to="/inscription" className="text-sm font-semibold text-primary hover:underline">Créer un compte gratuit →</Link>
+          </div>
+        )}
       </section>
 
       {/* 4 ÉPREUVES */}

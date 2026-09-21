@@ -4,6 +4,7 @@ import { BookOpen, Clock, ListChecks, Lightbulb, ArrowRight, Lock } from "lucide
 import { Seo } from "@/components/Seo";
 import { listCeExercises, type PracticeExerciseSummary } from "@/lib/practiceExercises";
 import { listCeSujets, type CeSujetSummary } from "@/lib/ceSujets";
+import { useAuth } from "@/lib/AuthContext";
 
 const FORMAT_STEPS = [
   {
@@ -28,6 +29,7 @@ const TIPS = [
 ];
 
 export default function ComprehensionEcrite() {
+  const { user } = useAuth();
   const [topics, setTopics] = useState<PracticeExerciseSummary[] | null>(null);
   const [sujets, setSujets] = useState<CeSujetSummary[] | null>(null);
 
@@ -193,7 +195,7 @@ export default function ComprehensionEcrite() {
               ))}
             </div>
           )}
-          <Link to="/inscription" className="btn-primary mt-8 inline-flex">Créer un compte gratuit</Link>
+          {!user && <Link to="/inscription" className="btn-primary mt-8 inline-flex">Créer un compte gratuit</Link>}
         </div>
       </section>
     </>

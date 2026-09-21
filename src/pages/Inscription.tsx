@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, CheckCircle2, ShieldCheck, Loader2, Target, ListChecks, Gift, ArrowRight } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { Seo } from "@/components/Seo";
@@ -12,7 +12,7 @@ const BENEFITS = [
 ];
 
 export default function Inscription() {
-  const { signUp, signInWithGoogle } = useAuth();
+  const { user, signUp, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +20,8 @@ export default function Inscription() {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+
+  if (user) return <Navigate to="/" replace />;
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();

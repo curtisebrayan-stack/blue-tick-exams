@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Mic, Clock, ListChecks, Lightbulb, ArrowRight, Lock } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { listEoPrompts, type SpeakingPromptSummary } from "@/lib/speakingPrompts";
+import { useAuth } from "@/lib/AuthContext";
 
 const FORMAT_STEPS = [
   {
@@ -27,6 +28,7 @@ const TIPS = [
 ];
 
 export default function ExpressionOrale() {
+  const { user } = useAuth();
   const [topics, setTopics] = useState<SpeakingPromptSummary[] | null>(null);
 
   useEffect(() => {
@@ -128,7 +130,7 @@ export default function ExpressionOrale() {
             ))}
           </div>
         )}
-        <Link to="/inscription" className="btn-primary mt-8 inline-flex">Créer un compte gratuit</Link>
+        {!user && <Link to="/inscription" className="btn-primary mt-8 inline-flex">Créer un compte gratuit</Link>}
       </section>
     </>
   );
