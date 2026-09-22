@@ -21,6 +21,7 @@ import AdminEeModifier from "@/pages/admin/AdminEeModifier";
 import AdminIntegrite from "@/pages/admin/AdminIntegrite";
 import AdminMessages from "@/pages/admin/AdminMessages";
 import Home from "@/pages/Home";
+import TcfCanada from "@/pages/TcfCanada";
 import Profil from "@/pages/Profil";
 import ComprehensionOrale from "@/pages/ComprehensionOrale";
 import PracticeCo from "@/pages/PracticeCo";
@@ -56,6 +57,7 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Home />} />
+        <Route path="tcf-canada" element={<TcfCanada />} />
         <Route path="comprehension-orale" element={<ComprehensionOrale />} />
         <Route path="comprehension-orale/examens/:slug" element={<PracticeCoSujet />} />
         <Route path="comprehension-orale/:slug" element={<PracticeCo />} />

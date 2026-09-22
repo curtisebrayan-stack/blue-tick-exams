@@ -12,6 +12,7 @@ const SKILL_LINKS = [
 ] as const;
 
 const UTILITY_LINKS = [
+  { to: "/tcf-canada", label: "TCF Canada" },
   { to: "/tarifs", label: "Tarifs" },
   { to: "/blog", label: "Blog" },
   { to: "/calculatrice-nclc", label: "Calculatrice NCLC" },
