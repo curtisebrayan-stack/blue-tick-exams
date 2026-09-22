@@ -43,6 +43,12 @@ import ReinitialiserMotDePasse from "@/pages/ReinitialiserMotDePasse";
 import APropos from "@/pages/APropos";
 import Contact from "@/pages/Contact";
 import Confidentialite from "@/pages/Confidentialite";
+import Cgu from "@/pages/Cgu";
+import PolitiqueRemboursement from "@/pages/PolitiqueRemboursement";
+import PolitiqueCookies from "@/pages/PolitiqueCookies";
+import MentionsLegales from "@/pages/MentionsLegales";
+import Faq from "@/pages/Faq";
+import ImmigrationCanada from "@/pages/ImmigrationCanada";
 import NotFound from "@/pages/NotFound";
 
 export default function App() {
@@ -90,6 +96,12 @@ export default function App() {
         <Route path="a-propos" element={<APropos />} />
         <Route path="contact" element={<Contact />} />
         <Route path="confidentialite" element={<Confidentialite />} />
+        <Route path="cgu" element={<Cgu />} />
+        <Route path="politique-remboursement" element={<PolitiqueRemboursement />} />
+        <Route path="politique-cookies" element={<PolitiqueCookies />} />
+        <Route path="mentions-legales" element={<MentionsLegales />} />
+        <Route path="faq" element={<Faq />} />
+        <Route path="immigration-canada" element={<ImmigrationCanada />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

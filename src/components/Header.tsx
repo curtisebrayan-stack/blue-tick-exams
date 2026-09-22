@@ -15,6 +15,7 @@ const UTILITY_LINKS = [
   { to: "/tarifs", label: "Tarifs" },
   { to: "/blog", label: "Blog" },
   { to: "/calculatrice-nclc", label: "Calculatrice NCLC" },
+  { to: "/faq", label: "FAQ" },
 ];
 
 function navLinkClass({ isActive }: { isActive: boolean }) {

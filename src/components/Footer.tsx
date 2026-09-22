@@ -35,9 +35,10 @@ export function Footer() {
               <li><Link className="hover:text-secondary-foreground" to="/">Accueil</Link></li>
               <li><Link className="hover:text-secondary-foreground" to="/tarifs">Tarifs</Link></li>
               <li><Link className="hover:text-secondary-foreground" to="/blog">Blog</Link></li>
+              <li><Link className="hover:text-secondary-foreground" to="/faq">FAQ</Link></li>
+              <li><Link className="hover:text-secondary-foreground" to="/immigration-canada">Immigration au Canada</Link></li>
               <li><Link className="hover:text-secondary-foreground" to="/a-propos">À propos de nous</Link></li>
               <li><Link className="hover:text-secondary-foreground" to="/contact">Contact</Link></li>
-              <li><Link className="hover:text-secondary-foreground" to="/confidentialite">Politique de confidentialité</Link></li>
             </ul>
           </div>
 
@@ -76,9 +77,15 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-2 border-t border-secondary-foreground/10 pt-6 text-xs text-secondary-foreground/40 sm:flex-row">
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-secondary-foreground/10 pt-6 text-xs text-secondary-foreground/40 sm:flex-row">
           <p>© {new Date().getFullYear()} Blue Tick Project. Site indépendant, non affilié à France Éducation international.</p>
-          <Link to="/confidentialite" className="hover:text-secondary-foreground/70">Confidentialité</Link>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <Link to="/confidentialite" className="hover:text-secondary-foreground/70">Confidentialité</Link>
+            <Link to="/cgu" className="hover:text-secondary-foreground/70">CGU</Link>
+            <Link to="/politique-remboursement" className="hover:text-secondary-foreground/70">Remboursement</Link>
+            <Link to="/politique-cookies" className="hover:text-secondary-foreground/70">Cookies</Link>
+            <Link to="/mentions-legales" className="hover:text-secondary-foreground/70">Mentions légales</Link>
+          </div>
         </div>
       </div>
     </footer>

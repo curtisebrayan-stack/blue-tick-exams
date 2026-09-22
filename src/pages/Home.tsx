@@ -171,14 +171,19 @@ export default function Home() {
                 Pour consulter les exigences, procédures et informations officielles, rendez-vous sur le site d'Immigration, Réfugiés et Citoyenneté Canada (IRCC).
               </p>
             </div>
-            <a
-              href="https://www.canada.ca/"
-              target="_blank"
-              rel="noreferrer"
-              className="btn-outline shrink-0"
-            >
-              Consulter le site officiel d'IRCC <ExternalLink className="h-4 w-4" />
-            </a>
+            <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+              <Link to="/immigration-canada" className="btn-primary">
+                Voir les exigences linguistiques
+              </Link>
+              <a
+                href="https://www.canada.ca/"
+                target="_blank"
+                rel="noreferrer"
+                className="btn-outline"
+              >
+                Site officiel d'IRCC <ExternalLink className="h-4 w-4" />
+              </a>
+            </div>
           </div>
         </div>
       </section>
