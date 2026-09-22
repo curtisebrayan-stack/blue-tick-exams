@@ -1,10 +1,12 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { UserCircle, ArrowRight, Mic, PenLine, Lock, CheckCircle2 } from "lucide-react";
+import { UserCircle, ArrowRight, Mic, PenLine, Lock, CheckCircle2, Target, BarChart3 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/AuthContext";
 import { SKILL_LABELS, type TcfSkill } from "@/lib/nclc";
 import { Seo } from "@/components/Seo";
+
+const NCLC_OPTIONS = [4, 5, 6, 7, 8, 9, 10];
 
 type PracticeResult = {
   id: string;
@@ -71,6 +73,11 @@ export default function Profil() {
   const [passwordSuccess, setPasswordSuccess] = useState(false);
   const [passwordSaving, setPasswordSaving] = useState(false);
 
+  const [objectifNclc, setObjectifNclc] = useState<number | "">("");
+  const [dateExamen, setDateExamen] = useState("");
+  const [goalSaving, setGoalSaving] = useState(false);
+  const [goalSaved, setGoalSaved] = useState(false);
+
   const handlePasswordChange = async (e: FormEvent) => {
     e.preventDefault();
     setPasswordError(null);
@@ -133,7 +140,53 @@ export default function Profil() {
       .then(({ data, error: fetchError }) => {
         if (!fetchError && data) setWritings(data as WritingSubmission[]);
       });
+
+    supabase
+      .from("learner_goals")
+      .select("objectif_nclc, date_examen")
+      .eq("id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setObjectifNclc(data.objectif_nclc ?? "");
+          setDateExamen(data.date_examen ?? "");
+        }
+      });
   }, [user]);
+
+  const handleSaveGoal = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    setGoalSaving(true);
+    setGoalSaved(false);
+    const { error: goalError } = await supabase.from("learner_goals").upsert({
+      id: user.id,
+      objectif_nclc: objectifNclc === "" ? null : objectifNclc,
+      date_examen: dateExamen === "" ? null : dateExamen,
+      updated_at: new Date().toISOString(),
+    });
+    setGoalSaving(false);
+    if (!goalError) setGoalSaved(true);
+  };
+
+  const skillAverages = useMemo(() => {
+    if (!results) return [];
+    const bySkill: Partial<Record<TcfSkill, { total: number; max: number; count: number }>> = {};
+    for (const r of results) {
+      const entry = bySkill[r.skill] ?? { total: 0, max: 0, count: 0 };
+      entry.total += r.score;
+      entry.max += r.max_score;
+      entry.count += 1;
+      bySkill[r.skill] = entry;
+    }
+    return (Object.entries(bySkill) as [TcfSkill, { total: number; max: number; count: number }][]).map(
+      ([skill, { total, max, count }]) => ({
+        skill,
+        percent: max > 0 ? Math.round((total / max) * 100) : 0,
+        count,
+      }),
+    );
+  }, [results]);
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-16 sm:py-24">
@@ -141,6 +194,67 @@ export default function Profil() {
       <span className="chip"><UserCircle className="h-3.5 w-3.5" /> Compte</span>
       <h1 className="mt-4 text-3xl font-bold sm:text-5xl">Ma progression</h1>
       <p className="mt-4 text-sm text-muted-foreground">{user?.email}</p>
+
+      <div className="mt-10 card-shell p-6">
+        <h2 className="flex items-center gap-2 text-lg font-bold">
+          <Target className="h-4 w-4 text-primary" /> Mon objectif
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">Le niveau que tu vises et la date prévue de ton examen TCF Canada.</p>
+        <form onSubmit={handleSaveGoal} className="mt-4 grid gap-4 sm:grid-cols-2">
+          <label className="block">
+            <span className="text-sm font-semibold">Objectif NCLC</span>
+            <select
+              value={objectifNclc}
+              onChange={(e) => setObjectifNclc(e.target.value === "" ? "" : Number(e.target.value))}
+              className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            >
+              <option value="">Non défini</option>
+              {NCLC_OPTIONS.map((n) => (
+                <option key={n} value={n}>{n === 10 ? "NCLC 10+" : `NCLC ${n}`}</option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            <span className="text-sm font-semibold">Date prévue de l'examen</span>
+            <input
+              type="date"
+              value={dateExamen}
+              onChange={(e) => setDateExamen(e.target.value)}
+              className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+            />
+          </label>
+          {goalSaved && (
+            <p className="flex items-center gap-1.5 text-sm text-green-500 sm:col-span-2">
+              <CheckCircle2 className="h-4 w-4" /> Objectif enregistré.
+            </p>
+          )}
+          <button type="submit" disabled={goalSaving} className="btn-primary sm:col-span-2 sm:w-fit disabled:opacity-60">
+            {goalSaving ? "Enregistrement..." : "Enregistrer mon objectif"}
+          </button>
+        </form>
+      </div>
+
+      {skillAverages.length > 0 && (
+        <div className="mt-10 card-shell p-6">
+          <h2 className="flex items-center gap-2 text-lg font-bold">
+            <BarChart3 className="h-4 w-4 text-primary" /> Mes compétences
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">Score moyen par épreuve, sur tes sujets déjà réalisés.</p>
+          <div className="mt-4 space-y-4">
+            {skillAverages.map(({ skill, percent, count }) => (
+              <div key={skill}>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-semibold">{SKILL_LABELS[skill]}</span>
+                  <span className="text-muted-foreground">{percent}% · {count} sujet{count > 1 ? "s" : ""}</span>
+                </div>
+                <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-primary" style={{ width: `${percent}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-10 card-shell p-6">
         <h2 className="flex items-center gap-2 text-lg font-bold">
