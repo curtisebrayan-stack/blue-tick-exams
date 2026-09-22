@@ -34,6 +34,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2 text-sm text-secondary-foreground/70">
               <li><Link className="hover:text-secondary-foreground" to="/">Accueil</Link></li>
               <li><Link className="hover:text-secondary-foreground" to="/tcf-canada">TCF Canada</Link></li>
+              <li><Link className="hover:text-secondary-foreground" to="/examens-blancs">Examens blancs</Link></li>
               <li><Link className="hover:text-secondary-foreground" to="/tarifs">Tarifs</Link></li>
               <li><Link className="hover:text-secondary-foreground" to="/blog">Blog</Link></li>
               <li><Link className="hover:text-secondary-foreground" to="/faq">FAQ</Link></li>

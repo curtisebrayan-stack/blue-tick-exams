@@ -60,14 +60,9 @@ export default function TcfCanada() {
                 et une navigation bloquée — exactement comme le jour J.
               </p>
             </div>
-            <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-              <Link to="/comprehension-orale" className="btn-primary">
-                <Clock className="h-4 w-4" /> Sujets CO
-              </Link>
-              <Link to="/comprehension-ecrite" className="btn-outline">
-                Sujets CE
-              </Link>
-            </div>
+            <Link to="/examens-blancs" className="btn-primary shrink-0">
+              <Clock className="h-4 w-4" /> Voir les examens blancs
+            </Link>
           </div>
         </div>
       </section>

@@ -13,6 +13,7 @@ const SKILL_LINKS = [
 
 const UTILITY_LINKS = [
   { to: "/tcf-canada", label: "TCF Canada" },
+  { to: "/examens-blancs", label: "Examens blancs" },
   { to: "/tarifs", label: "Tarifs" },
   { to: "/blog", label: "Blog" },
   { to: "/calculatrice-nclc", label: "Calculatrice NCLC" },
