@@ -3,6 +3,7 @@ import {
   Headphones, BookOpen, Mic, PenLine, Calculator, ArrowRight,
   Target, ListChecks, Smartphone,
   Layers, Landmark, ExternalLink,
+  UserPlus, Dumbbell, FileCheck2, LineChart, ChevronDown,
 } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { ARTICLES } from "@/lib/blog";
@@ -19,6 +20,21 @@ const ADVANTAGES = [
   { icon: Target, title: "Format proche du test", desc: "Des exercices calqués sur les conditions réelles de l'examen TCF Canada." },
   { icon: ListChecks, title: "Les quatre épreuves", desc: "Compréhension orale, compréhension écrite, expression orale et expression écrite couvertes." },
   { icon: Smartphone, title: "Web et mobile", desc: "Un entraînement accessible depuis n'importe quel appareil, à ton rythme." },
+];
+
+const STEPS = [
+  { icon: UserPlus, title: "Créez votre compte", desc: "Inscription gratuite en quelques secondes." },
+  { icon: Headphones, title: "Choisissez une épreuve", desc: "Compréhension orale, écrite, expression orale ou écrite." },
+  { icon: Dumbbell, title: "Entraînez-vous", desc: "Des exercices ciblés, au format proche de l'examen réel." },
+  { icon: FileCheck2, title: "Faites un examen blanc", desc: "Simulation chronométrée complète, comme le jour J." },
+  { icon: LineChart, title: "Suivez votre progression", desc: "Retrouve tous tes résultats sur ton profil." },
+];
+
+const FAQ_TEASER = [
+  { q: "TCF Canada ou TEF Canada, quelle différence ?", a: "Ce sont deux examens de français différents, tous les deux acceptés par IRCC pour l'immigration. Blue Tick Project prépare actuellement au TCF Canada ; le TEF Canada est en préparation." },
+  { q: "Puis-je utiliser le site depuis mon téléphone ?", a: "Oui, le site est utilisable depuis un ordinateur, une tablette ou un smartphone, sans rien installer." },
+  { q: "Les corrections sont-elles automatiques ?", a: "Pour la compréhension orale et écrite, oui : la bonne réponse et un écran de résultats détaillé s'affichent immédiatement après chaque sujet." },
+  { q: "Quels moyens de paiement sont acceptés ?", a: "Le paiement en ligne est en cours de mise en place. En attendant, la souscription à un abonnement Premium se fait par contact direct avec l'équipe." },
 ];
 
 export default function Home() {
@@ -106,6 +122,28 @@ export default function Home() {
         </div>
       </section>
 
+      {/* COMMENT ÇA FONCTIONNE */}
+      <section className="bg-muted">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+          <span className="chip">Le parcours</span>
+          <h2 className="mt-4 text-3xl font-bold sm:text-4xl">Comment ça fonctionne ?</h2>
+          <div className="mt-10 grid gap-4 sm:grid-cols-5">
+            {STEPS.map(({ icon: Icon, title, desc }, i) => (
+              <div key={title} className="card-shell relative flex flex-col items-center p-5 text-center">
+                <span className="absolute -top-3 left-1/2 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                  {i + 1}
+                </span>
+                <span className="mt-3 grid h-11 w-11 place-items-center rounded-lg bg-primary/10 text-primary">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-3 font-display text-sm font-bold">{title}</h3>
+                <p className="mt-1 text-xs text-muted-foreground">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* TARIFS TEASER */}
       <section className="bg-muted">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
@@ -130,6 +168,30 @@ export default function Home() {
           ))}
         </div>
         <Link to="/blog" className="btn-outline mt-6 inline-flex">Voir le blog</Link>
+      </section>
+
+      {/* FAQ TEASER */}
+      <section className="bg-muted">
+        <div className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
+          <div className="text-center">
+            <span className="chip">Questions fréquentes</span>
+            <h2 className="mt-4 text-3xl font-bold sm:text-4xl">Une question ?</h2>
+          </div>
+          <div className="mt-10 space-y-3">
+            {FAQ_TEASER.map((item) => (
+              <details key={item.q} className="card-shell group p-5">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold">
+                  {item.q}
+                  <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition group-open:rotate-180" />
+                </summary>
+                <p className="mt-3 text-sm text-muted-foreground">{item.a}</p>
+              </details>
+            ))}
+          </div>
+          <div className="mt-6 text-center">
+            <Link to="/faq" className="text-sm font-semibold text-primary hover:underline">Voir toute la FAQ →</Link>
+          </div>
+        </div>
       </section>
 
       {/* PLATEFORME TEF CANADA */}
