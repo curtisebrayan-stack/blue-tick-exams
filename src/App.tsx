@@ -35,6 +35,8 @@ import ExpressionOraleSessions from "@/pages/ExpressionOraleSessions";
 import PracticeEoSession from "@/pages/PracticeEoSession";
 import PracticeEo from "@/pages/PracticeEo";
 import ExpressionEcrite from "@/pages/ExpressionEcrite";
+import ExpressionEcriteSessions from "@/pages/ExpressionEcriteSessions";
+import PracticeEeSession from "@/pages/PracticeEeSession";
 import PracticeEe from "@/pages/PracticeEe";
 import Tarifs from "@/pages/Tarifs";
 import Blog from "@/pages/Blog";
@@ -73,6 +75,8 @@ export default function App() {
         <Route path="expression-orale/sessions/:slug" element={<PracticeEoSession />} />
         <Route path="expression-orale/:slug" element={<PracticeEo />} />
         <Route path="expression-ecrite" element={<ExpressionEcrite />} />
+        <Route path="expression-ecrite/sessions" element={<ExpressionEcriteSessions />} />
+        <Route path="expression-ecrite/sessions/:slug" element={<PracticeEeSession />} />
         <Route path="expression-ecrite/:slug" element={<PracticeEe />} />
         <Route path="tarifs" element={<Tarifs />} />
         <Route path="blog" element={<Blog />} />

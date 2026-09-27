@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { PenLine, Clock, ListChecks, Lightbulb, ArrowRight, Lock } from "lucide-react";
+import { PenLine, Clock, ListChecks, Lightbulb, ArrowRight, Lock, Calendar } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { listEePrompts, type WritingPromptSummary } from "@/lib/writingPrompts";
 import { useAuth } from "@/lib/AuthContext";
@@ -55,6 +55,23 @@ export default function ExpressionEcrite() {
       </section>
 
       <section className="bg-muted">
+        <div className="mx-auto max-w-4xl px-4 py-16 sm:py-20">
+          <div className="card-shell flex flex-col items-start gap-4 p-8 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <span className="chip"><Calendar className="h-3.5 w-3.5" /> Sessions mensuelles</span>
+              <h2 className="mt-3 text-xl font-bold">Sujets par session (Tâche 1, 2, 3)</h2>
+              <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                Retrouve les sujets d'expression écrite organisés par mois, avec la consigne et une proposition de réponse.
+              </p>
+            </div>
+            <Link to="/expression-ecrite/sessions" className="btn-primary shrink-0">
+              Voir les sessions <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section>
         <div className="mx-auto max-w-4xl px-4 py-16 sm:py-20">
           <h2 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
             <Lightbulb className="h-6 w-6 text-primary" /> Méthodologie
