@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Clock, ChevronDown, CheckCircle2, Type } from "lucide-react";
+import { ArrowLeft, Clock, ChevronDown, CheckCircle2, Type, Sparkles, ThumbsUp, AlertCircle } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
 import { supabase } from "@/lib/supabase";
@@ -29,6 +29,14 @@ const WORD_TARGETS: Record<1 | 2 | 3, string> = {
   1: "60-120 mots",
   2: "120-150 mots",
   3: "120-180 mots",
+};
+
+type Correction = {
+  score: number;
+  strengths: string[];
+  improvements: string[];
+  corrected_text: string;
+  comment: string;
 };
 
 const ACCENTS = ["é", "è", "ê", "ë", "à", "â", "ù", "û", "ô", "ö", "î", "ï", "ÿ", "ç", "œ", "æ"];
@@ -60,6 +68,9 @@ export default function PracticeEeExamen() {
   const [showConsigne, setShowConsigne] = useState(true);
   const [finished, setFinished] = useState(false);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [correcting, setCorrecting] = useState(false);
+  const [corrections, setCorrections] = useState<Partial<Record<1 | 2 | 3, Correction>>>({});
+  const [correctionErrors, setCorrectionErrors] = useState<Partial<Record<1 | 2 | 3, string>>>({});
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const finishedRef = useRef(false);
@@ -89,24 +100,48 @@ export default function PracticeEeExamen() {
     setFinished(true);
     if (!user || !sujets) return;
     setSaveState("saving");
+    const submissionIds: Partial<Record<1 | 2 | 3, string>> = {};
     try {
       for (const t of taches) {
         const content = answers[t] ?? "";
         if (!content.trim()) continue;
-        await supabase.from("writing_submissions").insert({
-          user_id: user.id,
-          email: user.email,
-          skill: "ee",
-          topic_slug: `examen-${mode}-tache-${t}`,
-          content,
-          word_count: countWords(content),
-          integrity_flags: { mode, tache: t, sessionLabel: sujets[t]?.sessionLabel },
-        });
+        const { data, error } = await supabase
+          .from("writing_submissions")
+          .insert({
+            user_id: user.id,
+            email: user.email,
+            skill: "ee",
+            topic_slug: `examen-${mode}-tache-${t}`,
+            content,
+            word_count: countWords(content),
+            integrity_flags: { mode, tache: t, sessionLabel: sujets[t]?.sessionLabel },
+          })
+          .select("id")
+          .single();
+        if (!error && data) submissionIds[t] = data.id;
       }
       setSaveState("saved");
     } catch {
       setSaveState("error");
     }
+
+    setCorrecting(true);
+    await Promise.all(
+      taches.map(async (t) => {
+        const content = answers[t] ?? "";
+        const sujet = sujets[t];
+        if (!content.trim() || !sujet) return;
+        const { data, error } = await supabase.functions.invoke("correct-ee", {
+          body: { tache: t, consigne: sujet.sujet.consigne, text: content, submissionId: submissionIds[t] },
+        });
+        if (error || !data?.correction) {
+          setCorrectionErrors((prev) => ({ ...prev, [t]: data?.error ?? "La correction a échoué pour cette tâche." }));
+          return;
+        }
+        setCorrections((prev) => ({ ...prev, [t]: data.correction }));
+      }),
+    );
+    setCorrecting(false);
   };
 
   useEffect(() => {
@@ -162,17 +197,65 @@ export default function PracticeEeExamen() {
             {saveState === "saved" && "Tes réponses sont sauvegardées dans ton profil."}
             {saveState === "error" && "Erreur de sauvegarde — tes réponses restent visibles ci-dessous."}
           </p>
-          <div className="mt-6 space-y-4 text-left">
-            {taches.map((t) => (
-              <div key={t} className="card-shell p-4">
-                <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Tâche {t} — {countWords(answers[t] ?? "")} mots</p>
-                <p className="mt-2 whitespace-pre-line text-sm">{answers[t] || <span className="italic text-muted-foreground">Aucune réponse rédigée.</span>}</p>
-              </div>
-            ))}
+          {correcting && (
+            <p className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <Sparkles className="h-4 w-4 animate-pulse text-primary" /> Correction par IA en cours...
+            </p>
+          )}
+          <div className="mt-6 space-y-5 text-left">
+            {taches.map((t) => {
+              const correction = corrections[t];
+              const correctionError = correctionErrors[t];
+              return (
+                <div key={t} className="card-shell overflow-hidden">
+                  <div className="border-b border-border p-4">
+                    <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Tâche {t} — {countWords(answers[t] ?? "")} mots</p>
+                    <p className="mt-2 whitespace-pre-line text-sm">{answers[t] || <span className="italic text-muted-foreground">Aucune réponse rédigée.</span>}</p>
+                  </div>
+                  {correction && (
+                    <div className="space-y-4 bg-primary/5 p-4">
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="h-4 w-4 text-primary" />
+                        <p className="font-display text-lg font-bold">{correction.score}/20</p>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{correction.comment}</p>
+                      {correction.strengths?.length > 0 && (
+                        <div>
+                          <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-green-600">
+                            <ThumbsUp className="h-3.5 w-3.5" /> Points forts
+                          </p>
+                          <ul className="mt-1.5 space-y-1 text-sm text-muted-foreground">
+                            {correction.strengths.map((s, i) => <li key={i}>• {s}</li>)}
+                          </ul>
+                        </div>
+                      )}
+                      {correction.improvements?.length > 0 && (
+                        <div>
+                          <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-amber-600">
+                            <AlertCircle className="h-3.5 w-3.5" /> À améliorer
+                          </p>
+                          <ul className="mt-1.5 space-y-1 text-sm text-muted-foreground">
+                            {correction.improvements.map((s, i) => <li key={i}>• {s}</li>)}
+                          </ul>
+                        </div>
+                      )}
+                      {correction.corrected_text && (
+                        <details>
+                          <summary className="cursor-pointer text-xs font-semibold text-primary">Voir le texte corrigé</summary>
+                          <p className="mt-2 whitespace-pre-line rounded-lg bg-background p-3 text-sm">{correction.corrected_text}</p>
+                        </details>
+                      )}
+                    </div>
+                  )}
+                  {correctionError && !correction && (
+                    <p className="flex items-center gap-1.5 bg-red-500/5 p-4 text-xs text-red-500">
+                      <AlertCircle className="h-3.5 w-3.5 shrink-0" /> {correctionError}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
           </div>
-          <p className="mt-6 rounded-lg bg-primary/5 p-3 text-xs text-muted-foreground">
-            La correction automatique par IA arrive bientôt. En attendant, relis ta production avec la grille d'auto-relecture disponible sur la page Expression écrite.
-          </p>
           <Link to="/expression-ecrite" className="btn-primary mt-6 inline-flex">Retour à l'épreuve</Link>
         </div>
       </section>
