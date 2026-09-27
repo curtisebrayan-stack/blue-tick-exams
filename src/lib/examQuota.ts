@@ -6,7 +6,7 @@
 
 import { supabase } from "./supabase";
 
-export const MONTHLY_EXAM_QUOTA = 30;
+export const MONTHLY_EXAM_QUOTA = 39;
 
 function startOfMonthIso(): string {
   const d = new Date();

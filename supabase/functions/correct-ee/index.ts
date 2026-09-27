@@ -9,7 +9,7 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 const MODEL = "claude-haiku-4-5-20251001";
 // Doit rester synchronisé avec MONTHLY_EXAM_QUOTA dans src/lib/examQuota.ts.
-const MONTHLY_EXAM_QUOTA = 30;
+const MONTHLY_EXAM_QUOTA = 39;
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
