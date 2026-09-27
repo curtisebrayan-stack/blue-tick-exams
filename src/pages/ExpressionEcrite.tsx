@@ -4,21 +4,7 @@ import { PenLine, Clock, ListChecks, Lightbulb, ArrowRight, Lock } from "lucide-
 import { Seo } from "@/components/Seo";
 import { listEePrompts, type WritingPromptSummary } from "@/lib/writingPrompts";
 import { useAuth } from "@/lib/AuthContext";
-
-const FORMAT_STEPS = [
-  {
-    title: "Tâche 1 — Message court",
-    desc: "Rédiger un message simple (mail, mot, formulaire) dans un contexte quotidien. Environ 60 mots.",
-  },
-  {
-    title: "Tâche 2 — Récit ou description",
-    desc: "Raconter un événement, décrire une situation ou exprimer un point de vue personnel. Environ 120 mots.",
-  },
-  {
-    title: "Tâche 3 — Argumentation",
-    desc: "Comparer des points de vue et défendre une opinion argumentée sur un sujet donné. Environ 120 mots.",
-  },
-];
+import methodologie3Taches from "@/assets/ee-methodologie-3-taches.jpg";
 
 const TIPS = [
   "Respecte le nombre de mots demandé : trop court pénalise autant que trop long.",
@@ -65,14 +51,7 @@ export default function ExpressionEcrite() {
         <p className="mt-2 text-sm text-muted-foreground">
           Trois productions écrites de longueur et de complexité croissantes.
         </p>
-        <div className="mt-8 space-y-4">
-          {FORMAT_STEPS.map((step) => (
-            <div key={step.title} className="card-shell p-6">
-              <h3 className="font-display text-base font-bold">{step.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{step.desc}</p>
-            </div>
-          ))}
-        </div>
+        <img src={methodologie3Taches} alt="Méthodologie Expression écrite TCF Canada — 3 tâches" className="mt-8 w-full rounded-2xl border border-border" />
       </section>
 
       <section className="bg-muted">
