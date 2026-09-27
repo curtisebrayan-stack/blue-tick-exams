@@ -8,7 +8,8 @@ const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 const MODEL = "claude-haiku-4-5-20251001";
-const MAX_CORRECTIONS_PER_DAY = 10;
+// Doit rester synchronisé avec MONTHLY_EXAM_QUOTA dans src/lib/examQuota.ts.
+const MONTHLY_EXAM_QUOTA = 30;
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -55,16 +56,18 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "La correction automatique est réservée aux comptes Premium." }, 403);
   }
 
-  // Anti-abus : limite de corrections par jour, indépendamment de ce que dit le client.
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  // Quota mensuel de corrections, indépendamment de ce que dit le client.
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
   const { count } = await supabase
     .from("writing_submissions")
     .select("id", { count: "exact", head: true })
     .eq("user_id", user.id)
     .not("corrected_at", "is", null)
-    .gte("corrected_at", since);
-  if ((count ?? 0) >= MAX_CORRECTIONS_PER_DAY) {
-    return jsonResponse({ error: `Limite de ${MAX_CORRECTIONS_PER_DAY} corrections par jour atteinte. Réessaie demain.` }, 429);
+    .gte("corrected_at", startOfMonth.toISOString());
+  if ((count ?? 0) >= MONTHLY_EXAM_QUOTA) {
+    return jsonResponse({ error: `Quota de ${MONTHLY_EXAM_QUOTA} examens corrigés atteint pour ce mois. Ça se réinitialise le 1er du mois prochain.` }, 429);
   }
 
   let body: { tache?: number; consigne?: string; text?: string; submissionId?: string };

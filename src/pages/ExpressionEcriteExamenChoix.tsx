@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ClipboardList, Mail, FileEdit, MessagesSquare, Clock } from "lucide-react";
+import { ArrowLeft, ClipboardList, Mail, FileEdit, MessagesSquare, Clock, Sparkles } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
 import { AuthRequired } from "@/components/AuthRequired";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
+import { getRemainingExams, MONTHLY_EXAM_QUOTA } from "@/lib/examQuota";
 
 const MODES = [
   {
@@ -43,6 +45,20 @@ const MODES = [
 export default function ExpressionEcriteExamenChoix() {
   const { user, isPremium, isAdmin } = useAuth();
   const locked = !isPremium && !isAdmin;
+  const [remaining, setRemaining] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!user || locked) return;
+    let cancelled = false;
+    getRemainingExams(user.id).then((n) => {
+      if (!cancelled) setRemaining(n);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [user, locked]);
+
+  const quotaReached = remaining === 0;
 
   return (
     <section className="mx-auto max-w-5xl px-4 py-16 sm:py-24">
@@ -64,21 +80,44 @@ export default function ExpressionEcriteExamenChoix() {
       ) : locked ? (
         <PremiumUpsell title="la simulation d'examen" />
       ) : (
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {MODES.map(({ to, icon: Icon, title, desc, duration, detail }) => (
-            <Link key={to} to={to} className="card-shell flex flex-col gap-3 p-5 transition hover:-translate-y-0.5 hover:shadow-lg">
-              <span className="grid h-10 w-10 place-items-center rounded-lg" style={{ backgroundColor: "color-mix(in oklch, var(--ee) 18%, transparent)", color: "var(--ee)" }}>
-                <Icon className="h-5 w-5" />
-              </span>
-              <p className="font-display text-base font-bold">{title}</p>
-              <p className="text-xs text-muted-foreground">{desc}</p>
-              <div className="mt-auto flex items-center justify-between border-t border-border pt-3 text-xs font-semibold text-muted-foreground">
-                <span className="inline-flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {duration}</span>
-                <span>{detail}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <>
+          {remaining !== null && (
+            <div className={`mx-auto mt-8 flex max-w-md items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${quotaReached ? "bg-red-500/10 text-red-600" : "bg-primary/10 text-primary"}`}>
+              <Sparkles className="h-4 w-4" />
+              {quotaReached
+                ? "Quota d'examens corrigés atteint pour ce mois-ci."
+                : `Examens corrigés restants ce mois-ci : ${remaining}/${MONTHLY_EXAM_QUOTA}`}
+            </div>
+          )}
+          {quotaReached && (
+            <p className="mx-auto mt-2 max-w-md text-center text-xs text-muted-foreground">
+              Le quota se réinitialise le 1er du mois prochain.
+            </p>
+          )}
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {MODES.map(({ to, icon: Icon, title, desc, duration, detail }) => {
+              const cardClass = `card-shell flex flex-col gap-3 p-5 transition ${quotaReached ? "opacity-50" : "hover:-translate-y-0.5 hover:shadow-lg"}`;
+              const cardContent = (
+                <>
+                  <span className="grid h-10 w-10 place-items-center rounded-lg" style={{ backgroundColor: "color-mix(in oklch, var(--ee) 18%, transparent)", color: "var(--ee)" }}>
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <p className="font-display text-base font-bold">{title}</p>
+                  <p className="text-xs text-muted-foreground">{desc}</p>
+                  <div className="mt-auto flex items-center justify-between border-t border-border pt-3 text-xs font-semibold text-muted-foreground">
+                    <span className="inline-flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {duration}</span>
+                    <span>{detail}</span>
+                  </div>
+                </>
+              );
+              return quotaReached ? (
+                <div key={to} className={cardClass}>{cardContent}</div>
+              ) : (
+                <Link key={to} to={to} className={cardClass}>{cardContent}</Link>
+              );
+            })}
+          </div>
+        </>
       )}
     </section>
   );
