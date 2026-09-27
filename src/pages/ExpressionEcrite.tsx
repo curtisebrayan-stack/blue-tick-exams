@@ -43,6 +43,9 @@ export default function ExpressionEcrite() {
             <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-foreground/10 px-3 py-1.5"><Clock className="h-3.5 w-3.5" /> ~60 minutes</span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-foreground/10 px-3 py-1.5"><ListChecks className="h-3.5 w-3.5" /> 3 tâches, notées sur 20</span>
           </div>
+          <Link to="/expression-ecrite/examen" className="btn-primary mt-6 inline-flex">
+            Simulation d'examen (chronométrée) <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 

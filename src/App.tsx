@@ -37,6 +37,8 @@ import PracticeEo from "@/pages/PracticeEo";
 import ExpressionEcrite from "@/pages/ExpressionEcrite";
 import ExpressionEcriteSessions from "@/pages/ExpressionEcriteSessions";
 import PracticeEeSession from "@/pages/PracticeEeSession";
+import ExpressionEcriteExamenChoix from "@/pages/ExpressionEcriteExamenChoix";
+import PracticeEeExamen from "@/pages/PracticeEeExamen";
 import PracticeEe from "@/pages/PracticeEe";
 import Tarifs from "@/pages/Tarifs";
 import Blog from "@/pages/Blog";
@@ -77,6 +79,8 @@ export default function App() {
         <Route path="expression-ecrite" element={<ExpressionEcrite />} />
         <Route path="expression-ecrite/sessions" element={<ExpressionEcriteSessions />} />
         <Route path="expression-ecrite/sessions/:slug" element={<PracticeEeSession />} />
+        <Route path="expression-ecrite/examen" element={<ExpressionEcriteExamenChoix />} />
+        <Route path="expression-ecrite/examen/:mode" element={<PracticeEeExamen />} />
         <Route path="expression-ecrite/:slug" element={<PracticeEe />} />
         <Route path="tarifs" element={<Tarifs />} />
         <Route path="blog" element={<Blog />} />
