@@ -380,7 +380,7 @@ export default function Profil() {
       )}
 
       {writings && writings.length > 0 && (
-        <div className="mt-10">
+        <div id="redactions" className="mt-10 scroll-mt-24">
           <h2 className="flex items-center gap-2 text-lg font-bold">
             <PenLine className="h-4 w-4 text-primary" /> Rédactions Expression écrite
           </h2>

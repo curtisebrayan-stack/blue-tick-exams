@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ClipboardList, Mail, FileEdit, MessagesSquare, Clock, Sparkles } from "lucide-react";
+import { ArrowLeft, ClipboardList, Mail, FileEdit, MessagesSquare, Clock, Sparkles, History } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
 import { AuthRequired } from "@/components/AuthRequired";
@@ -94,6 +94,11 @@ export default function ExpressionEcriteExamenChoix() {
               Le quota se réinitialise le 1er du mois prochain.
             </p>
           )}
+          <div className="mt-4 flex justify-center">
+            <Link to="/profil#redactions" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline">
+              <History className="h-4 w-4" /> Mes examens précédents
+            </Link>
+          </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {MODES.map(({ to, icon: Icon, title, desc, duration, detail }) => {
               const cardClass = `card-shell flex flex-col gap-3 p-5 transition ${quotaReached ? "opacity-50" : "hover:-translate-y-0.5 hover:shadow-lg"}`;
