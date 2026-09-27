@@ -2,6 +2,7 @@
 // Tâche 3 : argumentation à partir de deux documents). Voir supabase-ee-sessions.sql.
 
 import { supabase } from "./supabase";
+import { sortByMonthSlugDesc } from "./monthSlug";
 
 export type EeSessionSujet = {
   number: number;
@@ -29,10 +30,10 @@ export type EeSessionSummary = {
 export async function listEeSessions(): Promise<EeSessionSummary[]> {
   const { data, error } = await supabase
     .from("ee_sessions")
-    .select("id, slug, label, is_free")
-    .order("created_at", { ascending: true });
+    .select("id, slug, label, is_free");
   if (error) throw error;
-  return (data ?? []).map((s) => ({ id: s.id, slug: s.slug, label: s.label, isFree: s.is_free }));
+  const sessions = (data ?? []).map((s) => ({ id: s.id, slug: s.slug, label: s.label, isFree: s.is_free }));
+  return sortByMonthSlugDesc(sessions);
 }
 
 export async function getEeSession(slug: string): Promise<EeSession | undefined> {

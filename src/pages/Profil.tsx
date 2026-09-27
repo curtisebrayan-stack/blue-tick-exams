@@ -25,12 +25,21 @@ type SpeakingSubmission = {
   signedUrl?: string;
 };
 
+type Correction = {
+  score: number;
+  strengths: string[];
+  improvements: string[];
+  corrected_text: string;
+  comment: string;
+};
+
 type WritingSubmission = {
   id: string;
   topic_slug: string;
   content: string;
   word_count: number;
   created_at: string;
+  correction: Correction | null;
 };
 
 const TOPIC_LABELS: Record<string, string> = {
@@ -59,6 +68,15 @@ const TOPIC_LABELS: Record<string, string> = {
   "technologies": "Technologies",
   "travail-et-etudes": "Travail et études",
 };
+
+function writingLabel(topicSlug: string): string {
+  const examenMatch = topicSlug.match(/^examen-(complet|tache-\d)-tache-(\d)$/);
+  if (examenMatch) {
+    const [, mode, tache] = examenMatch;
+    return mode === "complet" ? `Examen complet — Tâche ${tache}` : `Simulation Tâche ${tache}`;
+  }
+  return TOPIC_LABELS[topicSlug] ?? topicSlug;
+}
 
 export default function Profil() {
   const { user, updatePassword } = useAuth();
@@ -135,7 +153,7 @@ export default function Profil() {
 
     supabase
       .from("writing_submissions")
-      .select("id, topic_slug, content, word_count, created_at")
+      .select("id, topic_slug, content, word_count, created_at, correction")
       .order("created_at", { ascending: false })
       .then(({ data, error: fetchError }) => {
         if (!fetchError && data) setWritings(data as WritingSubmission[]);
@@ -370,12 +388,36 @@ export default function Profil() {
             {writings.map((w) => (
               <details key={w.id} className="card-shell p-4">
                 <summary className="flex cursor-pointer items-center justify-between gap-2 text-sm font-semibold">
-                  <span>{TOPIC_LABELS[w.topic_slug] ?? w.topic_slug}</span>
-                  <span className="text-xs font-normal text-muted-foreground">
+                  <span>{writingLabel(w.topic_slug)}</span>
+                  <span className="flex items-center gap-2 text-xs font-normal text-muted-foreground">
+                    {w.correction && (
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 font-bold text-primary">{w.correction.score}/20</span>
+                    )}
                     {w.word_count} mots · {new Date(w.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
                   </span>
                 </summary>
                 <p className="mt-3 whitespace-pre-line text-sm text-muted-foreground">{w.content}</p>
+                {w.correction && (
+                  <div className="mt-4 space-y-3 rounded-lg bg-primary/5 p-3">
+                    <p className="text-sm text-muted-foreground">{w.correction.comment}</p>
+                    {w.correction.strengths?.length > 0 && (
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-wide text-green-600">Points forts</p>
+                        <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
+                          {w.correction.strengths.map((s, i) => <li key={i}>• {s}</li>)}
+                        </ul>
+                      </div>
+                    )}
+                    {w.correction.improvements?.length > 0 && (
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-wide text-amber-600">À améliorer</p>
+                        <ul className="mt-1 space-y-0.5 text-sm text-muted-foreground">
+                          {w.correction.improvements.map((s, i) => <li key={i}>• {s}</li>)}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
               </details>
             ))}
           </div>

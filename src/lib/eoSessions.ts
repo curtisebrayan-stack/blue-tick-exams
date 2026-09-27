@@ -4,6 +4,7 @@
 // base pour elle. Voir supabase-eo-sessions.sql pour le schéma.
 
 import { supabase } from "./supabase";
+import { sortByMonthSlugDesc } from "./monthSlug";
 
 export type EoSessionSujet = {
   number: number;
@@ -30,10 +31,10 @@ export type EoSessionSummary = {
 export async function listEoSessions(): Promise<EoSessionSummary[]> {
   const { data, error } = await supabase
     .from("eo_sessions")
-    .select("id, slug, label, is_free")
-    .order("created_at", { ascending: true });
+    .select("id, slug, label, is_free");
   if (error) throw error;
-  return (data ?? []).map((s) => ({ id: s.id, slug: s.slug, label: s.label, isFree: s.is_free }));
+  const sessions = (data ?? []).map((s) => ({ id: s.id, slug: s.slug, label: s.label, isFree: s.is_free }));
+  return sortByMonthSlugDesc(sessions);
 }
 
 export async function getEoSession(slug: string): Promise<EoSession | undefined> {
