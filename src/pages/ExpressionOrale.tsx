@@ -1,24 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Mic, Clock, ListChecks, Lightbulb, ArrowRight, Lock } from "lucide-react";
+import { Mic, Clock, ListChecks, Lightbulb, ArrowRight, Lock, Calendar } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { listEoPrompts, type SpeakingPromptSummary } from "@/lib/speakingPrompts";
 import { useAuth } from "@/lib/AuthContext";
-
-const FORMAT_STEPS = [
-  {
-    title: "Tâche 1 — Se présenter",
-    desc: "Répondre à des questions personnelles simples : toi, ta famille, tes goûts, ton quotidien. (~3 minutes)",
-  },
-  {
-    title: "Tâche 2 — Poser des questions",
-    desc: "À partir d'un thème et de mots-clés donnés, poser des questions à l'examinateur pour obtenir des informations. (~4 minutes)",
-  },
-  {
-    title: "Tâche 3 — Argumenter un point de vue",
-    desc: "Défendre une opinion sur un sujet donné et échanger avec l'examinateur, qui peut objecter. (~5 minutes)",
-  },
-];
+import methodologie3Taches from "@/assets/eo-methodologie-3-taches.jpg";
 
 const TIPS = [
   "Parle avec assurance même en cas d'hésitation : le débit et l'aisance comptent autant que la grammaire parfaite.",
@@ -65,13 +51,23 @@ export default function ExpressionOrale() {
         <p className="mt-2 text-sm text-muted-foreground">
           Trois tâches enchaînées, en face à face avec l'examinateur.
         </p>
-        <div className="mt-8 space-y-4">
-          {FORMAT_STEPS.map((step) => (
-            <div key={step.title} className="card-shell p-6">
-              <h3 className="font-display text-base font-bold">{step.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{step.desc}</p>
+        <img src={methodologie3Taches} alt="Méthodologie Expression orale TCF Canada — 3 tâches" className="mt-8 w-full rounded-2xl border border-border" />
+      </section>
+
+      <section className="bg-muted">
+        <div className="mx-auto max-w-4xl px-4 py-16 sm:py-20">
+          <div className="card-shell flex flex-col items-start gap-4 p-8 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <span className="chip"><Calendar className="h-3.5 w-3.5" /> Sessions mensuelles</span>
+              <h2 className="mt-3 text-xl font-bold">Sujets par session (Tâche 1, 2, 3)</h2>
+              <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                Retrouve les sujets d'expression orale organisés par mois, avec les questions proposées pour t'entraîner.
+              </p>
             </div>
-          ))}
+            <Link to="/expression-orale/sessions" className="btn-primary shrink-0">
+              Voir les sessions <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -1,0 +1,362 @@
+[
+  {
+    "number": 1,
+    "consigne": "Je vis dans votre quartier. Je vais partir en vacances une semaine et j’ai besoin que quelqu’un garde mon chien. Vous souhaitez m’aider et vous me demandez des informations (durée, soins, paiement, etc.).",
+    "questions": [
+      "Quelles sont les dates exactes de ton départ et de ton retour ?",
+      "Comment s’appelle ton chien et quelle est sa race ?",
+      "Quel âge a-t-il et a-t-il des besoins particuliers liés à son âge ?",
+      "Quelles sont ses habitudes alimentaires (type de nourriture, fréquence, quantité) ?",
+      "Ton chien a-t-il des allergies ou des problèmes de santé à surveiller ?",
+      "Dois-je lui donner des médicaments ou des soins spécifiques pendant ton absence ?",
+      "Quelles sont ses habitudes de promenade (nombre de sorties par jour, durée, lieux préférés) ?",
+      "Ton chien s’entend-il bien avec les autres animaux ou y a-t-il des précautions à prendre lors des promenades ?",
+      "Où dort-il habituellement et a-t-il besoin d’un espace particulier pour se reposer ?",
+      "Y a-t-il des objets, jouets ou activités qu’il aime particulièrement ou qu’il faut éviter ?",
+      "Souhaites-tu me rémunérer pour la garde de ton chien, et si oui, quel serait le montant ?",
+      "Comment puis-je te contacter en cas de question ou d’urgence pendant ton absence ?"
+    ]
+  },
+  {
+    "number": 2,
+    "consigne": "Je suis un(e) collègue. J’ai réalisé un tour touristique au Canada. Vous voulez faire la même expérience l’été prochain et me posez des questions sur le voyage (coût, étapes, temps, etc.).",
+    "questions": [
+      "Quelles villes ou régions as-tu visitées lors de ton tour touristique au Canada ?",
+      "Combien de temps a duré ton voyage au total ?",
+      "Quel budget as-tu prévu pour l’ensemble du séjour, y compris le transport, l’hébergement et les activités ?",
+      "Quels moyens de transport as-tu utilisés pour te déplacer entre les différentes étapes ?",
+      "Quels hébergements recommandes-tu (hôtels, auberges, locations, etc.) et à quels prix moyens ?",
+      "Quelles activités ou excursions t’ont le plus marqué pendant ton voyage ?",
+      "Y a-t-il des sites ou des attractions incontournables que tu conseilles absolument de visiter ?",
+      "As-tu rencontré des difficultés particulières lors de ton séjour (climat, langue, organisation) ?",
+      "Quelle période de l’été recommandes-tu pour profiter au mieux du Canada ?",
+      "As-tu des conseils pour économiser sur les repas ou les transports pendant le voyage ?",
+      "Comment as-tu organisé ton itinéraire et réservé tes activités à l’avance ?",
+      "Y a-t-il des spécialités culinaires ou des expériences locales à ne pas manquer selon toi ?"
+    ]
+  },
+  {
+    "number": 3,
+    "consigne": "Je suis un(e) collègue. J’ai participé à un mariage ce week-end. Vous voulez savoir comment s’est déroulée la cérémonie (repas, lieu, ambiance, etc.).",
+    "questions": [
+      "Où a eu lieu la cérémonie de mariage ?",
+      "Combien de personnes étaient invitées à la cérémonie ?",
+      "Comment était l’ambiance générale pendant le mariage ?",
+      "Quel type de repas a été servi lors de la réception ?",
+      "Y avait-il un thème particulier ou une décoration spéciale pour l’événement ?",
+      "Quelles animations ou activités ont été proposées pendant la soirée ?",
+      "Comment étaient les mariés, semblaient-ils heureux et détendus ?",
+      "Y a-t-il eu un moment particulièrement émouvant ou marquant pendant la cérémonie ?",
+      "La musique était-elle assurée par un DJ, un groupe ou une playlist ?",
+      "As-tu rencontré des personnes intéressantes ou retrouvé des connaissances lors du mariage ?",
+      "Y a-t-il eu des discours ou des surprises organisées pour les mariés ?",
+      "Comment s’est terminée la soirée et à quelle heure es-tu parti(e) ?"
+    ]
+  },
+  {
+    "number": 4,
+    "consigne": "Je suis un(e) ami(e). Vous recevrez prochainement des amis qui ne connaissent pas votre ville. Vous me posez des questions pour les aider à organiser leur séjour (restaurants, visites, sorties, etc.).",
+    "questions": [
+      "Combien de temps tes amis vont-ils rester en ville ?",
+      "Quels sont leurs centres d’intérêt principaux (culture, gastronomie, nature, etc.) ?",
+      "Y a-t-il des quartiers ou des sites incontournables que tu recommandes de visiter absolument ?",
+      "Quels restaurants locaux offrent une expérience typique de la ville ?",
+      "Existe-t-il des spécialités culinaires à ne pas manquer ici ?",
+      "Quels musées ou monuments valent vraiment le détour selon toi ?",
+      "Y a-t-il des événements ou des festivals prévus pendant leur séjour ?",
+      "Quels moyens de transport sont les plus pratiques pour se déplacer en ville ?",
+      "Connais-tu des activités originales ou insolites à faire dans la région ?",
+      "Y a-t-il des endroits où sortir le soir pour profiter de l’ambiance locale ?",
+      "As-tu des conseils pour éviter les pièges à touristes ou les endroits trop fréquentés ?",
+      "Où peut-on trouver les plus beaux points de vue ou endroits pour prendre des photos ?"
+    ]
+  },
+  {
+    "number": 5,
+    "consigne": "Je suis un(e) ami(e). Je m’installe à l’étranger et je ne peux pas transporter toutes mes affaires. J’ai mis certains objets en vente. Vous voulez en savoir plus et vous me posez des questions sur les articles à vendre (meubles, objets, tarifs, etc.).",
+    "questions": [
+      "Quels types d’objets mets-tu en vente exactement (meubles, électroménager, décoration, etc.) ?",
+      "Peux-tu me donner une liste détaillée des articles disponibles ?",
+      "Dans quel état général se trouvent ces objets ?",
+      "Quels sont les prix que tu proposes pour chaque article ?",
+      "Est-ce que certains objets sont négociables au niveau du tarif ?",
+      "Depuis combien de temps possèdes-tu ces meubles ou objets ?",
+      "Y a-t-il des marques ou des modèles particuliers parmi les articles à vendre ?",
+      "Où sont stockés les objets et comment peut-on venir les voir ?",
+      "Est-ce que tu proposes une aide pour le transport ou la livraison des objets achetés ?",
+      "Y a-t-il des objets qui nécessitent un montage ou une installation particulière ?",
+      "As-tu des photos récentes des articles à vendre ?",
+      "Jusqu’à quand comptes-tu laisser les objets en vente avant de t’en débarrasser autrement ?"
+    ]
+  },
+  {
+    "number": 6,
+    "consigne": "Nous sommes amis et vous envisagez de vous installer au Canada. Je vous suggère de vivre avec moi en colocation à Toronto. Vous me demandez des informations pour décider si c’est une bonne solution pour vous (logement, quartier, routine, etc.).",
+    "questions": [
+      "Peux-tu me décrire l’appartement et les espaces communs que nous partagerions ?",
+      "Dans quel quartier de Toronto se trouve le logement et comment est l’ambiance du quartier ?",
+      "Quel est le montant du loyer mensuel et quelles charges sont incluses dans ce prix ?",
+      "Y a-t-il des commerces, des transports en commun ou des services essentiels à proximité ?",
+      "Quelle est la routine quotidienne dans l’appartement (ménage, repas, horaires, etc.) ?",
+      "As-tu déjà eu d’autres colocataires et comment cela s’est-il passé ?",
+      "Quelles sont les règles de vie ou les attentes que tu as pour la colocation ?",
+      "Est-ce que l’appartement est meublé ou dois-je apporter mes propres meubles ?",
+      "Y a-t-il des animaux dans l’appartement ou envisages-tu d’en adopter ?",
+      "Comment gères-tu la répartition des tâches ménagères et des dépenses communes ?",
+      "Quelles sont les possibilités de stationnement ou de stockage si j’ai une voiture ou beaucoup d’affaires ?",
+      "Est-ce que tu peux me parler un peu de tes habitudes de vie et de tes centres d’intérêt ?"
+    ]
+  },
+  {
+    "number": 7,
+    "consigne": "Je travaille à l’accueil d’un club sportif de la ville. Vous envisagez de vous inscrire et vous me posez des questions (horaires, types de cours, tarifs, etc.)",
+    "questions": [
+      "Quels sont les horaires d’ouverture du club sportif ?",
+      "Quels types de cours proposez-vous (fitness, yoga, natation, etc.) ?",
+      "Y a-t-il des cours adaptés à différents niveaux (débutant, intermédiaire, avancé) ?",
+      "Quels sont les tarifs d’inscription et existe-t-il des formules d’abonnement mensuel ou annuel ?",
+      "Proposez-vous des séances d’essai gratuites avant l’inscription ?",
+      "Faut-il réserver à l’avance pour participer aux cours collectifs ?",
+      "Y a-t-il des réductions pour les étudiants, les familles ou les groupes ?",
+      "Quels équipements sont mis à disposition des membres (salle de musculation, piscine, sauna, etc.) ?",
+      "Les entraîneurs sont-ils diplômés et disponibles pour un accompagnement personnalisé ?",
+      "Quelles sont les modalités d’annulation ou de suspension de l’abonnement ?",
+      "Proposez-vous des activités ou des événements spéciaux le week-end ou pendant les vacances scolaires ?",
+      "Comment puis-je m’inscrire et quels documents dois-je fournir ?"
+    ]
+  },
+  {
+    "number": 8,
+    "consigne": "Je travaille à l’office de tourisme. Vous souhaitez planifier un week-end à prix réduit et vous me demandez des suggestions (activités, lieux à visiter, transports, etc.).",
+    "questions": [
+      "Quels sont les sites incontournables à visiter dans la région pour un week-end ?",
+      "Quelles activités gratuites ou à petit prix recommandez-vous pour les visiteurs ?",
+      "Existe-t-il des pass touristiques ou des réductions spéciales pour les attractions locales ?",
+      "Quels moyens de transport économiques sont disponibles pour se déplacer dans la ville et ses environs ?",
+      "Y a-t-il des événements ou des festivals prévus ce week-end qui pourraient être intéressants ?",
+      "Pouvez-vous me conseiller des hébergements abordables ou des auberges de jeunesse à proximité ?",
+      "Quels restaurants ou cafés proposent des menus à prix réduit ou des formules spéciales le week-end ?",
+      "Où puis-je trouver des marchés locaux ou des lieux typiques pour découvrir la gastronomie régionale sans trop dépenser ?",
+      "Y a-t-il des visites guidées gratuites ou à tarif réduit organisées par l’office de tourisme ?",
+      "Quels quartiers ou villages aux alentours valent le détour pour une balade ou une découverte authentique ?",
+      "Proposez-vous des itinéraires ou des circuits adaptés à un court séjour et à un budget limité ?",
+      "Comment puis-je obtenir des informations actualisées sur les horaires, les tarifs et les disponibilités des activités proposées ?"
+    ]
+  },
+  {
+    "number": 9,
+    "consigne": "Je suis votre voisin(e). Je m’absente en vacances et je cherche quelqu’un pour s’occuper de mon animal. Vous voulez en savoir plus avant d’accepter (dates, soins, règles, etc.).",
+    "questions": [
+      "Quelles sont les dates exactes de ton départ et de ton retour ?",
+      "De quel animal s’agit-il et comment s’appelle-t-il ?",
+      "Quel âge a ton animal et quelle est sa race ou son espèce ?",
+      "Quels soins quotidiens dois-je lui apporter (alimentation, eau, médicaments) ?",
+      "Ton animal a-t-il des allergies ou des problèmes de santé particuliers ?",
+      "Y a-t-il des habitudes ou des routines spécifiques à respecter pour ton animal ?",
+      "Dois-je promener ton animal ou lui faire faire de l’exercice ? Si oui, à quelle fréquence et où ?",
+      "Ton animal est-il sociable avec les étrangers ou les autres animaux ?",
+      "Y a-t-il des règles à respecter dans la maison concernant ton animal (accès à certaines pièces, objets interdits, etc.) ?",
+      "Que dois-je faire en cas d’urgence ou si ton animal tombe malade ?",
+      "As-tu des contacts vétérinaires ou des personnes à prévenir en cas de problème ?",
+      "Comment puis-je te joindre si j’ai une question ou un souci pendant ton absence ?"
+    ]
+  },
+  {
+    "number": 10,
+    "consigne": "Je suis votre ami(e). Vous cherchez un emploi et vous avez un entretien prochainement, vous me demandez comment le réussir (tenue, comportement, préparation, etc.).",
+    "questions": [
+      "Peux-tu me dire comment tu t’es préparé(e) pour tes entretiens précédents et ce qui a fonctionné pour toi ?",
+      "Selon toi, quelle tenue vestimentaire est la plus appropriée pour un entretien d’embauche ?",
+      "Quels conseils me donnerais-tu pour faire bonne impression dès les premières minutes ?",
+      "Comment gères-tu le stress avant et pendant un entretien ?",
+      "Quelles sont les questions les plus fréquentes que tu as rencontrées lors de tes entretiens ?",
+      "As-tu des astuces pour répondre efficacement aux questions difficiles ou inattendues ?",
+      "Comment te renseignes-tu sur l’entreprise avant un entretien ?",
+      "Quels comportements ou attitudes faut-il absolument éviter pendant un entretien ?",
+      "Est-il important de préparer des questions à poser au recruteur ? Si oui, lesquelles recommandes-tu ?",
+      "Comment conclure un entretien de manière positive et professionnelle ?",
+      "As-tu déjà eu des expériences négatives en entretien et comment les as-tu surmontées ?",
+      "Quels conseils donnerais-tu pour se démarquer des autres candidats ?"
+    ]
+  },
+  {
+    "number": 11,
+    "consigne": "Je suis employé(e) à l’accueil d’un parc de divertissement. Vous souhaitez y passer une journée et vous me posez des questions pour vous renseigner (tarifs, heures d’ouverture, activités, services, etc.).",
+    "questions": [
+      "Quels sont les horaires d’ouverture et de fermeture du parc ?",
+      "Quels sont les tarifs d’entrée pour les adultes, les enfants et les familles ?",
+      "Existe-t-il des réductions pour les groupes, les étudiants ou les personnes âgées ?",
+      "Quelles sont les principales attractions et activités proposées dans le parc ?",
+      "Y a-t-il des spectacles ou des animations prévus aujourd’hui ou dans la semaine ?",
+      "Est-il nécessaire de réserver les billets à l’avance ou peut-on les acheter sur place ?",
+      "Y a-t-il des aires de pique-nique ou des restaurants à l’intérieur du parc ?",
+      "Proposez-vous des services pour les personnes à mobilité réduite ou en situation de handicap ?",
+      "Y a-t-il un parking disponible et, si oui, est-il payant ?",
+      "Quelles sont les règles concernant l’apport de nourriture ou de boissons de l’extérieur ?",
+      "Y a-t-il des consignes ou des casiers pour déposer les affaires personnelles ?",
+      "Que se passe-t-il en cas de mauvais temps ou de fermeture exceptionnelle du parc ?"
+    ]
+  },
+  {
+    "number": 12,
+    "consigne": "Je suis employé(e) dans un magasin de téléphones. Vous cherchez un premier smartphone pour un enfant. Vous me posez des questions afin d’obtenir des informations sur les produits disponibles (appareils, accessoires, prix, etc.).",
+    "questions": [
+      "Quels modèles de smartphones recommandez-vous pour un enfant qui débute ?",
+      "Existe-t-il des téléphones spécialement conçus pour les enfants ou les adolescents ?",
+      "Quels sont les prix des smartphones d’entrée de gamme adaptés aux enfants ?",
+      "Quels systèmes de contrôle parental sont disponibles sur vos appareils ?",
+      "Quels accessoires essentiels conseillez-vous pour protéger le téléphone d’un enfant (coque, verre trempé, etc.) ?",
+      "Y a-t-il des offres ou des forfaits spéciaux pour les jeunes utilisateurs ?",
+      "Quels sont les critères de robustesse ou de résistance des modèles proposés ?",
+      "Proposez-vous des garanties ou des assurances en cas de casse ou de perte ?",
+      "Quels sont les modèles avec une autonomie de batterie suffisante pour une utilisation quotidienne par un enfant ?",
+      "Est-il possible de limiter l’accès à certaines applications ou fonctionnalités sur ces téléphones ?",
+      "Quels conseils donneriez-vous pour choisir un smartphone adapté à l’âge de l’enfant ?",
+      "Proposez-vous un service d’assistance ou de configuration pour la première utilisation du téléphone ?"
+    ]
+  },
+  {
+    "number": 13,
+    "consigne": "Je suis employé(e) dans un restaurant. Vous envisagez d’y organiser une fête d’anniversaire familiale. Vous me posez des questions pour obtenir des renseignements (capacité d’accueil, menus proposés, tarifs, modalités de réservation, etc.).",
+    "questions": [
+      "Quelle est la capacité maximale d’accueil de votre restaurant pour une fête familiale ?",
+      "Quels types de menus proposez-vous pour les groupes ou les événements spéciaux ?",
+      "Est-il possible d’adapter les menus en fonction des allergies ou des régimes alimentaires particuliers ?",
+      "Quels sont les tarifs pour un menu d’anniversaire par personne ou pour un groupe ?",
+      "Proposez-vous des formules tout compris incluant boissons, desserts et apéritifs ?",
+      "Faut-il verser un acompte pour réserver une salle ou une grande table ?",
+      "Quelles sont les modalités et délais de réservation pour organiser une fête d’anniversaire ?",
+      "Disposez-vous d’un espace privatisable ou d’une salle dédiée pour les événements familiaux ?",
+      "Offrez-vous des services supplémentaires comme la décoration, un gâteau d’anniversaire ou de la musique ?",
+      "Quels sont les horaires disponibles pour organiser une fête d’anniversaire dans votre établissement ?",
+      "Y a-t-il des facilités de stationnement ou des accès pour les personnes à mobilité réduite ?",
+      "Quels moyens de paiement acceptez-vous pour le règlement de la fête ?"
+    ]
+  },
+  {
+    "number": 14,
+    "consigne": "Je suis employé(e) au service des activités de votre nouvelle ville. Vous cherchez une activité pour faire de nouvelles connaissances. Vous me posez des questions afin d’obtenir des renseignements (type d’activité, horaires, participants, etc.).",
+    "questions": [
+      "Quelles activités proposez-vous actuellement pour favoriser les rencontres entre habitants ?",
+      "Quels sont les jours et horaires des différentes activités de groupe ?",
+      "Où se déroulent généralement ces activités dans la ville ?",
+      "Quel est le nombre moyen de participants à chaque activité ?",
+      "Faut-il s’inscrire à l’avance ou peut-on venir spontanément ?",
+      "Y a-t-il des activités spécialement destinées aux nouveaux arrivants ?",
+      "Quel est le coût de participation à ces activités, s’il y en a un ?",
+      "Quel type de public participe habituellement à ces événements (âge, centres d’intérêt, etc.) ?",
+      "Proposez-vous des activités en intérieur et en extérieur ?",
+      "Y a-t-il des activités adaptées aux familles ou aux personnes seules ?",
+      "Comment puis-je être informé(e) des prochaines activités organisées ?",
+      "Est-il possible de proposer une nouvelle activité ou de s’impliquer dans l’organisation ?"
+    ]
+  },
+  {
+    "number": 15,
+    "consigne": "Je suis un(e) collègue. J’organise souvent des sorties de jogging en groupe. Vous souhaitez y participer et vous me posez des questions pour obtenir des informations (itinéraire, horaires, équipement, niveau, etc.).",
+    "questions": [
+      "À quelle fréquence organises-tu les sorties de jogging en groupe ?",
+      "Quels sont généralement les jours et horaires des séances ?",
+      "Où se trouve le point de rendez-vous pour le départ du jogging ?",
+      "Quel est l’itinéraire habituel et la distance parcourue lors de chaque sortie ?",
+      "Le parcours comporte-t-il des dénivelés ou des difficultés particulières ?",
+      "Quel niveau de condition physique est recommandé pour participer ?",
+      "Combien de personnes participent en moyenne à chaque sortie ?",
+      "Faut-il s’inscrire à l’avance ou peut-on venir spontanément ?",
+      "Quel type d’équipement conseilles-tu d’apporter (chaussures, vêtements, accessoires) ?",
+      "Y a-t-il des pauses prévues pendant le jogging ou court-on en continu ?",
+      "Proposes-tu des échauffements ou des étirements avant ou après la séance ?",
+      "En cas de mauvais temps, les sorties sont-elles maintenues, reportées ou annulées ?"
+    ]
+  },
+  {
+    "number": 16,
+    "consigne": "Je suis un(e) voisin(e). Je prépare une soirée entre les habitants de l’immeuble et je vous propose d’y participer. Vous me demandez des renseignements sur l’événement (date, invités, repas, boissons, etc.).",
+    "questions": [
+      "À quelle date et à quelle heure la soirée aura-t-elle lieu ?",
+      "Où exactement se déroulera l’événement dans l’immeuble ?",
+      "Qui sont les personnes invitées à cette soirée ?",
+      "Faut-il confirmer sa présence à l’avance ?",
+      "Y aura-t-il un thème particulier pour la soirée ?",
+      "Est-ce que chacun doit apporter un plat ou une boisson ?",
+      "Quel type de repas ou de collations sera proposé pendant la soirée ?",
+      "Prévoyez-vous des boissons alcoolisées et non alcoolisées ?",
+      "Y aura-t-il des activités ou des animations prévues pendant la soirée ?",
+      "Les enfants sont-ils également invités à participer à l’événement ?",
+      "Y a-t-il des restrictions alimentaires ou des allergies à prendre en compte ?",
+      "Jusqu’à quelle heure la soirée est-elle prévue de durer ?"
+    ]
+  },
+  {
+    "number": 17,
+    "consigne": "Je suis un(e) colocataire. J’ai prévu d’inviter quelques amis chez nous. Vous me demandez des renseignements sur cette visite (nombre d’invités, durée, ambiance, etc.).",
+    "questions": [
+      "Combien de personnes comptes-tu inviter exactement ?",
+      "Peux-tu me dire quand la visite aura lieu et à quelle heure elle commencera ?",
+      "Jusqu’à quelle heure prévois-tu que tes amis restent chez nous ?",
+      "Est-ce que tu envisages d’organiser un repas ou juste un apéritif ?",
+      "Quel genre d’ambiance souhaites-tu créer pour cette soirée (calme, festive, jeux, musique, etc.) ?",
+      "Est-ce que certains de tes invités ont des allergies ou des besoins particuliers dont je devrais être informé(e) ?",
+      "Comptes-tu utiliser des espaces communs spécifiques pendant la visite (salon, cuisine, terrasse, etc.) ?",
+      "As-tu prévu de la musique ou des activités particulières pendant la soirée ?",
+      "Est-ce que tu souhaites que je participe à l’organisation ou préfères-tu t’en occuper seul(e) ?",
+      "Y aura-t-il des personnes qui dormiront sur place ou tout le monde repartira le soir même ?",
+      "As-tu informé les autres colocataires de cette visite ?",
+      "Y a-t-il des règles particulières que tu veux mettre en place pour cette soirée ?"
+    ]
+  },
+  {
+    "number": 18,
+    "consigne": "Je suis un(e) ami(e). Vous êtes arrivé(e) récemment au Québec. Vous me demandez des idées pour organiser une activité culturelle à petit budget (endroits, activités, moyens de transport, etc.).",
+    "questions": [
+      "Quels sont les endroits culturels gratuits ou peu coûteux que tu recommandes à Québec ?",
+      "Y a-t-il des musées ou des expositions accessibles sans frais ou avec des tarifs réduits pour les nouveaux arrivants ?",
+      "Connais-tu des festivals ou des événements culturels à venir qui ne nécessitent pas un gros budget ?",
+      "Quels quartiers de la ville sont intéressants à explorer pour découvrir la culture locale ?",
+      "Existe-t-il des activités culturelles en plein air, comme des visites guidées ou des spectacles de rue, qui sont abordables ?",
+      "Quels moyens de transport économiques me conseilles-tu pour me déplacer en ville lors de ces activités ?",
+      "Y a-t-il des bibliothèques ou des centres communautaires qui proposent des ateliers ou des événements gratuits ?",
+      "As-tu des suggestions pour rencontrer des artistes locaux ou participer à des activités artistiques sans trop dépenser ?",
+      "Où puis-je trouver des informations fiables sur les activités culturelles à petit budget à Québec ?",
+      "Est-ce qu’il existe des groupes ou des associations qui organisent des sorties culturelles pour les nouveaux arrivants ?",
+      "Quels sont tes coups de cœur personnels pour découvrir la culture québécoise sans se ruiner ?",
+      "Penses-tu qu’il soit possible de combiner plusieurs activités culturelles en une journée pour optimiser le budget ?"
+    ]
+  },
+  {
+    "number": 19,
+    "consigne": "Je suis un(e) ami(e). Je connais quelqu’un qui enseigne la cuisine. Vous souhaitez en savoir plus et vous me demandez des renseignements sur cette personne (compétences, horaires, prix, etc.).",
+    "questions": [
+      "Comment s’appelle la personne qui enseigne la cuisine ?",
+      "Depuis combien de temps donne-t-elle des cours de cuisine ?",
+      "Quelles sont ses spécialités culinaires ou types de cuisine qu’elle enseigne ?",
+      "Où se déroulent généralement ses cours (à domicile, en atelier, en ligne, etc.) ?",
+      "Quels sont les horaires habituels de ses cours de cuisine ?",
+      "Combien coûte une séance ou un forfait de cours avec elle ?",
+      "Est-ce qu’elle propose des cours pour tous les niveaux, débutants comme avancés ?",
+      "Faut-il apporter son propre matériel ou est-il fourni pendant les cours ?",
+      "Combien de personnes participent en général à chaque session ?",
+      "Propose-t-elle des ateliers thématiques ou des cours particuliers sur demande ?",
+      "Est-il possible d’obtenir un programme ou un planning détaillé de ses cours ?",
+      "Comment peut-on la contacter pour s’inscrire ou obtenir plus d’informations ?"
+    ]
+  },
+  {
+    "number": 20,
+    "consigne": "Je suis un(e) ami(e). Vous voulez faire goûter des spécialités québécoises à des amis. Vous me demandez des idées pour préparer ce repas (endroit, menu, coût, etc.).",
+    "questions": [
+      "Quelles sont les spécialités québécoises incontournables que tu me recommandes de faire découvrir à mes amis ?",
+      "Sais-tu où je pourrais trouver les ingrédients typiques pour préparer ces plats à Montréal ?",
+      "Est-il préférable d’organiser ce repas à la maison ou connais-tu un restaurant qui propose une expérience authentique ?",
+      "Peux-tu me donner des idées d’entrées, de plats principaux et de desserts traditionnels du Québec ?",
+      "Quel budget faut-il prévoir par personne pour un repas québécois complet ?",
+      "Y a-t-il des boissons locales que tu me conseilles de servir avec ces spécialités ?",
+      "As-tu des recettes faciles à réaliser pour quelqu’un qui n’a jamais cuisiné québécois ?",
+      "Existe-t-il des alternatives végétariennes ou sans gluten pour certains plats traditionnels ?",
+      "Quels sont les plats qui plaisent généralement le plus aux personnes qui découvrent la cuisine québécoise ?",
+      "Connais-tu des astuces pour présenter les plats de façon conviviale et typique ?",
+      "Est-ce qu’il y a des traditions ou des coutumes particulières à respecter lors d’un repas québécois ?",
+      "Peux-tu me recommander des magasins ou marchés spécialisés où acheter des produits québécois authentiques ?"
+    ]
+  }
+]
