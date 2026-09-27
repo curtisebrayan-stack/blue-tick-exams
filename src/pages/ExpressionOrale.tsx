@@ -5,6 +5,7 @@ import { Seo } from "@/components/Seo";
 import { listEoPrompts, type SpeakingPromptSummary } from "@/lib/speakingPrompts";
 import { useAuth } from "@/lib/AuthContext";
 import methodologie3Taches from "@/assets/eo-methodologie-3-taches.jpg";
+import { LoadingImage } from "@/components/LoadingImage";
 
 const TIPS = [
   "Parle avec assurance même en cas d'hésitation : le débit et l'aisance comptent autant que la grammaire parfaite.",
@@ -51,7 +52,7 @@ export default function ExpressionOrale() {
         <p className="mt-2 text-sm text-muted-foreground">
           Trois tâches enchaînées, en face à face avec l'examinateur.
         </p>
-        <img src={methodologie3Taches} alt="Méthodologie Expression orale TCF Canada — 3 tâches" className="mt-8 w-full rounded-2xl border border-border" />
+        <LoadingImage src={methodologie3Taches} alt="Méthodologie Expression orale TCF Canada — 3 tâches" className="mt-8 w-full rounded-2xl border border-border" />
       </section>
 
       <section className="bg-muted">

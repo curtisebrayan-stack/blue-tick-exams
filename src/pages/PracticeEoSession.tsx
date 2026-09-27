@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
 import { AuthRequired } from "@/components/AuthRequired";
 import methodologieTache1 from "@/assets/eo-methodologie-tache1.jpg";
+import { LoadingImage } from "@/components/LoadingImage";
 import NotFound from "./NotFound";
 
 type Tache = 1 | 2 | 3;
@@ -83,7 +84,7 @@ export default function PracticeEoSession() {
 
       <div className="mt-8">
         {tache === 1 ? (
-          <img src={methodologieTache1} alt="Méthodologie Expression orale — Tâche 1 : se présenter" className="w-full rounded-2xl border border-border" />
+          <LoadingImage src={methodologieTache1} alt="Méthodologie Expression orale — Tâche 1 : se présenter" className="w-full rounded-2xl border border-border" />
         ) : currentSujets.length === 0 ? (
           <p className="card-shell p-6 text-sm text-muted-foreground">
             Les sujets de la tâche {tache} pour cette session arrivent bientôt.

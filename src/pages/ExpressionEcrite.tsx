@@ -5,6 +5,7 @@ import { Seo } from "@/components/Seo";
 import { listEePrompts, type WritingPromptSummary } from "@/lib/writingPrompts";
 import { useAuth } from "@/lib/AuthContext";
 import methodologie3Taches from "@/assets/ee-methodologie-3-taches.jpg";
+import { LoadingImage } from "@/components/LoadingImage";
 
 const TIPS = [
   "Respecte le nombre de mots demandé : trop court pénalise autant que trop long.",
@@ -54,7 +55,7 @@ export default function ExpressionEcrite() {
         <p className="mt-2 text-sm text-muted-foreground">
           Trois productions écrites de longueur et de complexité croissantes.
         </p>
-        <img src={methodologie3Taches} alt="Méthodologie Expression écrite TCF Canada — 3 tâches" className="mt-8 w-full rounded-2xl border border-border" />
+        <LoadingImage src={methodologie3Taches} alt="Méthodologie Expression écrite TCF Canada — 3 tâches" className="mt-8 w-full rounded-2xl border border-border" />
       </section>
 
       <section className="bg-muted">
