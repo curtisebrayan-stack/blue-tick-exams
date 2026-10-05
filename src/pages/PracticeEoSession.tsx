@@ -103,19 +103,29 @@ export default function PracticeEoSession() {
                   <span className="chip">Consigne</span>
                   <p className="mt-2 text-sm text-muted-foreground">{sujet.consigne}</p>
                 </div>
-                <details className="group border-t border-border">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 text-sm font-semibold text-primary">
-                    Voir la proposition de questions
-                    <ChevronDown className="h-4 w-4 shrink-0 transition group-open:rotate-180" />
-                  </summary>
-                  <ol className="space-y-2 border-t border-border p-4 text-sm text-muted-foreground">
-                    {sujet.questions.map((q, i) => (
-                      <li key={i} className="flex gap-2">
-                        <span className="font-semibold text-foreground">{i + 1}.</span> {q}
-                      </li>
-                    ))}
-                  </ol>
-                </details>
+                {sujet.questions && sujet.questions.length > 0 ? (
+                  <details className="group border-t border-border">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 text-sm font-semibold text-primary">
+                      Voir la proposition de questions
+                      <ChevronDown className="h-4 w-4 shrink-0 transition group-open:rotate-180" />
+                    </summary>
+                    <ol className="space-y-2 border-t border-border p-4 text-sm text-muted-foreground">
+                      {sujet.questions.map((q, i) => (
+                        <li key={i} className="flex gap-2">
+                          <span className="font-semibold text-foreground">{i + 1}.</span> {q}
+                        </li>
+                      ))}
+                    </ol>
+                  </details>
+                ) : sujet.reponse ? (
+                  <details className="group border-t border-border">
+                    <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 text-sm font-semibold text-primary">
+                      Voir la proposition de réponse
+                      <ChevronDown className="h-4 w-4 shrink-0 transition group-open:rotate-180" />
+                    </summary>
+                    <p className="whitespace-pre-line border-t border-border p-4 text-sm text-muted-foreground">{sujet.reponse}</p>
+                  </details>
+                ) : null}
               </div>
             ))}
           </div>

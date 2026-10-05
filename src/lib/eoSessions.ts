@@ -9,7 +9,10 @@ import { sortByMonthSlugDesc } from "./monthSlug";
 export type EoSessionSujet = {
   number: number;
   consigne: string;
-  questions: string[];
+  // Tâche 2 (poser des questions) utilise "questions" ; Tâche 3 (défendre un
+  // point de vue) utilise "reponse" — un sujet ne renseigne jamais les deux.
+  questions: string[] | null;
+  reponse: string | null;
 };
 
 export type EoSession = {
@@ -48,13 +51,19 @@ export async function getEoSession(slug: string): Promise<EoSession | undefined>
 
   const { data: sujets, error: sujetsError } = await supabase
     .from("eo_session_sujets")
-    .select("tache, number, consigne, questions")
+    .select("tache, number, consigne, questions, reponse")
     .eq("session_id", session.id)
     .order("number", { ascending: true });
   if (sujetsError) throw sujetsError;
 
-  const tache2 = (sujets ?? []).filter((s) => s.tache === 2).map((s) => ({ number: s.number, consigne: s.consigne, questions: s.questions as string[] }));
-  const tache3 = (sujets ?? []).filter((s) => s.tache === 3).map((s) => ({ number: s.number, consigne: s.consigne, questions: s.questions as string[] }));
+  const toSujet = (s: { number: number; consigne: string; questions: unknown; reponse: string | null }): EoSessionSujet => ({
+    number: s.number,
+    consigne: s.consigne,
+    questions: (s.questions as string[] | null) ?? null,
+    reponse: s.reponse,
+  });
+  const tache2 = (sujets ?? []).filter((s) => s.tache === 2).map(toSujet);
+  const tache3 = (sujets ?? []).filter((s) => s.tache === 3).map(toSujet);
 
   return {
     id: session.id,
