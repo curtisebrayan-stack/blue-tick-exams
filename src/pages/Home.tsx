@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Seo } from "@/components/Seo";
 import { ARTICLES } from "@/lib/blog";
+import { EXAM_DESTINATIONS } from "@/lib/countries";
 import { useAuth } from "@/lib/AuthContext";
 
 const SKILLS = [
@@ -43,7 +44,7 @@ export default function Home() {
     <>
       <Seo
         title="Blue Tick Project"
-        description="Préparation structurée aux quatre épreuves du TCF Canada : compréhension orale, compréhension écrite, expression orale, expression écrite."
+        description="Explore les examens de langue par destination et prépare le TCF Canada avec des exercices et examens blancs pour les quatre épreuves."
       />
       {/* HERO */}
       <section className="bg-secondary text-secondary-foreground">
@@ -73,6 +74,74 @@ export default function Home() {
             {!user && <Link to="/inscription" className="btn-primary">Créer un compte gratuit</Link>}
             <Link to="/tarifs" className="btn-outline">Voir les tarifs</Link>
           </div>
+        </div>
+      </section>
+
+      {/* DESTINATIONS */}
+      <section id="destinations" className="scroll-mt-24 border-y border-border bg-muted/40">
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+          <div className="max-w-2xl">
+            <span className="chip">Un projet à l’international</span>
+            <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
+              Où veux-tu <span className="text-primary">passer ton examen</span> ?
+            </h2>
+            <p className="mt-3 text-muted-foreground">
+              Choisis une destination pour découvrir les examens de langue associés et les préparations disponibles.
+            </p>
+          </div>
+
+          <div className="mt-9 grid gap-5 md:grid-cols-[1fr_2fr]">
+            {EXAM_DESTINATIONS.slice(0, 1).map((destination) => (
+              <Link
+                key={destination.slug}
+                to={`/pays/${destination.slug}`}
+                className="group relative flex min-h-64 items-center justify-between gap-4 overflow-hidden rounded-3xl border border-primary/30 bg-secondary p-6 text-secondary-foreground transition hover:-translate-y-1 hover:border-primary/60 hover:shadow-xl sm:p-8"
+              >
+                <span aria-hidden="true" className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full border border-primary/20" />
+                <span aria-hidden="true" className="pointer-events-none absolute -right-4 -top-4 h-40 w-40 rounded-full border border-primary/20" />
+                <div className="relative z-10">
+                  <span className="chip">Destination principale</span>
+                  <h3 className="mt-4 font-display text-2xl font-extrabold sm:text-3xl">{destination.name}</h3>
+                  <p className="mt-1 text-sm text-secondary-foreground/65">{destination.summary}</p>
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
+                    Voir les examens <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </div>
+                <span
+                  aria-hidden="true"
+                  className="relative z-10 grid h-24 w-24 shrink-0 place-items-center rounded-full border border-primary/35 bg-primary/10 text-5xl shadow-[0_0_0_8px_color-mix(in_oklch,var(--primary)_8%,transparent)] transition-transform duration-300 group-hover:scale-105 sm:h-32 sm:w-32 sm:text-6xl"
+                >
+                  {destination.flag}
+                </span>
+              </Link>
+            ))}
+
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+              {EXAM_DESTINATIONS.slice(1).map((destination) => (
+                <Link
+                  key={destination.slug}
+                  to={`/pays/${destination.slug}`}
+                  className="group flex min-h-40 flex-col items-center justify-center rounded-3xl border border-border bg-card/80 px-3 py-5 text-center transition hover:-translate-y-1 hover:border-primary/50 hover:bg-card hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:min-h-48"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="grid h-16 w-16 place-items-center rounded-full border border-border bg-muted text-4xl shadow-sm transition duration-300 group-hover:scale-105 group-hover:border-primary/40 sm:h-[4.5rem] sm:w-[4.5rem]"
+                  >
+                    {destination.flag}
+                  </span>
+                  <span className="mt-3 font-display text-sm font-semibold text-foreground/85 sm:text-base">
+                    {destination.name}
+                  </span>
+                  <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition group-hover:text-primary">
+                    Explorer <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+          <p className="mt-5 text-xs text-muted-foreground">
+            Les exigences varient selon le visa et l’établissement. Vérifie toujours le test demandé auprès de l’organisme officiel.
+          </p>
         </div>
       </section>
 
