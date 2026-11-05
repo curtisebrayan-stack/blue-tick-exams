@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ChevronDown, AlertTriangle, Clock, Mic } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, AlertTriangle, Clock, FileCheck2, Mic } from "lucide-react";
 import { getEoSession, type EoSession } from "@/lib/eoSessions";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
@@ -84,6 +84,57 @@ export default function PracticeEoSession() {
         <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
         Ces sujets sont inspirés d'essais réels pour t'entraîner — ils ne constituent pas les sujets officiels de l'examen.
       </p>
+
+      <div className="card-shell mt-6 border-t-4 border-t-[var(--eo)] p-5 sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <span className="chip"><FileCheck2 className="h-3.5 w-3.5" /> 3 tâches · environ 12 minutes</span>
+            <h2 className="mt-3 font-display text-xl font-bold">Simulation complète de la session</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Enregistre chaque réponse et réécoute-la pour t’autoévaluer.</p>
+          </div>
+          <Link to={`/expression-orale/sessions/${session.slug}/examen`} className="btn-primary shrink-0">
+            Commencer l’examen complet <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-center font-display text-xl font-bold">Ou pratique les tâches individuellement</h2>
+        <div className="mt-5 grid gap-4 md:grid-cols-3">
+          {([
+            { number: 1 as Tache, title: "Entretien dirigé", duration: "2 min", description: "Réponds aux questions personnelles de l’examinateur.", available: true },
+            { number: 2 as Tache, title: "Exercice interactif", duration: "5 min 30 · 2 min de préparation", description: "Prépare des questions pour obtenir des informations.", available: session.tache2.length > 0 },
+            { number: 3 as Tache, title: "Expression d’un point de vue", duration: "4 min 30", description: "Développe et justifie ton opinion sur le sujet proposé.", available: session.tache3.length > 0 },
+          ]).map((task) => {
+            const content = (
+              <>
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-[color-mix(in_oklch,var(--eo)_12%,transparent)] text-[var(--eo)]">
+                  <Mic className="h-5 w-5" />
+                </span>
+                <h3 className="mt-4 font-display font-bold">{task.title}</h3>
+                <p className="mt-2 flex-1 text-sm text-muted-foreground">{task.description}</p>
+                <div className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs">
+                  <span className="text-muted-foreground">{task.duration}</span>
+                  <span className={task.available ? "font-semibold text-primary" : "text-muted-foreground"}>
+                    {task.available ? <>Commencer <ArrowRight className="inline h-3.5 w-3.5" /></> : "Bientôt disponible"}
+                  </span>
+                </div>
+              </>
+            );
+            return task.available ? (
+              <Link
+                key={task.number}
+                to={`/expression-orale/sessions/${session.slug}/examen/${task.number}`}
+                className="card-shell group flex min-h-48 flex-col p-5 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+              >
+                {content}
+              </Link>
+            ) : (
+              <article key={task.number} className="card-shell flex min-h-48 flex-col p-5 opacity-60">{content}</article>
+            );
+          })}
+        </div>
+      </div>
 
       <div className="mt-6 grid grid-cols-3 gap-2">
         {([1, 2, 3] as Tache[]).map((t) => (

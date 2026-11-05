@@ -34,6 +34,7 @@ import PracticeCeSujet from "@/pages/PracticeCeSujet";
 import ExpressionOrale from "@/pages/ExpressionOrale";
 import ExpressionOraleSessions from "@/pages/ExpressionOraleSessions";
 import PracticeEoSession from "@/pages/PracticeEoSession";
+import PracticeEoExam from "@/pages/PracticeEoExam";
 import PracticeEo from "@/pages/PracticeEo";
 import ExpressionEcrite from "@/pages/ExpressionEcrite";
 import ExpressionEcriteSessions from "@/pages/ExpressionEcriteSessions";
@@ -76,6 +77,7 @@ export default function App() {
         <Route path="comprehension-ecrite/:slug" element={<PracticeCe />} />
         <Route path="expression-orale" element={<ExpressionOrale />} />
         <Route path="expression-orale/sessions" element={<ExpressionOraleSessions />} />
+        <Route path="expression-orale/sessions/:slug/examen/:task?" element={<PracticeEoExam />} />
         <Route path="expression-orale/sessions/:slug" element={<PracticeEoSession />} />
         <Route path="expression-orale/:slug" element={<PracticeEo />} />
         <Route path="expression-ecrite" element={<ExpressionEcrite />} />

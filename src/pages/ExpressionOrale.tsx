@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CalendarDays, Clock, Lightbulb, ListChecks, Lock, Mic, UserRound } from "lucide-react";
+import { ArrowRight, CalendarDays, Clock, ListChecks, Lock, Mic, UserRound } from "lucide-react";
 import { ExamTaskCards, type ExamTaskFormat } from "@/components/ExamTaskCards";
 import { MonthlySessionCards } from "@/components/MonthlySessionCards";
 import { Seo } from "@/components/Seo";
@@ -13,19 +13,19 @@ const FORMAT_STEPS: ExamTaskFormat[] = [
     number: 1,
     title: "Entretien dirigé",
     description: "Réponds aux questions de l’examinateur sur ton parcours, tes activités et ton quotidien. L’objectif est d’échanger naturellement, sans préparation.",
-    detail: "Sans préparation",
+    detail: "2 min · sans préparation",
   },
   {
     number: 2,
-    title: "Interaction",
-    description: "À partir d’une situation, pose des questions adaptées pour obtenir des informations et faire avancer l’échange avec l’examinateur.",
-    detail: "2 min de préparation",
+    title: "Exercice interactif",
+    description: "Recueille des informations dans une situation de la vie quotidienne en posant des questions adaptées.",
+    detail: "5 min 30 · dont 2 min de préparation",
   },
   {
     number: 3,
     title: "Expression d’un point de vue",
-    description: "Présente ta position sur un sujet général, développe des arguments et illustre-les avec des exemples pertinents.",
-    detail: "Sans préparation",
+    description: "Exprime un point de vue sur une question générale, puis développe et justifie tes idées.",
+    detail: "4 min 30 · sans préparation",
   },
 ];
 
@@ -80,7 +80,7 @@ export default function ExpressionOrale() {
           <span className="text-xs font-bold uppercase tracking-[0.18em] text-secondary-foreground/60">Épreuve du TCF Canada</span>
           <h1 className="mt-3 text-3xl font-bold sm:text-5xl">Expression orale</h1>
           <p className="mt-3 max-w-2xl text-secondary-foreground/75">
-            Entraîne-toi avec des sujets classés par session, enregistre tes réponses et réécoute-les pour progresser.
+            Simule les trois tâches, enregistre tes réponses et retrouve les sujets d’entraînement classés par session.
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-sm">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-foreground/10 px-3 py-1.5">
@@ -96,44 +96,42 @@ export default function ExpressionOrale() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
-        <div className="card-shell mx-auto max-w-3xl overflow-hidden border-t-4 p-6 sm:p-8" style={{ borderTopColor: "var(--eo)" }}>
+      <section className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
+        <div className="card-shell mx-auto max-w-5xl overflow-hidden border-t-4 p-6 sm:p-8" style={{ borderTopColor: "var(--eo)" }}>
           <div className="flex items-start gap-4">
             <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-[color-mix(in_oklch,var(--eo)_18%,transparent)] text-[var(--eo)]">
               <Mic className="h-7 w-7" />
             </span>
             <div>
-              <h2 className="font-display text-xl font-bold sm:text-2xl">Entraînement à l’expression orale</h2>
+              <span className="chip">Simulation complète · 3 tâches</span>
+              <h2 className="mt-3 font-display text-xl font-bold sm:text-2xl">Examen d’expression orale TCF Canada</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Choisis une session, réponds aux sujets avec ton micro, puis réécoute ton enregistrement et utilise la grille d’auto-évaluation.
+                Enchaîne l’entretien dirigé, l’exercice interactif et l’expression d’un point de vue dans une simulation d’environ 12 minutes.
               </p>
             </div>
           </div>
-          <div className="mt-6 rounded-xl border border-border bg-muted/40 p-4">
+          <div className="mt-6 space-y-4 rounded-xl border border-border bg-muted/40 p-4">
             {authLoading ? (
               <p role="status" className="text-sm text-muted-foreground">Vérification de ta connexion…</p>
-            ) : user ? (
-              <Link to="/expression-orale/sessions" className="btn-primary flex w-full justify-center">
-                Choisir une session <ArrowRight className="h-4 w-4" />
-              </Link>
             ) : (
-              <>
-                <p className="flex items-center gap-2 text-sm font-semibold">
-                  <UserRound className="h-4 w-4 text-primary" />
-                  Connecte-toi pour enregistrer tes réponses et les retrouver dans ton profil.
-                </p>
-                <div className="mt-4 flex flex-wrap gap-3">
-                  <Link to="/connexion" className="btn-primary flex-1 justify-center">Se connecter</Link>
-                  <Link to="/inscription" className="btn-outline flex-1 justify-center">Créer un compte gratuit</Link>
-                </div>
-                <Link to="/expression-orale/sessions" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
-                  Parcourir les sessions <ArrowRight className="h-3.5 w-3.5" />
+              <p className="flex items-center gap-2 text-sm font-semibold">
+                <UserRound className="h-4 w-4 text-primary" />
+                {user
+                  ? "Choisis une session pour commencer la simulation et enregistrer tes réponses."
+                  : "Connecte-toi pour lancer la simulation et retrouver tes enregistrements dans ton profil."}
+              </p>
+            )}
+            {!authLoading && (
+              <div className="flex flex-wrap gap-3">
+                <Link to="/expression-orale/sessions" className="btn-primary flex-1 justify-center">
+                  Commencer l’examen complet <ArrowRight className="h-4 w-4" />
                 </Link>
-              </>
+                {!user && <Link to="/connexion" className="btn-outline flex-1 justify-center">Se connecter</Link>}
+              </div>
             )}
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
-            Les enregistrements se réécoutent avec une grille d’auto-évaluation ; cette activité ne fournit pas de note automatique par IA.
+            Tes réponses sont enregistrées pour réécoute et auto-évaluation. La plateforme ne fournit pas encore de note automatique par IA.
           </p>
         </div>
       </section>
@@ -167,7 +165,7 @@ export default function ExpressionOrale() {
               <span className="chip"><CalendarDays className="h-3.5 w-3.5" /> Liste des sujets</span>
               <h2 className="mt-4 text-2xl font-bold sm:text-3xl">Choisis une session pour commencer</h2>
               <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-                Chaque session regroupe les sujets des tâches 2 et 3. La tâche 1 reste un entretien dirigé.
+                Choisis une session pour ouvrir l’examen complet ou t’entraîner à une tâche précise.
               </p>
             </div>
             <Link to="/expression-orale/sessions" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline">

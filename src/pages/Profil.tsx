@@ -78,6 +78,15 @@ function writingLabel(topicSlug: string): string {
   return TOPIC_LABELS[topicSlug] ?? topicSlug;
 }
 
+function speakingLabel(topicSlug: string): string {
+  const sessionMatch = topicSlug.match(/^session-(.+)-tache-(\d)-sujet-(\d+)$/);
+  if (sessionMatch) {
+    const [, sessionSlug, task, subject] = sessionMatch;
+    return `Session ${sessionSlug.replace(/-/g, " ")} · Tâche ${task} · Sujet ${subject}`;
+  }
+  return TOPIC_LABELS[topicSlug] ?? topicSlug;
+}
+
 export default function Profil() {
   const { user, updatePassword } = useAuth();
   const [results, setResults] = useState<PracticeResult[] | null>(null);
@@ -367,7 +376,7 @@ export default function Profil() {
             {recordings.map((r) => (
               <div key={r.id} className="card-shell flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-sm font-semibold">{TOPIC_LABELS[r.topic_slug] ?? r.topic_slug}</p>
+                  <p className="text-sm font-semibold">{speakingLabel(r.topic_slug)}</p>
                   <p className="text-xs text-muted-foreground">
                     {new Date(r.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
                   </p>
