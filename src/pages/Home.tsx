@@ -90,54 +90,36 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-9 grid gap-5 md:grid-cols-[1fr_2fr]">
-            {EXAM_DESTINATIONS.slice(0, 1).map((destination) => (
-              <Link
-                key={destination.slug}
-                to={`/pays/${destination.slug}`}
-                className="group relative flex min-h-64 items-center justify-between gap-4 overflow-hidden rounded-3xl border border-primary/30 bg-secondary p-6 text-secondary-foreground transition hover:-translate-y-1 hover:border-primary/60 hover:shadow-xl sm:p-8"
-              >
-                <span aria-hidden="true" className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full border border-primary/20" />
-                <span aria-hidden="true" className="pointer-events-none absolute -right-4 -top-4 h-40 w-40 rounded-full border border-primary/20" />
-                <div className="relative z-10">
-                  <span className="chip">Destination principale</span>
-                  <h3 className="mt-4 font-display text-2xl font-extrabold sm:text-3xl">{destination.name}</h3>
-                  <p className="mt-1 text-sm text-secondary-foreground/65">{destination.summary}</p>
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
-                    Voir les examens <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </span>
-                </div>
-                <span
-                  aria-hidden="true"
-                  className="relative z-10 grid h-24 w-24 shrink-0 place-items-center rounded-full border border-primary/35 bg-primary/10 text-5xl shadow-[0_0_0_8px_color-mix(in_oklch,var(--primary)_8%,transparent)] transition-transform duration-300 group-hover:scale-105 sm:h-32 sm:w-32 sm:text-6xl"
-                >
-                  {destination.flag}
-                </span>
-              </Link>
-            ))}
-
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-              {EXAM_DESTINATIONS.slice(1).map((destination) => (
+          <div className="mt-10 grid grid-cols-2 items-end gap-x-3 gap-y-7 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-6">
+            {EXAM_DESTINATIONS.map((destination) => {
+              const isCanada = destination.slug === "canada";
+              return (
                 <Link
                   key={destination.slug}
                   to={`/pays/${destination.slug}`}
-                  className="group flex min-h-40 flex-col items-center justify-center rounded-3xl border border-border bg-card/80 px-3 py-5 text-center transition hover:-translate-y-1 hover:border-primary/50 hover:bg-card hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:min-h-48"
+                  aria-label={`${destination.name} — ${destination.summary}`}
+                  className={`group flex flex-col items-center text-center transition-transform duration-200 hover:-translate-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary ${isCanada ? "lg:-translate-y-2" : ""}`}
                 >
                   <span
                     aria-hidden="true"
-                    className="grid h-16 w-16 place-items-center rounded-full border border-border bg-muted text-4xl shadow-sm transition duration-300 group-hover:scale-105 group-hover:border-primary/40 sm:h-[4.5rem] sm:w-[4.5rem]"
+                    className={`grid aspect-square place-items-center rounded-full border bg-card shadow-sm transition duration-200 group-hover:scale-105 group-hover:border-primary/50 group-hover:shadow-md ${
+                      isCanada
+                        ? "h-24 w-24 border-primary/45 text-5xl shadow-[0_0_0_6px_color-mix(in_oklch,var(--primary)_9%,transparent)] sm:h-28 sm:w-28 sm:text-6xl"
+                        : "h-[4.5rem] w-[4.5rem] border-border text-4xl sm:h-20 sm:w-20 sm:text-5xl"
+                    }`}
                   >
                     {destination.flag}
                   </span>
-                  <span className="mt-3 font-display text-sm font-semibold text-foreground/85 sm:text-base">
+                  <span className={`mt-3 font-display ${isCanada ? "text-base font-extrabold text-foreground sm:text-lg" : "text-sm font-medium text-foreground/75 sm:text-base"}`}>
                     {destination.name}
                   </span>
-                  <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition group-hover:text-primary">
-                    Explorer <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                  <span className={`mt-1 inline-flex items-center gap-1 text-xs transition-colors group-hover:text-primary ${isCanada ? "font-semibold text-primary" : "font-normal text-muted-foreground"}`}>
+                    {isCanada ? "Destination principale" : "Explorer"}
+                    <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
                   </span>
                 </Link>
-              ))}
-            </div>
+              );
+            })}
           </div>
           <p className="mt-5 text-xs text-muted-foreground">
             Les exigences varient selon le visa et l’établissement. Vérifie toujours le test demandé auprès de l’organisme officiel.
