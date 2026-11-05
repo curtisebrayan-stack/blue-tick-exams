@@ -5,6 +5,10 @@ import { Seo } from "@/components/Seo";
 
 const SKILLS: TcfSkill[] = ["co", "ce", "eo", "ee"];
 
+function scoreColor(nclc: number | null): string {
+  return nclc === null || nclc < 6 ? "text-red-500" : "text-blue-500";
+}
+
 export default function CalculatriceNclc() {
   const [scores, setScores] = useState<Record<TcfSkill, string>>({ co: "", ce: "", eo: "", ee: "" });
 
@@ -55,7 +59,7 @@ export default function CalculatriceNclc() {
                 className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
               />
               {scores[skill] !== "" && (
-                <span className="mt-1 inline-block text-xs font-bold text-primary">
+                <span className={`mt-1 inline-block text-xs font-bold ${scoreColor(getNclc(skill, Number(scores[skill])))}`}>
                   {formatNclc(getNclc(skill, Number(scores[skill])))}
                 </span>
               )}
@@ -65,7 +69,7 @@ export default function CalculatriceNclc() {
 
         <div className="mt-8 rounded-lg bg-muted p-5">
           <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Niveau global</p>
-          <p className="mt-2 text-2xl font-bold">
+          <p className={`mt-2 text-2xl font-bold ${results.allFilled ? scoreColor(results.global) : ""}`}>
             {results.allFilled ? formatNclc(results.global) : "Renseigne les 4 épreuves"}
           </p>
           <p className="mt-2 flex items-start gap-1.5 text-xs text-muted-foreground">
