@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ChevronDown, AlertTriangle } from "lucide-react";
+import { ArrowLeft, ChevronDown, AlertTriangle, Clock, Mic } from "lucide-react";
 import { getEoSession, type EoSession } from "@/lib/eoSessions";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
 import { AuthRequired } from "@/components/AuthRequired";
-import methodologieTache1 from "@/assets/eo-methodologie-tache1.jpg";
-import { LoadingImage } from "@/components/LoadingImage";
 import NotFound from "./NotFound";
 
 type Tache = 1 | 2 | 3;
@@ -16,6 +14,7 @@ export default function PracticeEoSession() {
   const { slug } = useParams<{ slug: string }>();
   const { user, isPremium, isAdmin } = useAuth();
   const [session, setSession] = useState<EoSession | null | undefined>(undefined);
+  const [loadError, setLoadError] = useState(false);
   const [tache, setTache] = useState<Tache>(2);
 
   useEffect(() => {
@@ -23,14 +22,34 @@ export default function PracticeEoSession() {
       setSession(null);
       return;
     }
+    setLoadError(false);
+    setSession(undefined);
     let cancelled = false;
-    getEoSession(slug).then((result) => {
-      if (!cancelled) setSession(result ?? null);
-    });
+    getEoSession(slug)
+      .then((result) => {
+        if (!cancelled) setSession(result ?? null);
+      })
+      .catch((error: unknown) => {
+        console.error("Impossible de charger cette session d’expression orale.", error);
+        if (!cancelled) setLoadError(true);
+      });
     return () => {
       cancelled = true;
     };
   }, [slug]);
+
+  if (loadError) {
+    return (
+      <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
+        <Link to="/expression-orale/sessions" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+          <ArrowLeft className="h-4 w-4" /> Retour aux sessions
+        </Link>
+        <p role="alert" className="mt-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+          Impossible de charger cette session. Réessaie dans quelques instants.
+        </p>
+      </section>
+    );
+  }
 
   if (session === undefined) {
     return <div className="mx-auto max-w-3xl px-4 py-24 text-center text-sm text-muted-foreground">Chargement...</div>;
@@ -84,7 +103,16 @@ export default function PracticeEoSession() {
 
       <div className="mt-8">
         {tache === 1 ? (
-          <LoadingImage src={methodologieTache1} alt="Méthodologie Expression orale — Tâche 1 : se présenter" className="w-full rounded-2xl border border-border" />
+          <div className="card-shell p-6 sm:p-8">
+            <span className="chip"><Mic className="h-3.5 w-3.5" /> Entretien dirigé</span>
+            <h2 className="mt-4 font-display text-xl font-bold">Réponds aux questions de l’examinateur</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Présente-toi et parle de ton parcours, de tes activités ou de ton quotidien. L’examinateur te guide par des questions ; réponds de façon naturelle et développe tes idées avec des détails concrets.
+            </p>
+            <span className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground">
+              <Clock className="h-3.5 w-3.5" /> Sans préparation
+            </span>
+          </div>
         ) : currentSujets.length === 0 ? (
           <p className="card-shell p-6 text-sm text-muted-foreground">
             Les sujets de la tâche {tache} pour cette session arrivent bientôt.

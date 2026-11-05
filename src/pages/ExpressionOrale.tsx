@@ -1,86 +1,142 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Mic, Clock, ListChecks, Lightbulb, ArrowRight, Lock, Calendar } from "lucide-react";
+import { ArrowRight, CalendarDays, Clock, Lightbulb, ListChecks, Lock, Mic } from "lucide-react";
+import { ExamTaskCards, type ExamTaskFormat } from "@/components/ExamTaskCards";
+import { MonthlySessionCards } from "@/components/MonthlySessionCards";
 import { Seo } from "@/components/Seo";
-import { listEoPrompts, type SpeakingPromptSummary } from "@/lib/speakingPrompts";
 import { useAuth } from "@/lib/AuthContext";
-import methodologie3Taches from "@/assets/eo-methodologie-3-taches.jpg";
-import { LoadingImage } from "@/components/LoadingImage";
+import { listEoSessions, type EoSessionSummary } from "@/lib/eoSessions";
+import { listEoPrompts, type SpeakingPromptSummary } from "@/lib/speakingPrompts";
+
+const FORMAT_STEPS: ExamTaskFormat[] = [
+  {
+    number: 1,
+    title: "Entretien dirigé",
+    description: "Réponds aux questions de l’examinateur sur ton parcours, tes activités et ton quotidien. L’objectif est d’échanger naturellement, sans préparation.",
+    detail: "Sans préparation",
+  },
+  {
+    number: 2,
+    title: "Interaction",
+    description: "À partir d’une situation, pose des questions adaptées pour obtenir des informations et faire avancer l’échange avec l’examinateur.",
+    detail: "2 min de préparation",
+  },
+  {
+    number: 3,
+    title: "Expression d’un point de vue",
+    description: "Présente ta position sur un sujet général, développe des arguments et illustre-les avec des exemples pertinents.",
+    detail: "Sans préparation",
+  },
+];
 
 const TIPS = [
-  "Parle avec assurance même en cas d'hésitation : le débit et l'aisance comptent autant que la grammaire parfaite.",
-  "Sur la tâche 2, prépare des questions variées (qui, quoi, où, pourquoi) plutôt que des questions fermées.",
-  "Sur la tâche 3, prends clairement position puis justifie avec un exemple concret.",
-  "Reformule si tu te trompes plutôt que de t'arrêter : la fluidité prime sur la perfection.",
+  "Réponds avec des phrases complètes et ajoute un détail concret pour rendre tes réponses plus naturelles.",
+  "Pour l’interaction, prépare des questions ouvertes et varie les formulations : qui, quoi, où, comment, pourquoi.",
+  "Pour exprimer ton point de vue, annonce ta position, développe deux idées et termine par une conclusion claire.",
+  "Si tu hésites, reformule et continue : garde un débit régulier plutôt que de t’arrêter pour chercher la phrase parfaite.",
 ];
 
 export default function ExpressionOrale() {
   const { user } = useAuth();
+  const [sessions, setSessions] = useState<EoSessionSummary[] | null>(null);
+  const [sessionsError, setSessionsError] = useState(false);
   const [topics, setTopics] = useState<SpeakingPromptSummary[] | null>(null);
+  const [topicsError, setTopicsError] = useState(false);
 
   useEffect(() => {
-    listEoPrompts().then(setTopics).catch(() => setTopics([]));
+    let cancelled = false;
+
+    listEoSessions()
+      .then((result) => {
+        if (!cancelled) setSessions(result);
+      })
+      .catch((error: unknown) => {
+        console.error("Impossible de charger les sessions d’expression orale.", error);
+        if (!cancelled) setSessionsError(true);
+      });
+
+    listEoPrompts()
+      .then((result) => {
+        if (!cancelled) setTopics(result);
+      })
+      .catch((error: unknown) => {
+        console.error("Impossible de charger les exercices d’expression orale.", error);
+        if (!cancelled) setTopicsError(true);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
     <>
-      <Seo title="Expression orale" description="Méthodologie et sujets pratiques pour l'épreuve d'expression orale du TCF Canada." />
+      <Seo title="Expression orale" description="Format officiel, sessions de sujets et entraînement à l’expression orale du TCF Canada." />
       <section
         className="text-secondary-foreground"
         style={{ background: "linear-gradient(135deg, color-mix(in oklch, var(--eo) 22%, var(--secondary)), color-mix(in oklch, var(--primary) 26%, var(--secondary)))" }}
       >
-        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:py-20">
-          <span className="relative mx-auto grid h-16 w-16 place-items-center">
-            <span className="absolute inset-0 animate-spin rounded-full border-2 border-dashed border-secondary-foreground/30 [animation-duration:6s]" />
-            <span className="relative grid h-12 w-12 place-items-center rounded-full bg-secondary-foreground/10">
-              <Mic className="h-6 w-6" />
+        <div className="mx-auto max-w-5xl px-4 py-16 sm:py-20">
+          <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
+            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl border border-secondary-foreground/15 bg-secondary-foreground/10">
+              <Mic className="h-7 w-7" />
             </span>
-          </span>
-          <h1 className="mt-4 text-3xl font-bold uppercase tracking-wide sm:text-5xl">Expression orale</h1>
-          <p className="mx-auto mt-4 max-w-xl text-secondary-foreground/70">
-            Évalue ta capacité à t'exprimer à l'oral en français, seul face à un examinateur.
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-foreground/10 px-3 py-1.5"><Clock className="h-3.5 w-3.5" /> ~12 minutes</span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-foreground/10 px-3 py-1.5"><ListChecks className="h-3.5 w-3.5" /> 3 tâches, notées sur 20</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-4xl px-4 py-16 sm:py-20">
-        <h2 className="text-2xl font-bold sm:text-3xl">Format de l'épreuve</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Trois tâches enchaînées, en face à face avec l'examinateur.
-        </p>
-        <LoadingImage src={methodologie3Taches} alt="Méthodologie Expression orale TCF Canada — 3 tâches" className="mt-8 w-full rounded-2xl border border-border" />
-      </section>
-
-      <section className="bg-muted">
-        <div className="mx-auto max-w-4xl px-4 py-16 sm:py-20">
-          <div className="card-shell flex flex-col items-start gap-4 p-8 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <span className="chip"><Calendar className="h-3.5 w-3.5" /> Sessions mensuelles</span>
-              <h2 className="mt-3 text-xl font-bold">Sujets par session (Tâche 1, 2, 3)</h2>
-              <p className="mt-2 max-w-md text-sm text-muted-foreground">
-                Retrouve les sujets d'expression orale organisés par mois, avec les questions proposées pour t'entraîner.
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-secondary-foreground/65">TCF Canada · épreuve individuelle</span>
+              <h1 className="mt-2 text-3xl font-bold sm:text-5xl">Expression orale</h1>
+              <p className="mt-3 max-w-2xl text-secondary-foreground/75">
+                Entraîne-toi à répondre spontanément, à obtenir des informations et à défendre ton point de vue face à un examinateur.
               </p>
+              <div className="mt-5 flex flex-wrap gap-2 text-sm">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-foreground/10 px-3 py-1.5">
+                  <Clock className="h-3.5 w-3.5" /> 12 minutes au total
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-foreground/10 px-3 py-1.5">
+                  <ListChecks className="h-3.5 w-3.5" /> 3 tâches · 2 min de préparation
+                </span>
+              </div>
             </div>
-            <Link to="/expression-orale/sessions" className="btn-primary shrink-0">
-              Voir les sessions <ArrowRight className="h-4 w-4" />
-            </Link>
           </div>
         </div>
       </section>
 
-      <section className="bg-muted">
-        <div className="mx-auto max-w-4xl px-4 py-16 sm:py-20">
-          <h2 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
-            <Lightbulb className="h-6 w-6 text-primary" /> Méthodologie
-          </h2>
-          <ul className="mt-6 space-y-3">
-            {TIPS.map((tip) => (
-              <li key={tip} className="card-shell flex gap-3 p-4 text-sm text-muted-foreground">
-                <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+      <section className="mx-auto max-w-6xl px-4 py-14 sm:py-18">
+        <span className="chip">Comprendre l’épreuve</span>
+        <h2 className="mt-4 text-2xl font-bold sm:text-3xl">Un échange, une interaction, un point de vue</h2>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+          L’épreuve dure 12 minutes, dont 2 minutes de préparation pour la tâche d’interaction. Les trois tâches évaluent des façons différentes de communiquer.
+        </p>
+        <ExamTaskCards tasks={FORMAT_STEPS} accent="var(--eo)" />
+      </section>
+
+      <section className="bg-muted/60">
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:py-18">
+          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+            <div>
+              <span className="chip"><CalendarDays className="h-3.5 w-3.5" /> Sujets par session</span>
+              <h2 className="mt-4 text-2xl font-bold sm:text-3xl">Choisis une session pour t’entraîner</h2>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Chaque session rassemble les sujets d’interaction et d’argumentation. La tâche 1 reste un entretien dirigé, identique dans son format.
+              </p>
+              <Link to="/expression-orale/sessions" className="btn-outline mt-5 inline-flex">
+                Toutes les sessions <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <MonthlySessionCards sessions={sessions} skill="eo" hasError={sessionsError} />
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-14 sm:py-18">
+        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <span className="chip"><Lightbulb className="h-3.5 w-3.5" /> Méthodologie</span>
+            <h2 className="mt-4 text-2xl font-bold sm:text-3xl">Des réponses claires et naturelles</h2>
+          </div>
+          <ul className="space-y-3">
+            {TIPS.map((tip, index) => (
+              <li key={tip} className="card-shell flex gap-4 p-4 text-sm text-muted-foreground">
+                <span className="font-display text-sm font-bold tabular-nums text-[var(--eo)]">0{index + 1}</span>
                 {tip}
               </li>
             ))}
@@ -88,46 +144,45 @@ export default function ExpressionOrale() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
-        <h2 className="text-2xl font-bold sm:text-3xl">Liste des sujets</h2>
-        <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-          Un sujet gratuit pour découvrir le format ; les autres font partie du Premium.
-        </p>
-        {topics === null ? (
-          <p className="mt-8 text-sm text-muted-foreground">Chargement...</p>
-        ) : topics.length === 0 ? (
-          <p className="mt-8 text-sm text-muted-foreground">Aucun sujet disponible pour le moment.</p>
-        ) : (
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {topics.map((topic, i) => (
-              <Link
-                key={topic.slug}
-                to={`/expression-orale/${topic.slug}`}
-                className={`card-shell flex flex-col gap-3 p-5 transition hover:-translate-y-0.5 hover:shadow-lg ${!topic.isFree ? "opacity-60" : ""}`}
-              >
-                <div className="flex items-start justify-between">
-                  <span className="grid h-9 w-9 place-items-center rounded-lg" style={{ backgroundColor: "color-mix(in oklch, var(--eo) 18%, transparent)", color: "var(--eo)" }}>
-                    <Mic className="h-4 w-4" />
+      <section className="border-t border-border bg-muted/40">
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:py-18">
+          <span className="chip">En complément</span>
+          <h2 className="mt-4 text-2xl font-bold sm:text-3xl">Exercices ciblés</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Travaille une situation précise avant de passer à une session complète.
+          </p>
+          {topicsError ? (
+            <p role="alert" className="mt-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+              Impossible de charger les exercices pour le moment. Réessaie dans quelques instants.
+            </p>
+          ) : topics === null ? (
+            <p role="status" className="mt-6 text-sm text-muted-foreground">Chargement des exercices…</p>
+          ) : topics.length === 0 ? (
+            <p className="mt-6 text-sm text-muted-foreground">Aucun exercice ciblé disponible pour le moment.</p>
+          ) : (
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {topics.map((topic, index) => (
+                <Link
+                  key={topic.slug}
+                  to={`/expression-orale/${topic.slug}`}
+                  className="card-shell group flex min-h-28 items-center gap-4 p-4 transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+                >
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[color-mix(in_oklch,var(--eo)_16%,transparent)] text-[var(--eo)]">
+                    <Mic className="h-5 w-5" />
                   </span>
-                  <span className={`grid h-7 w-7 place-items-center rounded-md text-xs font-bold ${topic.isFree ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-                    {i + 1}
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-display font-bold">{topic.title}</span>
+                    <span className={`mt-1 inline-flex items-center gap-1 text-xs font-semibold ${topic.isFree ? "text-emerald-400" : "text-muted-foreground"}`}>
+                      {topic.isFree ? "Gratuit après connexion" : <><Lock className="h-3.5 w-3.5" /> Premium</>}
+                    </span>
                   </span>
-                </div>
-                <p className="font-display text-lg font-bold">{topic.title}</p>
-                {topic.isFree ? (
-                  <span className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                    Commencer <ArrowRight className="h-4 w-4" />
-                  </span>
-                ) : (
-                  <span className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground">
-                    <Lock className="h-3.5 w-3.5" /> Abonnement requis
-                  </span>
-                )}
-              </Link>
-            ))}
-          </div>
-        )}
-        {!user && <Link to="/inscription" className="btn-primary mt-8 inline-flex">Créer un compte gratuit</Link>}
+                  <span className="text-xs font-semibold tabular-nums text-muted-foreground">0{index + 1}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+          {!user && <Link to="/inscription" className="btn-primary mt-7 inline-flex">Créer un compte gratuit</Link>}
+        </div>
       </section>
     </>
   );
