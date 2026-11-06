@@ -5,6 +5,7 @@
 
 import { supabase } from "./supabase";
 import { sortByMonthSlugDesc } from "./monthSlug";
+import { filterCompleteEoSessions } from "./eoSessionAvailability";
 
 export type EoSessionSujet = {
   number: number;
@@ -38,6 +39,19 @@ export async function listEoSessions(): Promise<EoSessionSummary[]> {
   if (error) throw error;
   const sessions = (data ?? []).map((s) => ({ id: s.id, slug: s.slug, label: s.label, isFree: s.is_free }));
   return sortByMonthSlugDesc(sessions);
+}
+
+export async function listCompleteEoSessions(): Promise<EoSessionSummary[]> {
+  const sessions = await listEoSessions();
+  if (sessions.length === 0) return [];
+
+  const { data: subjects, error } = await supabase
+    .from("eo_session_sujets")
+    .select("session_id, tache")
+    .in("session_id", sessions.map((session) => session.id));
+  if (error) throw error;
+
+  return filterCompleteEoSessions(sessions, subjects ?? []);
 }
 
 export async function getEoSession(slug: string): Promise<EoSession | undefined> {

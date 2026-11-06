@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, CheckCircle2, ChevronDown, AlertTriangle, Clock, FileCheck2, ListChecks, Mic } from "lucide-react";
-import { getEoSession, listEoSessions, type EoSession } from "@/lib/eoSessions";
+import { getEoSession, listCompleteEoSessions, type EoSession, type EoSessionSummary } from "@/lib/eoSessions";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
@@ -15,6 +15,7 @@ export default function PracticeEoSession() {
   const { user, isPremium, isAdmin } = useAuth();
   const userId = user?.id;
   const [session, setSession] = useState<EoSession | null | undefined>(undefined);
+  const [completeSessions, setCompleteSessions] = useState<EoSessionSummary[]>([]);
   const [loadError, setLoadError] = useState(false);
   const [tache, setTache] = useState<Tache>(2);
   const isOverview = !slug;
@@ -24,10 +25,15 @@ export default function PracticeEoSession() {
     setSession(undefined);
     let cancelled = false;
     const loadSession = async () => {
+      const allCompleteSessions = await listCompleteEoSessions();
+      const accessibleCompleteSessions = allCompleteSessions.filter(
+        (item) => item.isFree || (userId && (isPremium || isAdmin)),
+      );
+      if (!cancelled) setCompleteSessions(accessibleCompleteSessions);
+
       let sessionSlug = slug;
       if (!sessionSlug) {
-        const sessions = await listEoSessions();
-        sessionSlug = (sessions.find((item) => (userId && (isPremium || isAdmin)) || item.isFree) ?? sessions[0])?.slug;
+        sessionSlug = accessibleCompleteSessions[0]?.slug;
       }
       if (!sessionSlug) {
         if (!cancelled) setSession(null);
@@ -48,19 +54,25 @@ export default function PracticeEoSession() {
 
   if (loadError) {
     return (
-      <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
-        <Link to={isOverview ? "/expression-orale" : "/expression-orale/sessions"} className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-          <ArrowLeft className="h-4 w-4" /> {isOverview ? "Retour à l’expression orale" : "Retour aux sessions"}
-        </Link>
-        <p role="alert" className="mt-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
-          Impossible de charger cette session. Réessaie dans quelques instants.
-        </p>
-      </section>
+      <div className={isOverview ? "eo-exam-theme min-h-screen" : ""}>
+        <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
+          <Link to={isOverview ? "/expression-orale" : "/expression-orale/sessions"} className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+            <ArrowLeft className="h-4 w-4" /> {isOverview ? "Retour à l’expression orale" : "Retour aux sessions"}
+          </Link>
+          <p role="alert" className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+            Impossible de charger cette session. Réessaie dans quelques instants.
+          </p>
+        </section>
+      </div>
     );
   }
 
   if (session === undefined) {
-    return <div className="mx-auto max-w-3xl px-4 py-24 text-center text-sm text-muted-foreground">Chargement...</div>;
+    return (
+      <div className={isOverview ? "eo-exam-theme min-h-screen" : ""}>
+        <div className="mx-auto max-w-3xl px-4 py-24 text-center text-sm text-muted-foreground">Chargement...</div>
+      </div>
+    );
   }
   if (!session) return <NotFound />;
 
@@ -68,19 +80,40 @@ export default function PracticeEoSession() {
 
   if (!user || locked) {
     return (
-      <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
-        <Seo title={isOverview ? "Simulation d’expression orale" : `Expression orale — ${session.label}`} description={`Sujets d'expression orale TCF Canada, session ${session.label}.`} />
-        <Link to={isOverview ? "/expression-orale" : "/expression-orale/sessions"} className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-          <ArrowLeft className="h-4 w-4" /> {isOverview ? "Retour à l’expression orale" : "Retour aux sessions"}
-        </Link>
-        {!user ? <AuthRequired title={isOverview ? "la simulation d’expression orale" : session.label} /> : <PremiumUpsell title={session.label} />}
-      </section>
+      <div className={isOverview ? "eo-exam-theme min-h-screen" : ""}>
+        <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
+          <Seo title={isOverview ? "Simulation d’expression orale" : `Expression orale — ${session.label}`} description={`Sujets d'expression orale TCF Canada, session ${session.label}.`} />
+          <Link to={isOverview ? "/expression-orale" : "/expression-orale/sessions"} className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+            <ArrowLeft className="h-4 w-4" /> {isOverview ? "Retour à l’expression orale" : "Retour aux sessions"}
+          </Link>
+          {!user ? <AuthRequired title={isOverview ? "la simulation d’expression orale" : session.label} /> : <PremiumUpsell title={session.label} />}
+        </section>
+      </div>
     );
   }
 
   const currentSujets = tache === 2 ? session.tache2 : tache === 3 ? session.tache3 : [];
+  const currentSessionIsComplete = session.tache2.length > 0 && session.tache3.length > 0;
+  const fullExamSession = currentSessionIsComplete ? session : completeSessions[0];
+  const tasks: Array<{
+    number: Tache;
+    title: string;
+    duration: string;
+    preparation: string;
+    description: string;
+  }> = [
+    { number: 1, title: "Entretien dirigé", duration: "2 min", preparation: "Sans préparation", description: "Échange spontanément avec l’examinateur autour de ta vie et de ton parcours." },
+    { number: 2, title: "Exercice interactif", duration: "5 min 30", preparation: "2 min de préparation + 3 min 30 d’échange", description: "Recueille des informations en posant des questions dans une situation du quotidien." },
+    { number: 3, title: "Expression d’un point de vue", duration: "4 min 30", preparation: "Sans préparation", description: "Exprime une opinion et développe tes idées de manière claire et convaincante." },
+  ];
+  const taskSessions: Record<Tache, EoSessionSummary | EoSession | undefined> = {
+    1: session,
+    2: session.tache2.length > 0 ? session : fullExamSession,
+    3: session.tache3.length > 0 ? session : fullExamSession,
+  };
 
   return (
+    <div className={isOverview ? "eo-exam-theme min-h-screen" : ""}>
     <section className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
       <Seo
         title={isOverview ? "Simulation d’expression orale" : `Expression orale — ${session.label}`}
@@ -124,20 +157,22 @@ export default function PracticeEoSession() {
             <span className="inline-flex items-center gap-2 text-sm font-semibold">
               <Clock className="h-4 w-4 text-primary" /> Environ 12 minutes
             </span>
-            <span className="text-xs font-semibold text-muted-foreground">3 tâches · session {session.label}</span>
+            <span className="text-xs font-semibold text-muted-foreground">3 tâches · session {fullExamSession?.label ?? session.label}</span>
           </div>
-          {session.tache2.length > 0 && session.tache3.length > 0 ? (
-            <Link to={`/expression-orale/sessions/${session.slug}/examen`} className="btn-primary mt-4 flex w-full justify-center">
+          {fullExamSession ? (
+            <Link to={`/expression-orale/sessions/${fullExamSession.slug}/examen`} className="btn-primary mt-4 flex w-full justify-center">
               <FileCheck2 className="h-4 w-4" /> Commencer l’examen complet
             </Link>
           ) : (
-            <p role="status" className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-200">
-              L’examen complet sera disponible dès que les sujets des trois tâches seront prêts pour cette session.
+            <p role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+              Aucun sujet complet n’est publié pour le moment.
             </p>
           )}
-          <p className="mt-3 text-center text-xs text-muted-foreground">
-            Ton navigateur demandera l’accès au microphone au moment de l’enregistrement.
-          </p>
+          {fullExamSession && fullExamSession.slug !== session.slug && (
+            <p className="mt-3 text-center text-xs text-muted-foreground">
+              Session utilisée pour les trois tâches : {fullExamSession.label}.
+            </p>
+          )}
         </div>
       ) : (
         <div className="card-shell mt-6 border-t-4 border-t-[var(--eo)] p-5 sm:p-6">
@@ -147,13 +182,11 @@ export default function PracticeEoSession() {
               <h2 className="mt-3 font-display text-xl font-bold">Simulation complète de la session</h2>
               <p className="mt-1 text-sm text-muted-foreground">Enregistre chaque réponse et réécoute-la pour t’autoévaluer.</p>
             </div>
-            {session.tache2.length > 0 && session.tache3.length > 0 ? (
-              <Link to={`/expression-orale/sessions/${session.slug}/examen`} className="btn-primary shrink-0">
+            {fullExamSession ? (
+              <Link to={`/expression-orale/sessions/${fullExamSession.slug}/examen`} className="btn-primary shrink-0">
                 Commencer l’examen complet <ArrowRight className="h-4 w-4" />
               </Link>
-            ) : (
-              <p className="text-sm text-muted-foreground">Les sujets de cette session sont encore incomplets.</p>
-            )}
+            ) : null}
           </div>
         </div>
       )}
@@ -161,11 +194,8 @@ export default function PracticeEoSession() {
       <div className="mt-8">
         <h2 className="text-center font-display text-xl font-bold">Ou pratique les tâches individuellement</h2>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
-          {([
-            { number: 1 as Tache, title: "Entretien dirigé", duration: "2 min", preparation: "Sans préparation", description: "Échange spontanément avec l’examinateur autour de ta vie et de ton parcours.", available: true },
-            { number: 2 as Tache, title: "Exercice interactif", duration: "5 min 30", preparation: "2 min de préparation + 3 min 30 d’échange", description: "Recueille des informations en posant des questions dans une situation du quotidien.", available: session.tache2.length > 0 },
-            { number: 3 as Tache, title: "Expression d’un point de vue", duration: "4 min 30", preparation: "Sans préparation", description: "Exprime une opinion et développe tes idées de manière claire et convaincante.", available: session.tache3.length > 0 },
-          ]).map((task) => {
+          {tasks.filter((task) => taskSessions[task.number]).map((task) => {
+            const taskSession = taskSessions[task.number]!;
             const content = (
               <>
                 <span className="grid h-10 w-10 place-items-center rounded-full bg-[color-mix(in_oklch,var(--eo)_12%,transparent)] text-[var(--eo)]">
@@ -179,24 +209,25 @@ export default function PracticeEoSession() {
                     <span className="font-semibold text-primary">1 tâche</span>
                   </div>
                   <p className="rounded-lg bg-muted/60 px-3 py-2 text-center italic text-muted-foreground">{task.preparation}</p>
+                  {task.number !== 1 && taskSession.slug !== session.slug && (
+                    <p className="text-center text-muted-foreground">Sujet de la session {taskSession.label}</p>
+                  )}
                   <div className="flex justify-end">
-                  <span className={task.available ? "font-semibold text-primary" : "text-muted-foreground"}>
-                    {task.available ? <>Commencer <ArrowRight className="inline h-3.5 w-3.5" /></> : "Bientôt disponible"}
-                  </span>
+                    <span className="font-semibold text-primary">
+                      Commencer <ArrowRight className="inline h-3.5 w-3.5" />
+                    </span>
                   </div>
                 </div>
               </>
             );
-            return task.available ? (
+            return (
               <Link
                 key={task.number}
-                to={`/expression-orale/sessions/${session.slug}/examen/${task.number}`}
+                to={`/expression-orale/sessions/${taskSession.slug}/examen/${task.number}`}
                 className="card-shell group flex min-h-48 flex-col p-5 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
               >
                 {content}
               </Link>
-            ) : (
-              <article key={task.number} className="card-shell flex min-h-48 flex-col p-5 opacity-60">{content}</article>
             );
           })}
         </div>
@@ -243,9 +274,16 @@ export default function PracticeEoSession() {
             </span>
           </div>
         ) : currentSujets.length === 0 ? (
-          <p className="card-shell p-6 text-sm text-muted-foreground">
-            Les sujets de la tâche {tache} pour cette session arrivent bientôt.
-          </p>
+          <div className="card-shell flex flex-wrap items-center justify-between gap-4 p-5">
+            <p className="text-sm text-muted-foreground">
+              Aucun sujet de la tâche {tache} n’est publié pour {session.label}.
+            </p>
+            {fullExamSession && fullExamSession.slug !== session.slug && (
+              <Link to={`/expression-orale/sessions/${fullExamSession.slug}/examen/${tache}`} className="btn-primary">
+                Faire la tâche {tache} · {fullExamSession.label} <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
+          </div>
         ) : (
           <div className="space-y-4">
             {currentSujets.map((sujet) => (
@@ -290,5 +328,6 @@ export default function PracticeEoSession() {
       </div>
       </>}
     </section>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
@@ -16,7 +16,7 @@ import { AuthRequired } from "@/components/AuthRequired";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
-import { getEoSession, type EoSession, type EoSessionSujet } from "@/lib/eoSessions";
+import { getEoSession, listCompleteEoSessions, type EoSession, type EoSessionSujet } from "@/lib/eoSessions";
 import { useExamIntegrity } from "@/lib/examIntegrity";
 import { supabase } from "@/lib/supabase";
 import NotFound from "./NotFound";
@@ -56,6 +56,7 @@ function getTaskSubject(session: EoSession, task: TaskNumber): EoSessionSujet | 
 
 export default function PracticeEoExam() {
   const { slug, task: taskParam } = useParams<{ slug: string; task?: string }>();
+  const navigate = useNavigate();
   const { user, isPremium, isAdmin } = useAuth();
   const { baseFlags } = useExamIntegrity();
   const [session, setSession] = useState<EoSession | null | undefined>(undefined);
@@ -82,20 +83,48 @@ export default function PracticeEoExam() {
     }
 
     let cancelled = false;
-    getEoSession(slug)
-      .then((result) => {
-        if (!cancelled) setSession(result ?? null);
-      })
-      .catch((error: unknown) => {
-        console.error("Impossible de charger la session de l’examen oral.", error);
-        if (!cancelled) setLoadError(true);
-      });
+    const loadSession = async () => {
+      const result = await getEoSession(slug);
+      if (!result) {
+        if (!cancelled) setSession(null);
+        return;
+      }
+
+      const selectedTask = taskIsSelected ? Number(taskParam) : undefined;
+      const hasRequestedSubject = selectedTask === 2
+        ? result.tache2.length > 0
+        : selectedTask === 3
+          ? result.tache3.length > 0
+          : selectedTask === undefined
+            ? result.tache2.length > 0 && result.tache3.length > 0
+            : true;
+
+      if (!hasRequestedSubject) {
+        const completeSessions = await listCompleteEoSessions();
+        const fallback = completeSessions.find(
+          (item) => item.slug !== slug && (item.isFree || (user && (isPremium || isAdmin))),
+        );
+        if (fallback) {
+          navigate(
+            `/expression-orale/sessions/${fallback.slug}/examen${taskIsSelected ? `/${taskParam}` : ""}`,
+            { replace: true },
+          );
+          return;
+        }
+      }
+
+      if (!cancelled) setSession(result);
+    };
+    loadSession().catch((error: unknown) => {
+      console.error("Impossible de charger la session de l’examen oral.", error);
+      if (!cancelled) setLoadError(true);
+    });
 
     return () => {
       cancelled = true;
       cancelledRef.current = true;
     };
-  }, [slug]);
+  }, [slug, taskIsSelected, taskParam, user, isPremium, isAdmin, navigate]);
 
   useEffect(() => {
     if (taskIsSelected && taskParam) {
@@ -133,15 +162,21 @@ export default function PracticeEoExam() {
 
   if (loadError) {
     return (
-      <section className="mx-auto max-w-3xl px-4 py-16">
-        <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
-          Impossible de charger cette session. Réessaie dans quelques instants.
-        </p>
-      </section>
+      <div className="eo-exam-theme min-h-screen">
+        <section className="mx-auto max-w-3xl px-4 py-16">
+          <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+            Impossible de charger cette session. Réessaie dans quelques instants.
+          </p>
+        </section>
+      </div>
     );
   }
   if (session === undefined) {
-    return <p role="status" className="mx-auto max-w-3xl px-4 py-24 text-center text-sm text-muted-foreground">Chargement de la session…</p>;
+    return (
+      <div className="eo-exam-theme min-h-screen">
+        <p role="status" className="mx-auto max-w-3xl px-4 py-24 text-center text-sm text-muted-foreground">Chargement de la session…</p>
+      </div>
+    );
   }
   if (!session) return <NotFound />;
   if (taskParam !== undefined && !taskIsSelected) return <NotFound />;
@@ -149,10 +184,12 @@ export default function PracticeEoExam() {
   const locked = !session.isFree && !isPremium && !isAdmin;
   if (!user || locked) {
     return (
-      <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
-        <Seo title={`Simulation EO — ${session.label}`} description={`Simulation d’expression orale TCF Canada, session ${session.label}.`} />
-        {!user ? <AuthRequired title={`la simulation EO ${session.label}`} /> : <PremiumUpsell title={`la simulation EO ${session.label}`} />}
-      </section>
+      <div className="eo-exam-theme min-h-screen">
+        <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
+          <Seo title={`Simulation EO — ${session.label}`} description={`Simulation d’expression orale TCF Canada, session ${session.label}.`} />
+          {!user ? <AuthRequired title={`la simulation EO ${session.label}`} /> : <PremiumUpsell title={`la simulation EO ${session.label}`} />}
+        </section>
+      </div>
     );
   }
 
@@ -276,6 +313,7 @@ export default function PracticeEoExam() {
   const backToSession = `/expression-orale/sessions/${session.slug}`;
 
   return (
+    <div className="eo-exam-theme min-h-screen">
     <section className="mx-auto max-w-4xl px-4 py-10 sm:py-16">
       <Seo
         title={`${isFullExam ? "Examen complet EO" : `Tâche ${taskNumber}`} — ${session.label}`}
@@ -305,7 +343,7 @@ export default function PracticeEoExam() {
           <div
             key={number}
             className={`rounded-xl border p-3 text-center text-xs font-semibold sm:p-4 sm:text-sm ${
-              number === taskNumber ? "border-primary bg-primary/10 text-foreground" : isFullExam && number < taskNumber ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-400" : "border-border text-muted-foreground"
+              number === taskNumber ? "border-primary bg-primary/10 text-foreground" : isFullExam && number < taskNumber ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-700" : "border-border text-muted-foreground"
             }`}
           >
             <span className="block text-lg font-bold">{isFullExam && number < taskNumber ? <Check className="mx-auto h-5 w-5" /> : `0${number}`}</span>
@@ -358,8 +396,9 @@ export default function PracticeEoExam() {
                 </ul>
               </>
             ) : !currentSubject ? (
-              <p role="alert" className="mt-5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200">
-                Aucun sujet n’est disponible pour la tâche {taskNumber} dans cette session. Choisis une autre session pour continuer.
+              <p role="alert" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                Aucun sujet n’est publié pour la tâche {taskNumber} dans cette session.
+                <Link to="/expression-orale/sessions" className="ml-1 font-semibold text-primary underline">Choisir une autre session</Link>
               </p>
             ) : (
               <>
@@ -454,7 +493,7 @@ export default function PracticeEoExam() {
             )}
 
             {errorMessage && runState !== "recorded" && (
-              <p role="alert" className="mt-4 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">{errorMessage}</p>
+              <p role="alert" className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">{errorMessage}</p>
             )}
           </div>
         </div>
@@ -466,5 +505,6 @@ export default function PracticeEoExam() {
         </p>
       )}
     </section>
+    </div>
   );
 }

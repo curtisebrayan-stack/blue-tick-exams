@@ -38,6 +38,7 @@
   --card-foreground: oklch(0.96 0.008 264);
   /* Bleu signature "Blue Tick" — accent principal (CTA, liens, éléments actifs) */
   --primary: oklch(0.64 0.19 230);
+  --primary-hover: oklch(0.56 0.19 230);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.115 0.02 264);
   --secondary-foreground: oklch(0.96 0.008 264);
@@ -55,6 +56,28 @@
   --eo: oklch(0.65 0.16 145);
   /* Expression écrite */
   --ee: oklch(0.78 0.15 85);
+}
+
+.eo-exam-theme {
+  --background: #ffffff;
+  --foreground: #263445;
+  --card: #ffffff;
+  --card-foreground: #263445;
+  --primary: #ed5146;
+  --primary-hover: #d94338;
+  --primary-foreground: #ffffff;
+  --secondary: #fff3f1;
+  --secondary-foreground: #263445;
+  --muted: #f5f6f8;
+  --muted-foreground: #68778a;
+  --accent: #ffe9e6;
+  --accent-foreground: #263445;
+  --border: #f0c9c5;
+  --ring: #ed5146;
+  --eo: #ed5146;
+  min-height: 100%;
+  background: var(--background);
+  color: var(--foreground);
 }
 
 @layer base {
@@ -98,7 +121,7 @@
   font-weight: 600;
   transition: transform 0.15s, background 0.15s;
   &:hover {
-    background: oklch(0.56 0.19 230);
+    background: var(--primary-hover);
     transform: translateY(-1px);
   }
 }
