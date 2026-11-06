@@ -104,6 +104,39 @@ export default function ComprehensionOrale() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-4xl px-4 py-12 sm:py-16">
+        <div className="flex items-center gap-3">
+          <span
+            className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl"
+            style={{ backgroundColor: "color-mix(in oklch, var(--co) 16%, transparent)", color: "var(--co)" }}
+          >
+            <Headphones className="h-6 w-6" />
+          </span>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Entraînement audio</p>
+            <h2 className="font-display text-xl font-bold sm:text-2xl">Écoute un extrait</h2>
+          </div>
+        </div>
+        <div className="card-shell mt-5 grid gap-4 p-5 sm:grid-cols-[1fr_auto] sm:items-center sm:p-6">
+          <div>
+            <p className="font-semibold">Extrait de compréhension orale</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              Écoute ce fichier pour t’entraîner à repérer les informations importantes. Il s’agit d’un extrait d’écoute libre,
+              distinct des sujets corrigés de 39 questions présentés ci-dessous.
+            </p>
+          </div>
+          <audio
+            controls
+            preload="none"
+            src="/audio/co-exemple.mp3"
+            aria-label="Écouter l’extrait d’entraînement de compréhension orale"
+            className="block w-full sm:min-w-72"
+          >
+            Ton navigateur ne permet pas de lire cet audio.
+          </audio>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
         <h2 className="text-2xl font-bold sm:text-3xl">Liste des sujets</h2>
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">
