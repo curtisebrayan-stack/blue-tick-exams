@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, CalendarDays, Clock, ListChecks, Lock, Mic, UserRound } from "lucide-react";
+import { ArrowRight, CalendarDays, Clock, Headphones, ListChecks, Lock, Mic, UserRound } from "lucide-react";
 import { ExamTaskCards, type ExamTaskFormat } from "@/components/ExamTaskCards";
 import { MonthlySessionCards } from "@/components/MonthlySessionCards";
 import { Seo } from "@/components/Seo";
@@ -80,7 +80,7 @@ export default function ExpressionOrale() {
           <span className="text-xs font-bold uppercase tracking-[0.18em] text-secondary-foreground/60">Épreuve du TCF Canada</span>
           <h1 className="mt-3 text-3xl font-bold sm:text-5xl">Expression orale</h1>
           <p className="mt-3 max-w-2xl text-secondary-foreground/75">
-            Simule les trois tâches, enregistre tes réponses et retrouve les sujets d’entraînement classés par session.
+            Entraîne-toi aux trois tâches du TCF Canada, écoute un exemple et retrouve les sujets classés par session.
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-sm">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary-foreground/10 px-3 py-1.5">
@@ -103,10 +103,10 @@ export default function ExpressionOrale() {
               <Mic className="h-7 w-7" />
             </span>
             <div>
-              <span className="chip">Simulation complète · 3 tâches</span>
-              <h2 className="mt-3 font-display text-xl font-bold sm:text-2xl">Examen d’expression orale TCF Canada</h2>
+              <span className="chip">Examen complet · 3 tâches</span>
+              <h2 className="mt-3 font-display text-xl font-bold sm:text-2xl">Examen TCF d’expression orale</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Enchaîne l’entretien dirigé, l’exercice interactif et l’expression d’un point de vue dans une simulation d’environ 12 minutes.
+                Entraîne-toi dans les conditions de l’épreuve : entretien dirigé, exercice interactif et expression d’un point de vue.
               </p>
             </div>
           </div>
@@ -117,14 +117,14 @@ export default function ExpressionOrale() {
               <p className="flex items-center gap-2 text-sm font-semibold">
                 <UserRound className="h-4 w-4 text-primary" />
                 {user
-                  ? "Choisis une session pour commencer la simulation et enregistrer tes réponses."
-                  : "Connecte-toi pour lancer la simulation et retrouver tes enregistrements dans ton profil."}
+                  ? "L’examen s’ouvre sur une page dédiée où tu peux lancer les trois tâches ou t’entraîner séparément."
+                  : "Connecte-toi pour démarrer l’examen et retrouver tes enregistrements dans ton profil."}
               </p>
             )}
             {!authLoading && (
               <div className="flex flex-wrap gap-3">
-                <Link to="/expression-orale/sessions" className="btn-primary flex-1 justify-center">
-                  Commencer l’examen complet <ArrowRight className="h-4 w-4" />
+                <Link to="/expression-orale/examen" className="btn-primary flex-1 justify-center">
+                  Commencer l’examen <ArrowRight className="h-4 w-4" />
                 </Link>
                 {!user && <Link to="/connexion" className="btn-outline flex-1 justify-center">Se connecter</Link>}
               </div>
@@ -139,22 +139,31 @@ export default function ExpressionOrale() {
       <section className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
         <div className="max-w-2xl">
           <span className="chip"><Mic className="h-3.5 w-3.5" /> Préparation · tâche 1</span>
-          <h2 className="mt-4 text-2xl font-bold sm:text-3xl">Exemples de questions pour l’entretien dirigé</h2>
+          <h2 className="mt-4 text-2xl font-bold sm:text-3xl">Exemples pour la tâche 1</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Entraîne-toi à répondre naturellement et à développer tes idées. Ces exemples sont indicatifs, pas des sujets officiels.
+            Écoute l’exemple audio avant de t’entraîner à répondre naturellement et à développer tes idées.
           </p>
         </div>
-        <div className="mt-6 grid gap-3 md:grid-cols-3">
-          {[
-            "Pouvez-vous vous présenter et parler de votre parcours ?",
-            "Qu’aimez-vous faire pendant votre temps libre ?",
-            "Parlez-moi d’une expérience récente qui vous a marqué.",
-          ].map((example, index) => (
-            <article key={example} className="card-shell flex gap-4 p-5">
-              <span className="font-display text-sm font-bold tabular-nums text-[var(--eo)]">0{index + 1}</span>
-              <p className="text-sm font-medium leading-relaxed">{example}</p>
-            </article>
-          ))}
+        <div className="card-shell mt-6 grid gap-5 overflow-hidden p-5 sm:grid-cols-[auto_1fr] sm:items-center sm:p-6">
+          <span className="grid h-14 w-14 place-items-center rounded-2xl bg-[color-mix(in_oklch,var(--eo)_16%,transparent)] text-[var(--eo)]">
+            <Headphones className="h-7 w-7" />
+          </span>
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="font-display text-lg font-bold">Question 1 · exemple audio</h3>
+              <span className="rounded-full bg-muted px-2.5 py-1 text-[0.7rem] font-semibold text-muted-foreground">Tâche 1</span>
+            </div>
+            <p className="mt-1 text-sm text-muted-foreground">Lance l’écoute quand tu es prêt. Tu peux la mettre en pause ou la réécouter.</p>
+            <audio
+              controls
+              preload="none"
+              src="/audio/eo-question-1.mp3"
+              aria-label="Écouter l’exemple audio EO, question 1"
+              className="mt-4 block w-full max-w-2xl"
+            >
+              Ton navigateur ne permet pas de lire cet audio.
+            </audio>
+          </div>
         </div>
       </section>
 

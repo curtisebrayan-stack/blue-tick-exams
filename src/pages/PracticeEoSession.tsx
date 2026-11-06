@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, ChevronDown, AlertTriangle, Clock, FileCheck2, Mic } from "lucide-react";
-import { getEoSession, type EoSession } from "@/lib/eoSessions";
+import { ArrowLeft, ArrowRight, CheckCircle2, ChevronDown, AlertTriangle, Clock, FileCheck2, ListChecks, Mic } from "lucide-react";
+import { getEoSession, listEoSessions, type EoSession } from "@/lib/eoSessions";
 import { Seo } from "@/components/Seo";
 import { useAuth } from "@/lib/AuthContext";
 import { PremiumUpsell } from "@/components/PremiumUpsell";
@@ -13,22 +13,30 @@ type Tache = 1 | 2 | 3;
 export default function PracticeEoSession() {
   const { slug } = useParams<{ slug: string }>();
   const { user, isPremium, isAdmin } = useAuth();
+  const userId = user?.id;
   const [session, setSession] = useState<EoSession | null | undefined>(undefined);
   const [loadError, setLoadError] = useState(false);
   const [tache, setTache] = useState<Tache>(2);
+  const isOverview = !slug;
 
   useEffect(() => {
-    if (!slug) {
-      setSession(null);
-      return;
-    }
     setLoadError(false);
     setSession(undefined);
     let cancelled = false;
-    getEoSession(slug)
-      .then((result) => {
-        if (!cancelled) setSession(result ?? null);
-      })
+    const loadSession = async () => {
+      let sessionSlug = slug;
+      if (!sessionSlug) {
+        const sessions = await listEoSessions();
+        sessionSlug = (sessions.find((item) => (userId && (isPremium || isAdmin)) || item.isFree) ?? sessions[0])?.slug;
+      }
+      if (!sessionSlug) {
+        if (!cancelled) setSession(null);
+        return;
+      }
+      const result = await getEoSession(sessionSlug);
+      if (!cancelled) setSession(result ?? null);
+    };
+    loadSession()
       .catch((error: unknown) => {
         console.error("Impossible de charger cette session d’expression orale.", error);
         if (!cancelled) setLoadError(true);
@@ -36,13 +44,13 @@ export default function PracticeEoSession() {
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, userId, isPremium, isAdmin]);
 
   if (loadError) {
     return (
       <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
-        <Link to="/expression-orale/sessions" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-          <ArrowLeft className="h-4 w-4" /> Retour aux sessions
+        <Link to={isOverview ? "/expression-orale" : "/expression-orale/sessions"} className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+          <ArrowLeft className="h-4 w-4" /> {isOverview ? "Retour à l’expression orale" : "Retour aux sessions"}
         </Link>
         <p role="alert" className="mt-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
           Impossible de charger cette session. Réessaie dans quelques instants.
@@ -61,11 +69,11 @@ export default function PracticeEoSession() {
   if (!user || locked) {
     return (
       <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
-        <Seo title={`Expression orale — ${session.label}`} description={`Sujets d'expression orale TCF Canada, session ${session.label}.`} />
-        <Link to="/expression-orale/sessions" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-          <ArrowLeft className="h-4 w-4" /> Retour aux sessions
+        <Seo title={isOverview ? "Simulation d’expression orale" : `Expression orale — ${session.label}`} description={`Sujets d'expression orale TCF Canada, session ${session.label}.`} />
+        <Link to={isOverview ? "/expression-orale" : "/expression-orale/sessions"} className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+          <ArrowLeft className="h-4 w-4" /> {isOverview ? "Retour à l’expression orale" : "Retour aux sessions"}
         </Link>
-        {!user ? <AuthRequired title={session.label} /> : <PremiumUpsell title={session.label} />}
+        {!user ? <AuthRequired title={isOverview ? "la simulation d’expression orale" : session.label} /> : <PremiumUpsell title={session.label} />}
       </section>
     );
   }
@@ -73,38 +81,90 @@ export default function PracticeEoSession() {
   const currentSujets = tache === 2 ? session.tache2 : tache === 3 ? session.tache3 : [];
 
   return (
-    <section className="mx-auto max-w-3xl px-4 py-16 sm:py-24">
-      <Seo title={`Expression orale — ${session.label}`} description={`Sujets d'expression orale TCF Canada, session ${session.label} : tâche 1, 2 et 3.`} />
-      <Link to="/expression-orale/sessions" className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-        <ArrowLeft className="h-4 w-4" /> Retour aux sessions
+    <section className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
+      <Seo
+        title={isOverview ? "Simulation d’expression orale" : `Expression orale — ${session.label}`}
+        description={`Sujets d'expression orale TCF Canada, session ${session.label} : tâche 1, 2 et 3.`}
+      />
+      <Link to={isOverview ? "/expression-orale" : "/expression-orale/sessions"} className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+        <ArrowLeft className="h-4 w-4" /> {isOverview ? "Retour à l’expression orale" : "Retour aux sessions"}
       </Link>
 
-      <h1 className="mt-6 text-2xl font-bold sm:text-3xl">Expression orale — Sujets de {session.label}</h1>
-      <p className="mt-2 flex items-start gap-1.5 text-xs text-muted-foreground">
+      <div className="mt-6">
+        <span className="chip"><Mic className="h-3.5 w-3.5" /> Expression orale · {session.label}</span>
+        <h1 className="mt-3 text-2xl font-bold sm:text-4xl">{isOverview ? "Prépare ton examen oral" : `Sujets de la session ${session.label}`}</h1>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+          {isOverview
+            ? "Passe les trois tâches dans l’ordre de l’épreuve ou choisis un entraînement ciblé."
+            : "Choisis une tâche pour parcourir les sujets et te préparer."}
+        </p>
+      </div>
+      {!isOverview && <p className="mt-4 flex items-start gap-1.5 text-xs text-muted-foreground">
         <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
         Ces sujets sont inspirés d'essais réels pour t'entraîner — ils ne constituent pas les sujets officiels de l'examen.
-      </p>
+      </p>}
 
-      <div className="card-shell mt-6 border-t-4 border-t-[var(--eo)] p-5 sm:p-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <span className="chip"><FileCheck2 className="h-3.5 w-3.5" /> 3 tâches · environ 12 minutes</span>
-            <h2 className="mt-3 font-display text-xl font-bold">Simulation complète de la session</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Enregistre chaque réponse et réécoute-la pour t’autoévaluer.</p>
+      {isOverview ? (
+        <div className="card-shell mt-8 border-t-4 border-t-[var(--eo)] p-5 sm:p-8">
+          <span className="chip"><FileCheck2 className="h-3.5 w-3.5" /> Examen complet</span>
+          <h2 className="mt-4 flex items-center gap-2 font-display text-xl font-bold sm:text-2xl">
+            <Mic className="h-5 w-5 text-[var(--eo)]" /> Examen complet TCF Canada
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            Passe l’épreuve d’expression orale avec ses trois tâches, dans l’ordre. Chaque réponse est enregistrée pour que tu puisses la réécouter et t’autoévaluer.
+          </p>
+          <ul className="mt-5 grid gap-2 text-sm sm:grid-cols-3">
+            {["Entretien dirigé", "Exercice interactif", "Expression d’un point de vue"].map((label) => (
+              <li key={label} className="flex items-center gap-2 text-muted-foreground">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" /> {label}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted/60 px-4 py-3">
+            <span className="inline-flex items-center gap-2 text-sm font-semibold">
+              <Clock className="h-4 w-4 text-primary" /> Environ 12 minutes
+            </span>
+            <span className="text-xs font-semibold text-muted-foreground">3 tâches · session {session.label}</span>
           </div>
-          <Link to={`/expression-orale/sessions/${session.slug}/examen`} className="btn-primary shrink-0">
-            Commencer l’examen complet <ArrowRight className="h-4 w-4" />
-          </Link>
+          {session.tache2.length > 0 && session.tache3.length > 0 ? (
+            <Link to={`/expression-orale/sessions/${session.slug}/examen`} className="btn-primary mt-4 flex w-full justify-center">
+              <FileCheck2 className="h-4 w-4" /> Commencer l’examen complet
+            </Link>
+          ) : (
+            <p role="status" className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-200">
+              L’examen complet sera disponible dès que les sujets des trois tâches seront prêts pour cette session.
+            </p>
+          )}
+          <p className="mt-3 text-center text-xs text-muted-foreground">
+            Ton navigateur demandera l’accès au microphone au moment de l’enregistrement.
+          </p>
         </div>
-      </div>
+      ) : (
+        <div className="card-shell mt-6 border-t-4 border-t-[var(--eo)] p-5 sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <span className="chip"><FileCheck2 className="h-3.5 w-3.5" /> 3 tâches · environ 12 minutes</span>
+              <h2 className="mt-3 font-display text-xl font-bold">Simulation complète de la session</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Enregistre chaque réponse et réécoute-la pour t’autoévaluer.</p>
+            </div>
+            {session.tache2.length > 0 && session.tache3.length > 0 ? (
+              <Link to={`/expression-orale/sessions/${session.slug}/examen`} className="btn-primary shrink-0">
+                Commencer l’examen complet <ArrowRight className="h-4 w-4" />
+              </Link>
+            ) : (
+              <p className="text-sm text-muted-foreground">Les sujets de cette session sont encore incomplets.</p>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="mt-8">
         <h2 className="text-center font-display text-xl font-bold">Ou pratique les tâches individuellement</h2>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           {([
-            { number: 1 as Tache, title: "Entretien dirigé", duration: "2 min", description: "Réponds aux questions personnelles de l’examinateur.", available: true },
-            { number: 2 as Tache, title: "Exercice interactif", duration: "5 min 30 · 2 min de préparation", description: "Prépare des questions pour obtenir des informations.", available: session.tache2.length > 0 },
-            { number: 3 as Tache, title: "Expression d’un point de vue", duration: "4 min 30", description: "Développe et justifie ton opinion sur le sujet proposé.", available: session.tache3.length > 0 },
+            { number: 1 as Tache, title: "Entretien dirigé", duration: "2 min", preparation: "Sans préparation", description: "Échange spontanément avec l’examinateur autour de ta vie et de ton parcours.", available: true },
+            { number: 2 as Tache, title: "Exercice interactif", duration: "5 min 30", preparation: "2 min de préparation + 3 min 30 d’échange", description: "Recueille des informations en posant des questions dans une situation du quotidien.", available: session.tache2.length > 0 },
+            { number: 3 as Tache, title: "Expression d’un point de vue", duration: "4 min 30", preparation: "Sans préparation", description: "Exprime une opinion et développe tes idées de manière claire et convaincante.", available: session.tache3.length > 0 },
           ]).map((task) => {
             const content = (
               <>
@@ -113,11 +173,17 @@ export default function PracticeEoSession() {
                 </span>
                 <h3 className="mt-4 font-display font-bold">{task.title}</h3>
                 <p className="mt-2 flex-1 text-sm text-muted-foreground">{task.description}</p>
-                <div className="mt-4 flex items-center justify-between border-t border-border pt-3 text-xs">
-                  <span className="text-muted-foreground">{task.duration}</span>
+                <div className="mt-4 space-y-2 border-t border-border pt-3 text-xs">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="inline-flex items-center gap-1.5 text-muted-foreground"><Clock className="h-3.5 w-3.5" /> {task.duration}</span>
+                    <span className="font-semibold text-primary">1 tâche</span>
+                  </div>
+                  <p className="rounded-lg bg-muted/60 px-3 py-2 text-center italic text-muted-foreground">{task.preparation}</p>
+                  <div className="flex justify-end">
                   <span className={task.available ? "font-semibold text-primary" : "text-muted-foreground"}>
                     {task.available ? <>Commencer <ArrowRight className="inline h-3.5 w-3.5" /></> : "Bientôt disponible"}
                   </span>
+                  </div>
                 </div>
               </>
             );
@@ -136,6 +202,18 @@ export default function PracticeEoSession() {
         </div>
       </div>
 
+      {isOverview && (
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border p-4">
+          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+            <ListChecks className="h-4 w-4 text-primary" /> Sujets chargés depuis la session {session.label}.
+          </p>
+          <Link to="/expression-orale/sessions" className="text-sm font-semibold text-primary hover:underline">
+            Choisir une autre session <ArrowRight className="inline h-4 w-4" />
+          </Link>
+        </div>
+      )}
+
+      {!isOverview && <>
       <div className="mt-6 grid grid-cols-3 gap-2">
         {([1, 2, 3] as Tache[]).map((t) => (
           <button
@@ -210,6 +288,7 @@ export default function PracticeEoSession() {
           </div>
         )}
       </div>
+      </>}
     </section>
   );
 }

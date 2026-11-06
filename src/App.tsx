@@ -77,6 +77,7 @@ export default function App() {
         <Route path="comprehension-ecrite/:slug" element={<PracticeCe />} />
         <Route path="expression-orale" element={<ExpressionOrale />} />
         <Route path="expression-orale/sessions" element={<ExpressionOraleSessions />} />
+        <Route path="expression-orale/examen" element={<PracticeEoSession />} />
         <Route path="expression-orale/sessions/:slug/examen/:task?" element={<PracticeEoExam />} />
         <Route path="expression-orale/sessions/:slug" element={<PracticeEoSession />} />
         <Route path="expression-orale/:slug" element={<PracticeEo />} />
